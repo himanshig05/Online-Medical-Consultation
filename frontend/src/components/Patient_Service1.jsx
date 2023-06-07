@@ -1,6 +1,8 @@
 import React from 'react'
+import Link from 'next/link';
 
 const Patient_Service1 = () => {
+
   return (
     <>
     <div className='w-full h-screen bg-[#EFF3FC] flex justify-between items-center'>
@@ -12,7 +14,7 @@ const Patient_Service1 = () => {
               Consult with top doctors across specialists
               </div>
               <div className="m-6 ml-20 text-lg hover:scale-[1.01] duration-500">
-                <a href="#" target = '_blank' className="bg-[#8271E4] text-white p-4 rounded-md">Learn More </a>
+                <Link href="/ListDoctors" className="bg-[#8271E4] text-white p-4 rounded-md">Learn More </Link>
               </div>
             </div>
             <div className='mr-20 mt'>
