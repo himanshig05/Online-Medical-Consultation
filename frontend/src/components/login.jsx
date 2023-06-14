@@ -42,7 +42,7 @@ const login = () => {
               </div>
             </div>
           </div>
-          <div class="hidden lg:flex w-1/2 relative items-center justify-center">
+          <div className="hidden lg:flex w-1/2 relative items-center justify-center">
           <img src="bg1.gif" alt="" style={{width:"768px", height:"500px"}} />
           {/* <video width="800" height="1000" controls autoplay muted loop src="main.gif" type="video/mp4" ></video> */}
           </div>
