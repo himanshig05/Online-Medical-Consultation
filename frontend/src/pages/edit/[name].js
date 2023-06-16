@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-const DoctorForm = () => {
+import { useRouter } from "next/router";
+const EditForm = () => {
   const { data: session } = useSession();
-  const [name, setName] = useState("");
-  const [age, setAge] = useState();
+  const [age, setAge] = useState("");
   const [domain, setDomain] = useState("");
-  const [experience, setExperience] = useState();
+  const [experience, setExperience] = useState("");
   const [qualifications, setQualifications] = useState("");
   const [location, setLocation] = useState("");
   const [hours, setHours] = useState("");
+  const router = useRouter();
 
-  const createDoctor = (e) => {
-    fetch("http://127.0.0.1:5000/create", {
+  const updateDoctor = (e) => {
+    const n = router.query.name;
+    fetch(`http://127.0.0.1:5000/update/${n}`, {
       method: "POST",
       body: JSON.stringify({
-        name: name,
         age: age,
         domain: domain,
         experience: experience,
@@ -29,7 +30,7 @@ const DoctorForm = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        alert("Created profile");
+        alert("Updated profile");
         console.log(data);
       })
       .catch((error) => {
@@ -41,16 +42,6 @@ const DoctorForm = () => {
   return (
     <div>
       <form method="post">
-        <label>Name: </label>
-        <input
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          type="text"
-          name="name"
-          style={{ color: "black" }}
-        />
-        <br />
         <label>Age: </label>
         <input
           onChange={(e) => {
@@ -113,12 +104,12 @@ const DoctorForm = () => {
         <br />
         <button
           onClick={(e) => {
-            createDoctor(e);
+            updateDoctor(e);
           }}
           type="submit"
           style={{ backgroundColor: "white", color: "black" }}
         >
-          Add Details
+          Edit Details
         </button>
       </form>
       <button style={{ backgroundColor: "white", color: "black" }}>
@@ -128,4 +119,4 @@ const DoctorForm = () => {
   );
 };
 
-export default DoctorForm;
+export default EditForm;
