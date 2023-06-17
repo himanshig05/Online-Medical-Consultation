@@ -1,15 +1,30 @@
 import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Patient_Login from "@/pages/Patient_Login";
+import DoctorTable from "../pages/DoctorTable.jsx"
+
 const login = () => {
   const { data: session } = useSession();
 
   if (session) {
-    return (
+    const emailId = session.user.email ;
+    const index = emailId.indexOf("@");
+    const check = emailId.slice(index)
+    if (check == "@pec.edu.in") {
+      return (
+        <div>
+          <DoctorTable />
+        </div>
+      )
+    }
+    else {
+      return (
       <div>
         <Patient_Login />
       </div>
     );
+    }
+    
   } else {
     return (
       <>
