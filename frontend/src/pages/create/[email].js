@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 const DoctorForm = () => {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -10,11 +11,14 @@ const DoctorForm = () => {
   const [qualifications, setQualifications] = useState("");
   const [location, setLocation] = useState("");
   const [hours, setHours] = useState("");
+  const router = useRouter();
 
   const createDoctor = (e) => {
-    fetch("http://127.0.0.1:5000/create", {
+    const email = router.query.email;
+    fetch(`http://127.0.0.1:5000/create/${email}`, {
       method: "POST",
       body: JSON.stringify({
+        email: email,
         name: name,
         age: age,
         domain: domain,
@@ -36,6 +40,7 @@ const DoctorForm = () => {
         alert("Error");
         console.log(error);
       });
+    router.push(`/find/${email}`);
   };
 
   return (
@@ -121,9 +126,6 @@ const DoctorForm = () => {
           Add Details
         </button>
       </form>
-      <button style={{ backgroundColor: "white", color: "black" }}>
-        <Link href={"/DoctorTable"}>Show Doctor Table</Link>
-      </button>
     </div>
   );
 };

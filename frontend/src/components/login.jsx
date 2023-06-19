@@ -1,9 +1,10 @@
 import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Patient_Login from "@/pages/Patient_Login";
-import DoctorTable from "../pages/DoctorTable.jsx"
+import { useRouter } from "next/router.js";
 
 const login = () => {
+   const router = useRouter();
   const { data: session } = useSession();
 
   if (session) {
@@ -11,11 +12,7 @@ const login = () => {
     const index = emailId.indexOf("@");
     const check = emailId.slice(index)
     if (check == "@pec.edu.in") {
-      return (
-        <div>
-          <DoctorTable />
-        </div>
-      )
+      router.push(`/find/${emailId}`);
     }
     else {
       return (

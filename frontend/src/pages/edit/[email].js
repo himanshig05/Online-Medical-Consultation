@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 const EditForm = () => {
   const { data: session } = useSession();
+  const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [domain, setDomain] = useState("");
   const [experience, setExperience] = useState("");
@@ -13,10 +14,11 @@ const EditForm = () => {
   const router = useRouter();
 
   const updateDoctor = (e) => {
-    const n = router.query.name;
-    fetch(`http://127.0.0.1:5000/update/${n}`, {
+    const email = router.query.email;
+    fetch(`http://127.0.0.1:5000/update/${email}`, {
       method: "POST",
       body: JSON.stringify({
+        name: name,
         age: age,
         domain: domain,
         experience: experience,
@@ -37,11 +39,22 @@ const EditForm = () => {
         alert("Error");
         console.log(error);
       });
+    router.push(`/find/${email}`);
   };
 
   return (
     <div>
       <form method="post">
+        <label>Name: </label>
+        <input
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          type="text"
+          name="name"
+          style={{ color: "black" }}
+        />
+        <br />
         <label>Age: </label>
         <input
           onChange={(e) => {
@@ -113,7 +126,7 @@ const EditForm = () => {
         </button>
       </form>
       <button style={{ backgroundColor: "white", color: "black" }}>
-        <Link href={"/DoctorTable"}>Show Doctor Table</Link>
+        <Link href={`/find/${session.user.email}`}>Show Profile</Link>
       </button>
     </div>
   );
