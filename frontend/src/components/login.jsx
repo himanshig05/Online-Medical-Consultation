@@ -27,7 +27,7 @@ const login = () => {
       <>
         <div className="flex h-screen w-full bg-gray-50">
           <div className="flex w-full h-screen items-center justify-center lg:w-1/2">
-            <div className=" bg-white px-12 py-20 border-2 border-purple-200">
+            <div className=" bg-white px-12 py-20 border-2 border-purple-500">
               <div className="flex justify-center items-center">
                 <h1 className="text-5xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700">
                   MediConnect Online
@@ -37,8 +37,8 @@ const login = () => {
                 <div className="m-10 mt-14 text-lg hover:scale-[1.05] duration-500">
                   <button
                     onClick={() => signIn()}
-                    className="bg-purple-100 text-black py-4 px-20 rounded-md border-2 hover:border-indigo-700 border-transparent
-                    "
+                    className="bg-purple-100 text-white py-4 px-20 rounded-md border-2 hover:border-indigo-700 border-transparent
+                    bg-gradient-to-r from-blue-400 to-purple-700 font-bold"
                   >
                     Login as Patient
                   </button>
@@ -46,7 +46,7 @@ const login = () => {
                 <div className="mx-10 text-lg hover:scale-[1.05] duration-500">
                   <button
                     onClick={() => signIn()}
-                    className="bg-purple-100 text-black py-4 px-20 rounded-md border-2 hover:border-indigo-700 border-transparent"
+                    className="bg-purple-100 text-white py-4 px-20 rounded-md border-2 hover:border-indigo-700 border-transparent bg-gradient-to-r from-blue-400 to-purple-700 font-bold"
                   >
                     Login as Doctor
                   </button>
