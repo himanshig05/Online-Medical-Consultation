@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
+dotenv.config();
 const connection = {};
 
 async function dbConnect() {
   if (connection.isConnected) {
     return;
   }
-  const db = await mongoose.connect("mongodb://127.0.0.1:27017/doctorsDB");
+  const db = await mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true,});
   connection.isConnected = db.connections[0].readyState;
   console.log(connection.isConnected);
 }
