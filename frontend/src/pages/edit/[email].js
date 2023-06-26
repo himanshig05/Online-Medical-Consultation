@@ -131,7 +131,7 @@ const EditForm = () => {
           type="submit"
           // style={{ backgroundColor: "white", color: "black" }}
         >
-          Edit Details
+          Submit
         </button>
         </div>
       </form>
