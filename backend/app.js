@@ -62,7 +62,7 @@ app.post("/update/:email", async function (req, res) {
     },
     {
       $set: {
-        name: req.params.name,
+        name: req.body.name,
         age: req.body.age,
         domain: req.body.domain,
         experience: req.body.experience,

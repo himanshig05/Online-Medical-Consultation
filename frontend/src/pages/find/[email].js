@@ -33,21 +33,14 @@ const DoctorTable = () => {
       <>
         <div className="w-full px-2 bg-white flex justify-between items-center">
           <div className="flex justify-between">
-            <div className="text-black">
-              <img
-                src={session.user.image}
-                alt=""
-                style={{ width: "80px", height: "80px" }}
-              />
-            </div>
             <div className="text-black uppercase p-5 text-lg font-medium mt-2">
-              <a href="">MY PROFILE: {session.user.email}</a>
+              <a href="/">MY PROFILE</a>
             </div>
           </div>
           <div className="flex justify-center">
             <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
               <li className="text-lg font-medium ml-10">
-                <a href="#">Home</a>
+                <Link href="#">Home</Link>
               </li>
               <li className="text-lg font-medium ml-10">
                 <a href="#">About</a>
@@ -143,70 +136,78 @@ const DoctorTable = () => {
             </div>
           </div> */}
         <div className="bg-gray-100 h-screen w-full">
-        <div class="bg-white rounded-b-3xl h-[86%] left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
-        <div className="flex justify-center items-center flex-col">
-        <div class="">
-            <img className="" src="https://www.dgvaishnavcollege.edu.in/dgvaishnav-c/uploads/2021/01/dummy-profile-pic.jpg" style={{width:"200px",height:"200px"}}></img>
-            <div class="text-black text-xl font-bold pt-5 text-center">
-                {doctor.name}
-            </div>
-        </div>
-        <div class="text-center mt-4 space-y-4">
-            <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-            <Link href={`/edit/${session.user.email}`}>Edit Profile Pic</Link>   
-            </div>
-            <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-            <Link href={`/edit/${session.user.email}`}>Edit Details</Link>   
-            </div>
-        </div>
-        </div>
-    </div>
-        <div className="ml-[29%] text-2xl px-10 w-[58%]">
-          <h2 className="text-black pt-8 text-3xl font-sans mb-2.5 font-bold">IDENTITY</h2>
-          <div className="bg-white rounded-3xl shadow-xl shadow-gray-500 pt-5 pb-5 pl-12 mb-5 mt-8">
-            <div>
-              <table className="border-none text-base h-[370px] w-[80%] text-black">
-                <tbody>
-                  <tr>
-                    <td>Name</td>
-                    <td>:</td>
-                    <td>{doctor.name}</td>
-                  </tr>
-                  <tr>
-                    <td>Age</td>
-                    <td>:</td>
-                    <td>{doctor.age} years</td>
-                  </tr>
-                  <tr>
-                    <td>Email</td>
-                    <td>:</td>
-                    <td>{session.user.email}</td>
-                  </tr>
-                  <tr>
-                    <td>Address</td>
-                    <td>:</td>
-                    <td>{doctor.location}</td>
-                  </tr>
-                  <tr>
-                    <td>Speciality</td>
-                    <td>:</td>
-                    <td>{doctor.domain}</td>
-                  </tr>
-                  <tr>
-                    <td>Qualifications</td>
-                    <td>:</td>
-                    <td>{doctor.qualifications}</td>
-                  </tr>
-                  <tr>
-                    <td>Experience</td>
-                    <td>:</td>
-                    <td>{doctor.experience} years</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="bg-white rounded-b-3xl h-[86%] left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
+            <div className="flex justify-center items-center flex-col">
+              <div class="">
+                <img
+                  className=""
+                  src={session.user.image}
+                  style={{ width: "200px", height: "200px" }}
+                ></img>
+                <div class="text-black text-xl font-bold pt-5 text-center">
+                  {doctor.name}
+                </div>
+              </div>
+              <div class="text-center mt-4 space-y-4">
+                <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                  <Link href={`/edit/${session.user.email}`}>
+                    Edit Profile Pic
+                  </Link>
+                </div>
+                <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                  <Link href={`/edit/${session.user.email}`}>Edit Details</Link>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+          <div className="ml-[29%] text-2xl px-10 w-[58%]">
+            <h2 className="text-black pt-8 text-3xl font-sans mb-2.5 font-bold">
+              IDENTITY
+            </h2>
+            <div className="bg-white rounded-3xl shadow-xl shadow-gray-500 pt-5 pb-5 pl-12 mb-5 mt-8">
+              <div>
+                <table className="border-none text-base h-[370px] w-[80%] text-black">
+                  <tbody>
+                    <tr>
+                      <td>Name</td>
+                      <td>:</td>
+                      <td>{doctor.name}</td>
+                    </tr>
+                    <tr>
+                      <td>Age</td>
+                      <td>:</td>
+                      <td>{doctor.age} years</td>
+                    </tr>
+                    <tr>
+                      <td>Email</td>
+                      <td>:</td>
+                      <td>{session.user.email}</td>
+                    </tr>
+                    <tr>
+                      <td>Address</td>
+                      <td>:</td>
+                      <td>{doctor.location}</td>
+                    </tr>
+                    <tr>
+                      <td>Speciality</td>
+                      <td>:</td>
+                      <td>{doctor.domain}</td>
+                    </tr>
+                    <tr>
+                      <td>Qualifications</td>
+                      <td>:</td>
+                      <td>{doctor.qualifications}</td>
+                    </tr>
+                    <tr>
+                      <td>Experience</td>
+                      <td>:</td>
+                      <td>{doctor.experience} years</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </>
     );
