@@ -13,21 +13,21 @@ const Patient_Login = () => {
     return (
       <>
         <div className="bg-slate-50 w-full h-screen">
-          <div className="w-full px-2 bg-[#8271E4] flex justify-between items-center">
+          <div className="w-full px-2 bg-white flex justify-between items-center">
             <div className="flex justify-between">
-              <div className="text-white">
+              <div className="text-black lowercase">
                 <img
                   src={session.user.image}
                   alt=""
                   style={{ width: "80px", height: "80px" }}
                 />
               </div>
-              <div className="text-white uppercase p-5 text-lg font-medium mt-2">
+              <div className="text-black uppercase p-5 text-lg font-medium mt-2">
                 <a href="">MY PROFILE: {session.user.email}</a>
               </div>
             </div>
             <div className="flex justify-center">
-              <ul className="flex justify-between space-x-8 text-white uppercase p-5 mr-12">
+              <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12 font-sans">
                 <li className="text-lg font-medium ml-10">
                   <a href="#">Home</a>
                 </li>
@@ -41,7 +41,7 @@ const Patient_Login = () => {
                   <a href="#">Contact Us</a>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <button onClick={()=>signOut()}>Sign Out</button>
+                  <button onClick={()=>signOut()}>SIGN OUT</button>
                 </li>
               </ul>
             </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
+// import styles from '../../styles/profile.css'
 const DoctorTable = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -29,44 +29,44 @@ const DoctorTable = () => {
       </button>
     );
   } else {
-      return (
-        <>
-          <div className="w-full px-2 bg-[#8271E4] flex justify-between items-center">
-            <div className="flex justify-between">
-              <div className="text-white">
-                <img
-                  src={session.user.image}
-                  alt=""
-                  style={{ width: "80px", height: "80px" }}
-                />
-              </div>
-              <div className="text-white uppercase p-5 text-lg font-medium mt-2">
-                <a href="">MY PROFILE: {session.user.email}</a>
-              </div>
+    return (
+      <>
+        <div className="w-full px-2 bg-white flex justify-between items-center">
+          <div className="flex justify-between">
+            <div className="text-black">
+              <img
+                src={session.user.image}
+                alt=""
+                style={{ width: "80px", height: "80px" }}
+              />
             </div>
-            <div className="flex justify-center">
-              <ul className="flex justify-between space-x-8 text-white uppercase p-5 mr-12">
-                <li className="text-lg font-medium ml-10">
-                  <a href="#">Home</a>
-                </li>
-                <li className="text-lg font-medium ml-10">
-                  <a href="#">About</a>
-                </li>
-                <li className="text-lg font-medium ml-10">
-                  <a href="#">services</a>
-                </li>
-                <li className="text-lg font-medium ml-10">
-                  <a href="#">Contact Us</a>
-                </li>
-                <li className="text-lg font-medium ml-10">
-                  <button onClick={() => signOut({ callbackUrl: "/" })}>
-                    Sign Out
-                  </button>
-                </li>
-              </ul>
+            <div className="text-black uppercase p-5 text-lg font-medium mt-2">
+              <a href="">MY PROFILE: {session.user.email}</a>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex justify-center">
+            <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
+              <li className="text-lg font-medium ml-10">
+                <a href="#">Home</a>
+              </li>
+              <li className="text-lg font-medium ml-10">
+                <a href="#">About</a>
+              </li>
+              <li className="text-lg font-medium ml-10">
+                <a href="#">services</a>
+              </li>
+              <li className="text-lg font-medium ml-10">
+                <a href="#">Contact Us</a>
+              </li>
+              <li className="text-lg font-medium ml-10">
+                <button onClick={() => signOut({ callbackUrl: "/" })}>
+                  Sign Out
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {/* <div className="flex flex-col">
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -141,9 +141,75 @@ const DoctorTable = () => {
                 </div>
               </div>
             </div>
+          </div> */}
+        <div className="bg-gray-100 h-screen w-full">
+        <div class="bg-white rounded-b-3xl h-[86%] left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
+        <div className="flex justify-center items-center flex-col">
+        <div class="">
+            <img className="" src="https://www.dgvaishnavcollege.edu.in/dgvaishnav-c/uploads/2021/01/dummy-profile-pic.jpg" style={{width:"200px",height:"200px"}}></img>
+            <div class="text-black text-xl font-bold pt-5 text-center">
+                {doctor.name}
+            </div>
+        </div>
+        <div class="text-center mt-4 space-y-4">
+            <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+            <Link href={`/edit/${session.user.email}`}>Edit Profile Pic</Link>   
+            </div>
+            <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+            <Link href={`/edit/${session.user.email}`}>Edit Details</Link>   
+            </div>
+        </div>
+        </div>
+    </div>
+        <div className="ml-[29%] text-2xl px-10 w-[58%]">
+          <h2 className="text-black pt-8 text-3xl font-sans mb-2.5 font-bold">IDENTITY</h2>
+          <div className="bg-white rounded-3xl shadow-xl shadow-gray-500 pt-5 pb-5 pl-12 mb-5 mt-8">
+            <div>
+              <table className="border-none text-base h-[370px] w-[80%] text-black">
+                <tbody>
+                  <tr>
+                    <td>Name</td>
+                    <td>:</td>
+                    <td>{doctor.name}</td>
+                  </tr>
+                  <tr>
+                    <td>Age</td>
+                    <td>:</td>
+                    <td>{doctor.age} years</td>
+                  </tr>
+                  <tr>
+                    <td>Email</td>
+                    <td>:</td>
+                    <td>{session.user.email}</td>
+                  </tr>
+                  <tr>
+                    <td>Address</td>
+                    <td>:</td>
+                    <td>{doctor.location}</td>
+                  </tr>
+                  <tr>
+                    <td>Speciality</td>
+                    <td>:</td>
+                    <td>{doctor.domain}</td>
+                  </tr>
+                  <tr>
+                    <td>Qualifications</td>
+                    <td>:</td>
+                    <td>{doctor.qualifications}</td>
+                  </tr>
+                  <tr>
+                    <td>Experience</td>
+                    <td>:</td>
+                    <td>{doctor.experience} years</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </>
-      );
+        </div>
+        </div>
+      </>
+    );
   }
 };
 
