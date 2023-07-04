@@ -136,26 +136,33 @@ const DoctorTable = () => {
             </div>
           </div> */}
         <div className="bg-gray-100 h-screen w-full">
-          <div class="bg-white rounded-b-3xl h-[86%] left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
+          <div className="bg-white rounded-b-3xl h-[86%] left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
             <div className="flex justify-center items-center flex-col">
-              <div class="">
+              <div className="">
                 <img
                   className=""
-                  src={session.user.image}
+                  src={session?.user.image}
                   style={{ width: "200px", height: "200px" }}
                 ></img>
-                <div class="text-black text-xl font-bold pt-5 text-center">
+                <div className="text-black text-xl font-bold pt-5 text-center">
                   {doctor.name}
                 </div>
               </div>
-              <div class="text-center mt-4 space-y-4">
-                <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-                  <Link href={`/edit/${session.user.email}`}>
+              <div className="text-center mt-4 space-y-4">
+                <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                  <Link href={`/edit/${session?.user.email}`}>
                     Edit Profile Pic
                   </Link>
                 </div>
-                <div class="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-                  <Link href={`/edit/${session.user.email}`}>Edit Details</Link>
+                <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                  <Link href={`/edit/${session?.user.email}`}>
+                    Edit Details
+                  </Link>
+                </div>
+                <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                  <Link href="/Messenger">
+                    Your Patients
+                  </Link>
                 </div>
               </div>
             </div>
@@ -181,7 +188,7 @@ const DoctorTable = () => {
                     <tr>
                       <td>Email</td>
                       <td>:</td>
-                      <td>{session.user.email}</td>
+                      <td>{doctor.email}</td>
                     </tr>
                     <tr>
                       <td>Address</td>

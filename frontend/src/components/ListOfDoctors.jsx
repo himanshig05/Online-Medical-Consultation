@@ -27,6 +27,27 @@ export default function App() {
     return data;
   }
 
+  const handleClick = async (doctor) => {
+    try {
+      const res = await fetch(`http://localhost:5000/conversations`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          senderEmail: session.user.email,
+          receiverEmail: doctor.email,
+        }),
+      })
+        .then((res) => res.json)
+        .then((data) => {
+          router.push('/Messenger');
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -101,6 +122,15 @@ export default function App() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {person.experience}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <button
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                        onClick={()=>handleClick(person)}
+                        style={{ backgroundColor: "black", color: "white" }}
+                      >
+                        Contact
+                      </button>
                     </td>
                   </tr>
                 ))}
