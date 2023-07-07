@@ -5,23 +5,27 @@ const Patient_Service1 = () => {
 
   return (
     <>
-    <div className='w-full h-screen bg-[#EFF3FC] flex justify-between items-center'>
+    <div className='w-full h-screen bg-white flex justify-between items-center'>
     {/* <div className="flex justify-center items-center"> */}
         {/* <div className='shadow-2xl ml-0 mr-0 mb-32 rounded-3xl hover:scale-[1.01] duration-500 p-10'> */}
           {/* <div className="flex justify-center items-center"> */}
-            <div className="flex flex-col">
-              <div className="font-bold text-black ml-20 text-5xl m-auto">
-              Consult with top doctors across specialists
+            <div className="flex flex-col justify-center">
+              <div className="font-bold text-[#2f0563] ml-20 text-6xl m-auto">
+              Virtual
               </div>
+              <div className="font-bold text-[#2f0563] ml-20 text-6xl m-auto">
+              Healthcare
+              </div>
+              <p className='text-gray-500 ml-20 text-2xl m-auto italic'>Consult with top doctors across specialists</p>
               <div className="m-6 ml-20 text-lg hover:scale-[1.01] duration-500">
-                <Link href="/ListDoctors" className="bg-[#8271E4] text-white p-4 rounded-md">Learn More </Link>
+                <Link href="/ListDoctors" className="bg-red-500 text-white p-4 rounded-md">Learn More </Link>
               </div>
             </div>
-            <div className='mr-20 mt'>
+            <div className='mr-8'>
               <img
-                src="pic1.png"
+                src="img1.png"
                 alt=""
-                style={{ width: "600px", height: "400px" }}
+                style={{ width: "800px", height: "700px" }}
               />
             </div>
         {/* </div> */}

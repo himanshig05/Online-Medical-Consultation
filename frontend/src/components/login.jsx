@@ -30,8 +30,13 @@ const login = () => {
             <div className=" bg-white px-12 py-20 border-2 border-purple-500">
               <div className="flex justify-center items-center">
                 <h1 className="text-5xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700">
-                  MediConnect Online
+                  MediCare Online
                 </h1>
+              </div>
+              <div className="flex justify-center items-center">
+                <p className="text-2xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-700">
+                  Modernizing Medication
+                </p>
               </div>
               <div className="flex flex-col gap-4 items-center">
                 <div className="m-10 mt-14 text-lg hover:scale-[1.05] duration-500">
