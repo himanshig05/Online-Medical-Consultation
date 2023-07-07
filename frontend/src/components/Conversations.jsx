@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 //import "./Conversations.css";
 
 const Conversation = ({ conversation }) => {
@@ -11,6 +12,7 @@ const Conversation = ({ conversation }) => {
   }
 
   return (
+    <>
     <div className="conversation">
       <img
         className="conversationImg"
@@ -18,7 +20,13 @@ const Conversation = ({ conversation }) => {
         alt=""
       />
       <span className="conversationName">{receiver}</span>
-    </div>
+      </div>
+      <div>
+        <button>
+          <Link href={`/patientProfile/${receiver}`}>See Profile</Link>
+        </button>
+      </div>
+      </>
   );
 };
 

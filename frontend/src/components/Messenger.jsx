@@ -5,6 +5,7 @@ import Conversation from "./Conversations";
 import Message from "./Message";
 import { io } from "socket.io-client";
 import { IoChevronBackOutline } from "react-icons/io5";
+import Link from "next/link";
 
 const Messenger = () => {
 
@@ -134,9 +135,11 @@ const Messenger = () => {
             <div className="text-2xl font-bold text-black flex justify-center">Your Chats</div>
             {/* </div> */}
             {conversations.map((c) => (
+              <>
               <div className="text-black text-lg font-semibold border-b-2" onClick={() => setCurrentChat(c)}>
                 <Conversation conversation={c} />
               </div>
+                </>
             ))}
           </div>
         </div>

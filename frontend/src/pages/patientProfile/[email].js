@@ -150,17 +150,17 @@ const PatientProfile = () => {
               </div>
               <div className="text-center mt-4 space-y-4">
                 <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-                  <Link href={`/patientUpdate/${session?.user.email}`}>
+                  <Link href={`/patientUpdate/${patient.email}`}>
                     Edit Profile Pic
                   </Link>
                 </div>
                 <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-                  <Link href={`/patientUpdate/${session?.user.email}`}>
+                  <Link href={`/patientUpdate/${patient.email}`}>
                     Edit Details
                   </Link>
                 </div>
                 <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-                  <Link href={`/patientPrescription/${session?.user.email}`}>
+                  <Link href={`/patientPrescription/${patient.email}`}>
                     Add Prescription
                   </Link>
                 </div>
