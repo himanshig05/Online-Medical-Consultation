@@ -2,12 +2,19 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser")
 const Doctor = require("./models/doctorModel");
+const Patient = require("./models/patientModel");
 const dbConnect = require("./utils/dbConnect");
 const cors = require("cors");
 const conversationRoutes = require("./routes/conversationRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 
 const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 dbConnect();
@@ -80,19 +87,83 @@ app.post("/update/:email", async function (req, res) {
   res.json(doctor);
 });
 
+
+// PATIENT ROUTES
+
+// create patient profile
+app.post("/patientCreate/:email", async function (req, res) {
+  const patient = new Patient({
+    email: req.params.email,
+    name: req.body.name,
+    age: req.body.age,
+    gender: req.body.gender,
+    height: req.body.height,
+    weight: req.body.weight,
+    bloodGroup: req.body.bloodGroup,
+    conditions: req.body.conditions,
+    prescriptions: [],
+  });
+  await patient.save();
+  res.json(patient);
+});
+
+// get patient profile
+app.get("/patientProfile/:email", async function (req, res) {
+  const email = req.params.email;
+  const patient = await Patient.findOne({ email: email });
+  res.json(patient);
+});
+
+
+// update patient profile
+app.post("/patientUpdate/:email", async function (req, res) {
+  const patient = await Patient.findOneAndUpdate(
+    {
+      email: req.params.email,
+    },
+    {
+      $set: {
+        name: req.body.name,
+        age: req.body.age,
+        gender: req.body.gender,
+        height: req.body.height,
+        weight: req.body.weight,
+        bloodGroup: req.body.bloodGroup,
+        conditions: req.body.conditions,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  res.json(patient);
+});
+
+// add prescription
+app.patch("/addPrescription/:email", async function (req, res) {
+  const email = req.params.email;
+  const { date, medicine, duration, amount } = req.body;
+  const newPrescription = { date, medicine, duration, amount };
+  const patient = await Patient.findOne({ email: email });
+  patient.prescriptions.push(newPrescription);
+  const updatedPatient = await Patient.findOneAndUpdate(
+    {
+      email: email,
+    },
+    { prescriptions: patient.prescriptions },
+    { new: true }
+  );
+  res.json(updatedPatient);
+})
+
+// CHAT ROUTES
+
 app.use("/conversations", conversationRoutes);
 app.use("/messages", messageRoutes);
 
-app.listen(5000, function (req, res) {
-  console.log("Server running on port 5000.");
-});
 
 
-const io = require("socket.io")(7000, {
-  cors: {
-    origin: "http://localhost:3000",
-  },
-});
+
 
 let users = [];
 
@@ -133,4 +204,8 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
+});
+
+server.listen(5000, function (req, res) {
+  console.log("Server running on port 5000.");
 });

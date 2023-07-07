@@ -14,7 +14,7 @@ const Doctor_Profile = () => {
                 />
               </div>
               <div className="text-white uppercase p-5 text-lg font-medium mt-2">
-                <a href="">MY PROFILE</a>
+                <a href="/">MY PROFILE</a>
               </div>
             </div>
             <div className="flex justify-center">

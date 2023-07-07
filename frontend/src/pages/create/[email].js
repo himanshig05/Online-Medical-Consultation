@@ -48,7 +48,7 @@ const DoctorForm = () => {
       <div className="flex items-center justify-center">
       <div className=" bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
       <form method="post">
-        <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">Edit your Profile</div>
+        <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">Create your Profile</div>
         <div className="mb-6">
         <label className="block mb-2 text-sm font-medium text-gray-900">Name: </label>
         <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
