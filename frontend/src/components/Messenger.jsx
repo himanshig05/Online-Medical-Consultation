@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Conversation from "./Conversations";
 import Message from "./Message";
 import { io } from "socket.io-client";
-
+import { IoChevronBackOutline } from "react-icons/io5";
 
 const Messenger = () => {
 
@@ -125,12 +125,16 @@ const Messenger = () => {
 
   return (
     <>
-      <div className="messenger">
+      <div className="messenger bg-white">
         <div className="chatMenu">
-          <div className="chatMenuWrapper">
-            <div style={{ fontSize: "20px" }}>Your Chats</div>
+          <div className="chatMenuWrapper border-2 border-b-2">
+            <a href="/"> <div className="text-black text-lg flex items-center"><IoChevronBackOutline/>Back</div></a>
+            {/* <div className="flex items-center justify-between">
+            <div className="text-2xl text-black justify-start">Back</div> */}
+            <div className="text-2xl font-bold text-black flex justify-center">Your Chats</div>
+            {/* </div> */}
             {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
+              <div className="text-black text-lg font-semibold border-b-2" onClick={() => setCurrentChat(c)}>
                 <Conversation conversation={c} />
               </div>
             ))}
@@ -140,7 +144,7 @@ const Messenger = () => {
           <div className="chatBoxWrapper">
             {currentChat ? (
               <>
-                <div className="chatBoxTop">
+                <div className="chatBoxTop pl-4">
                   {messages.map((m) => (
                     <div ref={scrollRef}>
                       <Message
@@ -150,10 +154,10 @@ const Messenger = () => {
                     </div>
                   ))}
                 </div>
-                <div className="chatBoxBottom">
+                <div className="chatBoxBottom space-x-12 pl-5">
                   <textarea
-                    className="chatMessageInput"
-                    placeholder="write something..."
+                    className="chatMessageInput w-full rounded-full border border-gray-200 p-6 bg-gray-100"
+                    placeholder="Write Something..."
                     onChange={(e) => setNewMessage(e.target.value)}
                     value={newMessage}
                   ></textarea>
@@ -163,7 +167,7 @@ const Messenger = () => {
                 </div>
               </>
             ) : (
-              <span className="noConversationText">
+              <span className="noConversationText text-black flex justify-center items-center">
                 Open a conversation to start a chat
               </span>
             )}

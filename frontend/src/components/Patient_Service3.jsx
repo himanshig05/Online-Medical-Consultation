@@ -3,20 +3,23 @@ import React from 'react'
 const Patient_Service3 = () => {
   return (
     <>
-    <div className='w-full h-screen bg-[#f6eff8] flex justify-between items-center'>
+    <div className='w-full h-screen bg-white flex justify-between items-center'>
             <div className="flex flex-col">
-              <div className="font-bold text-black ml-20 text-5xl m-auto">
-              Edit your medical history
+              <div className="font-bold text-[#2f0563] ml-20 text-6xl m-auto">
+              Edit Your
+              </div>
+              <div className="font-bold text-[#2f0563] ml-20 text-6xl m-auto">
+              Medical History
               </div>
               <div className="m-6 ml-20 text-lg hover:scale-[1.01] duration-500">
-                <a href="#" target = '_blank' className="bg-[#8271E4] text-white p-4 rounded-md">Learn More </a>
+                <a href="#" target = '_blank' className="bg-red-500 text-white p-4 rounded-md">Learn More </a>
               </div>
             </div>
-            <div className='mr-20 mt'>
+            <div className='mr-8 mt'>
               <img
-                src="pic3.png"
+                src="pic2.png"
                 alt=""
-                style={{ width: "600px", height: "500px"}}
+                style={{ width: "800px", height: "600px"}}
               />
             </div>
       </div>
