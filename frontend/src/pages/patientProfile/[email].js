@@ -141,7 +141,7 @@ const PatientProfile = () => {
               <div className="">
                 <img
                   className=""
-                  src={session?.user.image}
+                  src={patient.picturePath}
                   style={{ width: "200px", height: "200px" }}
                 ></img>
                 <div className="text-black text-xl font-bold pt-5 text-center">

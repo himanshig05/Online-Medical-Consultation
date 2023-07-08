@@ -25,6 +25,10 @@ const doctorSchema = new mongoose.Schema({
   hours: {
     type: String,
   },
+  picturePath: {
+    type: String,
+    default: "",
+  },
 });
 
 const Doctor = mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);

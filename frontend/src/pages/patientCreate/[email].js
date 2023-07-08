@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import app from "../../firebase.js";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
 const PatientForm = () => {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -10,44 +18,104 @@ const PatientForm = () => {
     const [height, setHeight] = useState("");
     const [weight, setWeight] = useState("");
     const [bloodGroup, setBloodGroup] = useState("");
-    const [conditions, setConditions] = useState("");
+  const [conditions, setConditions] = useState("");
+  const [image, setImage] = useState(null);
   const router = useRouter();
 
   const patientCreate = (e) => {
     const email = router.query.email;
-    fetch(`http://127.0.0.1:5000/patientCreate/${email}`, {
-      method: "POST",
-      body: JSON.stringify({
-        email: email,
-        name: name,
-        age: age,
-        gender: gender,
-        height: height,
-        weight: weight,
-        bloodGroup: bloodGroup,
-        conditions: conditions,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        alert("Created profile");
-        console.log(data);
+    if (image===null) {
+      fetch(`http://127.0.0.1:5000/patientCreate/${email}`, {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          name: name,
+          age: age,
+          gender: gender,
+          height: height,
+          weight: weight,
+          bloodGroup: bloodGroup,
+          conditions: conditions,
+          picturePath: "",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .catch((error) => {
-        alert("Error");
-        console.log(error);
-      });
-    router.push(`/patientProfile/${email}`);
+        .then((res) => res.json())
+        .then((data) => {
+          alert("Created profile");
+          console.log(data);
+        })
+        .catch((error) => {
+          alert("Error");
+          console.log(error);
+        });
+      router.push(`/patientProfile/${email}`);
+    }
+
+    else {
+      const fileName = new Date().getTime() + image.name;
+      const storage = getStorage(app);
+      const StorageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(StorageRef, image);
+      uploadTask.on('state_changed', (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+        (error) => {
+          console.group(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            fetch(`http://127.0.0.1:5000/patientCreate/${email}`, {
+              method: "POST",
+              body: JSON.stringify({
+                email: email,
+                name: name,
+                age: age,
+                gender: gender,
+                height: height,
+                weight: weight,
+                bloodGroup: bloodGroup,
+                conditions: conditions,
+                picturePath: downloadURL,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                alert("Created profile");
+                console.log(data);
+              })
+              .catch((error) => {
+                alert("Error");
+                console.log(error);
+              });
+            router.push(`/patientProfile/${email}`);
+          })
+        }
+      )
+     
+      
+    }
   };
 
   return (
     <div className="bg-white">
       <div className="flex items-center justify-center">
         <div className=" bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
-          <form method="post">
             <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">
               Create your Profile
             </div>
@@ -145,19 +213,31 @@ const PatientForm = () => {
                 style={{ color: "black" }}
               />
             </div>
+            <div className="mb-6">
+              <label className="block mb-2 text-sm font-medium text-gray-900">
+                Profile Picture:{" "}
+              </label>
+              <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                type="file"
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+                name="location"
+                style={{ color: "black" }}
+              />
+            </div>
             <div className="mb-6 flex items-center justify-center">
               <button
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
                 onClick={(e) => {
                   patientCreate(e);
                 }}
-                type="submit"
                 style={{ backgroundColor: "white", color: "black" }}
               >
                 Add Details
               </button>
             </div>
-          </form>
         </div>
       </div>
     </div>

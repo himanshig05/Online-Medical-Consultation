@@ -43,7 +43,7 @@ app.post("/create", async function (req, res) {
     experience: req.body.experience,
     qualifications: req.body.qualifications,
     location: req.body.location,
-    hours: req.body.hours
+    hours: req.body.hours,
   });
   await doctor.save();
   res.json(doctor);
@@ -59,6 +59,7 @@ app.post("/create/:email", async function (req, res) {
     qualifications: req.body.qualifications,
     location: req.body.location,
     hours: req.body.hours,
+    picturePath: req.body.picturePath,
   });
   await doctor.save();
   res.json(doctor);
@@ -101,6 +102,7 @@ app.post("/patientCreate/:email", async function (req, res) {
     weight: req.body.weight,
     bloodGroup: req.body.bloodGroup,
     conditions: req.body.conditions,
+    picturePath: req.body.picturePath,
     prescriptions: [],
   });
   await patient.save();

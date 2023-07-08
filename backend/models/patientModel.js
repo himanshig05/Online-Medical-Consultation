@@ -25,6 +25,10 @@ const patientSchema = new mongoose.Schema({
   conditions: {
     type: String,
   },
+  picturePath: {
+    type: String,
+    default: "",
+  },
   prescriptions: [
     {
       date: {
