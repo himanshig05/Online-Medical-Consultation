@@ -17,13 +17,13 @@ const Patient_Login = () => {
             <div className="flex justify-between">
               <div className="text-black lowercase">
                 <img
-                  src={session.user.image}
+                  src={session?.user?.image}
                   alt=""
                   style={{ width: "80px", height: "80px" }}
                 />
               </div>
               <div className="text-black uppercase p-5 text-lg font-medium mt-2">
-                <a href="">MY PROFILE: {session.user.email}</a>
+                <a href="">MY PROFILE: {session?.user?.email}</a>
               </div>
             </div>
             <div className="flex justify-center">

@@ -53,7 +53,7 @@ const PatientProfile = () => {
               </li>
               <li className="text-lg font-medium ml-10">
                 <button onClick={() => signOut({ callbackUrl: "/" })}>
-                  Sign Out
+                  SIGN OUT
                 </button>
               </li>
             </ul>
@@ -135,8 +135,8 @@ const PatientProfile = () => {
               </div>
             </div>
           </div> */}
-        <div className="bg-gray-100 h-screen w-full">
-          <div className="bg-white rounded-b-3xl h-[86%] left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
+        <div className="bg-gray-100 w-full h-full">
+          <div className="bg-white rounded-b-3xl h-full left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
             <div className="flex justify-center items-center flex-col">
               <div className="">
                 <img
@@ -168,45 +168,45 @@ const PatientProfile = () => {
             </div>
           </div>
           <div className="ml-[29%] text-2xl px-10 w-[58%]">
-            <h2 className="text-black pt-8 text-3xl font-sans mb-2.5 font-bold">
-              IDENTITY
+            <h2 className="text-black pt-8 text-3xl font-sans mb-2.5 font-bold flex justify-center">
+              Profile Details
             </h2>
             <div className="bg-white rounded-3xl shadow-xl shadow-gray-500 pt-5 pb-5 pl-12 mb-5 mt-8">
               <div>
                 <table className="border-none text-base h-[370px] w-[80%] text-black">
                   <tbody>
                     <tr>
-                      <td>Name</td>
+                      <td className="font-semibold italic">Name</td>
                       <td>:</td>
                       <td>{patient.name}</td>
                     </tr>
                     <tr>
-                      <td>Age</td>
+                      <td className="font-semibold italic">Age</td>
                       <td>:</td>
                       <td>{patient.age} years</td>
                     </tr>
                     <tr>
-                      <td>Gender</td>
+                      <td className="font-semibold italic">Gender</td>
                       <td>:</td>
                       <td>{patient.gender}</td>
                     </tr>
                     <tr>
-                      <td>Height</td>
+                      <td className="font-semibold italic">Height</td>
                       <td>:</td>
                       <td>{patient.height}</td>
                     </tr>
                     <tr>
-                      <td>Weight</td>
+                      <td className="font-semibold italic">Weight</td>
                       <td>:</td>
                       <td>{patient.weight}</td>
                     </tr>
                     <tr>
-                      <td>Blood Group</td>
+                      <td className="font-semibold italic">Blood Group</td>
                       <td>:</td>
                       <td>{patient.bloodGroup}</td>
                     </tr>
                     <tr>
-                      <td>Conditions</td>
+                      <td className="font-semibold italic">Conditions</td>
                       <td>:</td>
                       <td>{patient.conditions}</td>
                     </tr>
@@ -214,28 +214,30 @@ const PatientProfile = () => {
                 </table>
               </div>
             </div>
+            <div className="text-black text-3xl flex justify-center font-bold mt-8">Current Medication</div>
             {patient.prescriptions?.map((p) => (
-              <div className="bg-white rounded-3xl shadow-xl shadow-gray-500 pt-5 pb-5 pl-12 mb-5 mt-8">
-                <div>
-                  <table className="border-none text-base h-[370px] w-[80%] text-black">
+              <div className="bg-white rounded-3xl border-red-400 pt-5 pb-5 pl-12 mb-5 mt-8">
+                <div className="flex flex-row space-x-16">
+                  <div><img src="/download.jpeg"></img></div>
+                  <table className="border-none text-base h-[270px] w-[80%]] text-black">
                     <tbody>
                       <tr>
-                        <td>Date</td>
+                        <td className="font-semibold">Date</td>
                         <td>:</td>
                         <td>{p.date}</td>
                       </tr>
                       <tr>
-                        <td>Medicine</td>
+                        <td className="font-semibold">Medicine</td>
                         <td>:</td>
                         <td>{p.medicine}</td>
                       </tr>
                       <tr>
-                        <td>Duration</td>
+                        <td className="font-semibold">Duration</td>
                         <td>:</td>
                         <td>{p.duration}</td>
                       </tr>
                       <tr>
-                        <td>Amount</td>
+                        <td className="font-semibold">Amount</td>
                         <td>:</td>
                         <td>{p.amount}</td>
                       </tr>

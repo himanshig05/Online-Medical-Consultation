@@ -236,7 +236,7 @@ const DoctorForm = () => {
               onClick={(e) => {
                 createDoctor(e);
               }}
-              style={{ backgroundColor: "white", color: "black" }}
+              
             >
               Add Details
             </button>
