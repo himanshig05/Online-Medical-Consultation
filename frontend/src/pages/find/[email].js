@@ -21,12 +21,24 @@ const DoctorTable = () => {
   }, [router.isReady]);
   if (doctor === null) {
     return (
-      <button
-        className="px-2 inline-flex text-xs leading-5
-                       font-semibold rounded-full bg-green-100 text-green-800"
-      >
-        <Link href={`/create/${email}`}>Add Doctor</Link>
-      </button>
+      <div className="bg-white flex flex-col w-full h-screen">
+        <div className="flex justify-center"><img src="/doctor_team.png" style={{ width: "600px", height: "500px" }}></img></div>
+        <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6">Join us in bringing healthcare to all, register now!</div>
+        <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
+            <Link
+              href={`/create/${email}`}
+              className="bg-red-500 text-white p-4 rounded-md"
+            >
+              Register Now{" "}
+            </Link>
+          </div>
+      </div>
+      // <button
+      //   className="px-2 inline-flex text-xs leading-5
+      //                  font-semibold rounded-full bg-green-100 text-green-800"
+      // >
+      //   <Link href={`/create/${email}`}>Add Doctor</Link>
+      // </button>
     );
   } else {
     return (

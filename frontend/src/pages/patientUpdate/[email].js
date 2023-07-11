@@ -152,7 +152,7 @@ const PatientUpdateForm = () => {
                   patientUpdate(e);
                 }}
                 type="submit"
-                style={{ backgroundColor: "white", color: "black" }}
+                
               >
                 Add Details
               </button>

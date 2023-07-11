@@ -29,8 +29,8 @@ const login = () => {
           <div className="flex w-full h-screen items-center justify-center lg:w-1/2">
             <div className=" bg-white px-12 py-20 border-2 border-purple-500">
               <div className="flex justify-center items-center">
-                <h1 className="text-5xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700">
-                  MediCare Online
+                <h1 className="text-6xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700">
+                  MediCare
                 </h1>
               </div>
               <div className="flex justify-center items-center">

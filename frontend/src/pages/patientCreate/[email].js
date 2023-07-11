@@ -233,7 +233,7 @@ const PatientForm = () => {
                 onClick={(e) => {
                   patientCreate(e);
                 }}
-                style={{ backgroundColor: "white", color: "black" }}
+                // style={{ backgroundColor: "white", color: "black" }}
               >
                 Add Details
               </button>
