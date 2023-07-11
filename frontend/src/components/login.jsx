@@ -10,7 +10,7 @@ const login = () => {
   if (session) {
     const emailId = session.user.email ;
     const index = emailId.indexOf("@");
-    const check = emailId.slice(index)
+    const check = emailId.slice(index);
     if (check == "@pec.edu.in") {
       router.push(`/find/${emailId}`);
     }

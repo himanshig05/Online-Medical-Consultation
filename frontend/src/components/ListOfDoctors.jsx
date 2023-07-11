@@ -65,13 +65,13 @@ export default function App() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Specialist
+                    Domain
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Status
+                    Location
                   </th>
                   <th
                     scope="col"
@@ -89,7 +89,7 @@ export default function App() {
                         <div className="flex-shrink-0 h-10 w-10">
                           <img
                             className="h-10 w-10 rounded-full"
-                            src={person.image}
+                            src={person.picturePath}
                             alt=""
                           />
                         </div>

@@ -29,7 +29,7 @@ const Patient_Login = () => {
             <div className="flex justify-center">
               <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12 font-sans">
                 <li className="text-lg font-medium ml-10">
-                  <a href="#">Home</a>
+                  <a href="/">Home</a>
                 </li>
                 <li className="text-lg font-medium ml-10">
                   <a href="#">About</a>
