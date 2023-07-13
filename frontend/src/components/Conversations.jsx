@@ -13,10 +13,11 @@ const Conversation = ({ conversation }) => {
   const index = receiver.indexOf("@");
   const check = receiver.slice(index);
   var doctor = false;
-  if (check == "@pec.edu.in") {
-    doctor = true;
-     useEffect(() => {
-       if (router.isReady) {
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (check == "@pec.edu.in") {
+        doctor = true;
          fetch(`${BASE_URL}/search/${receiver}`, {
            method: "GET",
          })
@@ -24,12 +25,8 @@ const Conversation = ({ conversation }) => {
            .then((data) => {
              setUser(data);
            });
-       }
-     }, [router.isReady]);
-  }
-  else {
-    useEffect(() => {
-      if (router.isReady) {
+      }
+      else {
         fetch(`${BASE_URL}/patientProfile/${receiver}`, {
           method: "GET",
         })
@@ -38,8 +35,8 @@ const Conversation = ({ conversation }) => {
             setUser(data);
           });
       }
-    }, [router.isReady]);
-  }
+    }
+  }, [router.isReady]);
 
   if (!user) {
     return null;
