@@ -150,7 +150,7 @@ const Messenger = () => {
               <>
                 <div className="chatBoxTop pl-4">
                   {messages.map((m) => (
-                    <div ref={scrollRef}>
+                    <div key={m?.sender} ref={scrollRef}>
                       <Message
                         message={m}
                         own={m?.sender === session.user.email}
