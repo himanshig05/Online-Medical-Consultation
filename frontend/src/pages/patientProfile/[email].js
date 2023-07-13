@@ -29,14 +29,14 @@ const PatientProfile = () => {
           ></img>
         </div>
         <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6">
-          Join us in bringing healthcare to all, register now!
+          Create Profile to track your Medical History!
         </div>
         <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
           <Link
             href={`/patientCreate/${email}`}
             className="bg-red-500 text-white p-4 rounded-md"
           >
-            Register Now{" "}
+            Create Profile{" "}
           </Link>
         </div>
       </div>
@@ -214,8 +214,10 @@ const PatientProfile = () => {
                 </div>
               ))
             ) : (
-              <div className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8 text-black">
+              <div className="bg-gray-100 flex justify-center p-8 h-[250px]">
+              <div className="bg-white rounded-3xl p-6 w-[700px] flex justify-center text-black">
                 No prescriptions found
+              </div>
               </div>
             )}
           </div>
