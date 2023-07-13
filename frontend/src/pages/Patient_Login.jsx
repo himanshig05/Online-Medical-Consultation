@@ -5,6 +5,7 @@ import Service2 from '../components/Patient_Service2'
 import Service3 from '../components/Patient_Service3'
 import { signOut, useSession } from "next-auth/react";
 import Login from '../components/Login'
+import Link from "next/link";
 
 
 const Patient_Login = () => {
@@ -32,16 +33,16 @@ const Patient_Login = () => {
             <div className="flex justify-center">
               <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12 font-sans">
                 <li className="text-lg font-medium ml-10">
-                  <a href="/">Home</a>
+                  <Link href="/">Home</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <a href="/ListDoctors">Find Doctors</a>
+                  <Link href="/ListDoctors">Find Doctors</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <a href="/Messenger">CHAT CONSULT</a>
+                  <Link href="/Messenger">CHAT CONSULT</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <a href={`/patientProfile/${session?.user?.email}`}>Profile</a>
+                  <Link href={`/patientProfile/${session?.user?.email}`}>Profile</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
                   <button onClick={()=>signOut()}>SIGN OUT</button>

@@ -10,32 +10,6 @@ const Message = ({ message, own }) => {
   const index = message?.sender.indexOf("@");
   const check = message?.sender.slice(index);
 
-  /*if (check == "@pec.edu.in") {
-    useEffect(() => {
-      if (router.isReady) {
-        fetch(`${BASE_URL}/search/${message?.sender}`, {
-          method: "GET",
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setUser(data);
-          });
-      }
-    }, [router.isReady]);
-  } else {
-    useEffect(() => {
-      if (router.isReady) {
-        fetch(`${BASE_URL}/patientProfile/${message?.sender}`, {
-          method: "GET",
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setUser(data);
-          });
-      }
-    }, [router.isReady]);
-  }*/
-
   useEffect(() => {
     if (router.isReady) {
       if (check == "@pec.edu.in") {

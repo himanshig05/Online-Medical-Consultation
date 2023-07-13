@@ -1,6 +1,7 @@
 import React from 'react'
 import ListOFDoctors from '../components/ListOfDoctors'
 import { signOut, useSession } from "next-auth/react";
+import Link from 'next/link';
 
 const Doctor_Profile = () => {
   const { data: session } = useSession();
@@ -24,16 +25,16 @@ const Doctor_Profile = () => {
             <div className="flex justify-center">
               <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
                 <li className="text-lg font-medium ml-10">
-                  <a href="/">Home</a>
+                  <Link href="/">Home</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <a href="/ListDoctors">Find Doctors</a>
+                  <Link href="/ListDoctors">Find Doctors</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <a href="/Messenger">chat consult</a>
+                  <Link href="/Messenger">chat consult</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <a href={`/patientProfile/${session?.user?.email}`}>Profile</a>
+                  <Link href={`/patientProfile/${session?.user?.email}`}>Profile</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
                   <button onClick={() => signOut({ callbackUrl: "/" })}>SIGN OUT</button>
