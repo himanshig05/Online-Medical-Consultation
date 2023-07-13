@@ -45,9 +45,12 @@ const DoctorTable = () => {
       <>
         <div className="w-full px-2 bg-white flex justify-between items-center">
           <div className="flex justify-between">
-            <div className="text-black uppercase p-5 text-lg font-medium mt-2">
+            {/* <div className="text-black uppercase p-5 text-lg font-medium mt-2">
               <a href="/">MY PROFILE</a>
-            </div>
+            </div> */}
+             <div className="text-4xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700 p-5">
+                  MediCare
+                </div>
           </div>
           <div className="flex justify-center">
             <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
@@ -55,17 +58,17 @@ const DoctorTable = () => {
                 <Link href="#">Home</Link>
               </li>
               <li className="text-lg font-medium ml-10">
-                <a href="#">About</a>
+                <a href="/Messenger">PATIENTS</a>
               </li>
-              <li className="text-lg font-medium ml-10">
+              {/* <li className="text-lg font-medium ml-10">
                 <a href="#">services</a>
               </li>
               <li className="text-lg font-medium ml-10">
                 <a href="#">Contact Us</a>
-              </li>
+              </li> */}
               <li className="text-lg font-medium ml-10">
                 <button onClick={() => signOut({ callbackUrl: "/" })}>
-                  Sign Out
+                  SIGN OUT
                 </button>
               </li>
             </ul>
