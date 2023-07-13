@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 // import styles from '../../styles/profile.css'
-import { MdDelete} from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 const PatientProfile = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -20,6 +20,28 @@ const PatientProfile = () => {
         });
     }
   }, [router.isReady]);
+
+  const handleDelete = async (prescriptionId) => {
+    fetch(
+      `http://127.0.0.1:5000/deletePrescription/${email}/${prescriptionId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        alert("Deleted prescription");
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    router.reload(`/patientProfile/${email}`);
+  };
+
   if (patient === null) {
     return (
       <div className="bg-white flex flex-col w-full h-screen">
@@ -212,21 +234,34 @@ const PatientProfile = () => {
                       </tbody>
                     </table>
                     <div className="">
-                    <button class="inline-flex items-center px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">
-	<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-	  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-	</svg>
-	Delete
-  </button>
-  </div>
+                      <button className="inline-flex items-center px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md"
+                        onClick={()=>handleDelete(p._id)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-5 w-5 mr-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))
             ) : (
               <div className="bg-gray-100 flex justify-center p-8 h-[250px]">
-              <div className="bg-white rounded-3xl p-6 w-[700px] flex justify-center text-black">
-                No prescriptions found
-              </div>
+                <div className="bg-white rounded-3xl p-6 w-[700px] flex justify-center text-black">
+                  No prescriptions found
+                </div>
               </div>
             )}
           </div>

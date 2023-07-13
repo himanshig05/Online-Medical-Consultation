@@ -158,6 +158,27 @@ app.patch("/addPrescription/:email", async function (req, res) {
   res.json(updatedPatient);
 })
 
+// delete prescription
+app.patch("/deletePrescription/:email/:prescriptionId", async function (req, res) {
+  const email = req.params.email;
+  const patient = await Patient.findOne({ email: email });
+  for (var i = patient.prescriptions.length - 1; i >= 0; i--){
+    if (patient.prescriptions[i]._id == req.params.prescriptionId) {
+      patient.prescriptions.splice(i, 1);
+    }
+  }
+  const updatedPatient = await Patient.findOneAndUpdate(
+    {
+      email: email,
+    },
+    { prescriptions: patient.prescriptions },
+    { new: true }
+  );
+  res.json(updatedPatient);
+})
+
+
+
 // CHAT ROUTES
 
 app.use("/conversations", conversationRoutes);
