@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
-import Login from '../components/Login'
+import Login from "../components/Login.jsx";
 const inter = Inter({ subsets: ['latin'] })
 import { useEffect } from 'react'
 import { BASE_URL } from "../helper.js";

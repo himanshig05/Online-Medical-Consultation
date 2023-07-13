@@ -4,7 +4,7 @@ import Service1 from '../components/Patient_Service1'
 import Service2 from '../components/Patient_Service2'
 import Service3 from '../components/Patient_Service3'
 import { signOut, useSession } from "next-auth/react";
-import Login from '../components/Login'
+import Login from '../components/Login.jsx'
 import Link from "next/link";
 
 
