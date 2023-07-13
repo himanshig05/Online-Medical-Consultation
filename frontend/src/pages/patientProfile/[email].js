@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { BASE_URL } from "../../helper.js";
 // import styles from '../../styles/profile.css'
 import { MdDelete } from "react-icons/md";
 const PatientProfile = () => {
@@ -11,7 +12,7 @@ const PatientProfile = () => {
   const email = router.query.email;
   useEffect(() => {
     if (router.isReady) {
-      fetch(`http://localhost:5000/patientProfile/${email}`, {
+      fetch(`${BASE_URL}/patientProfile/${email}`, {
         method: "GET",
       })
         .then((res) => res.json())
@@ -23,7 +24,7 @@ const PatientProfile = () => {
 
   const handleDelete = async (prescriptionId) => {
     fetch(
-      `http://127.0.0.1:5000/deletePrescription/${email}/${prescriptionId}`,
+      `${BASE_URL}/deletePrescription/${email}/${prescriptionId}`,
       {
         method: "PATCH",
         headers: {
@@ -34,13 +35,13 @@ const PatientProfile = () => {
       .then((res) => res.json())
       .then((data) => {
         alert("Deleted prescription");
+        router.reload(`/patientProfile/${email}`);
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-    router.reload(`/patientProfile/${email}`);
-  };
+  }
 
   if (patient === null) {
     return (

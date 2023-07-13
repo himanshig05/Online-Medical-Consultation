@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { BASE_URL } from "../../helper.js";
 // import styles from '../../styles/profile.css'
 const DoctorTable = () => {
   const router = useRouter();
@@ -10,7 +11,7 @@ const DoctorTable = () => {
   const email = router.query.email;
   useEffect(() => {
     if (router.isReady) {
-      fetch(`http://localhost:5000/search/${email}`, {
+      fetch(`${BASE_URL}/search/${email}`, {
         method: "GET",
       })
         .then((res) => res.json())

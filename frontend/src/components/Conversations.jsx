@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../helper.js";
 //import "./Conversations.css";
 
 const Conversation = ({ conversation }) => {
@@ -16,7 +17,7 @@ const Conversation = ({ conversation }) => {
     doctor = true;
      useEffect(() => {
        if (router.isReady) {
-         fetch(`http://localhost:5000/search/${receiver}`, {
+         fetch(`${BASE_URL}/search/${receiver}`, {
            method: "GET",
          })
            .then((res) => res.json())
@@ -29,7 +30,7 @@ const Conversation = ({ conversation }) => {
   else {
     useEffect(() => {
       if (router.isReady) {
-        fetch(`http://localhost:5000/patientProfile/${receiver}`, {
+        fetch(`${BASE_URL}/patientProfile/${receiver}`, {
           method: "GET",
         })
           .then((res) => res.json())

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../../helper.js"; 
 const PatientUpdateForm = () => {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ const PatientUpdateForm = () => {
   const email = router.query.email;
 
   const patientUpdate = (e) => {
-    fetch(`http://127.0.0.1:5000/patientUpdate/${email}`, {
+    fetch(`${BASE_URL}/patientUpdate/${email}`, {
       method: "POST",
       body: JSON.stringify({
         email: email,
@@ -34,19 +35,18 @@ const PatientUpdateForm = () => {
       .then((res) => res.json())
       .then((data) => {
         alert("Updated profile");
+        router.push(`/patientProfile/${email}`);
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-    router.push(`/patientProfile/${email}`);
   };
 
   return (
     <div className="bg-white">
       <div className="flex items-center justify-center">
         <div className=" bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
-          <form method="post">
             <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">
               Edit your Profile
             </div>
@@ -150,13 +150,10 @@ const PatientUpdateForm = () => {
                 onClick={(e) => {
                   patientUpdate(e);
                 }}
-                type="submit"
-                
               >
-                Add Details
+                Edit Details
               </button>
             </div>
-          </form>
           <div className="flex items-center justify-center">
             <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
               <Link href={`/patientProfile/${email}`}>Show Profile</Link>

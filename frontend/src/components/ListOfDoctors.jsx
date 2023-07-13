@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../helper.js";
 
 export default function App() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function App() {
     }
   }, [router.isReady]);
   async function getResponse() {
-    const response = await fetch("http://127.0.0.1:5000/search");
+    const response = await fetch(`${BASE_URL}/search`);
     console.log(response);
     if (!response.ok) {
       console.log(err);
@@ -28,7 +29,7 @@ export default function App() {
 
   const handleClick = async (doctor) => {
     try {
-      const res = await fetch(`http://localhost:5000/conversations`, {
+      const res = await fetch(`${BASE_URL}/conversations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

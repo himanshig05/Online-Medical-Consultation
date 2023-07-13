@@ -9,6 +9,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { BASE_URL } from "../../helper.js";
 
 const PatientForm = () => {
   const { data: session } = useSession();
@@ -25,7 +26,7 @@ const PatientForm = () => {
   const patientCreate = (e) => {
     const email = router.query.email;
     if (image===null) {
-      fetch(`http://127.0.0.1:5000/patientCreate/${email}`, {
+      fetch(`${BASE_URL}/patientCreate/${email}`, {
         method: "POST",
         body: JSON.stringify({
           email: email,
@@ -45,13 +46,13 @@ const PatientForm = () => {
         .then((res) => res.json())
         .then((data) => {
           alert("Created profile");
+          router.push(`/patientProfile/${email}`);
           console.log(data);
         })
         .catch((error) => {
           alert("Error");
           console.log(error);
         });
-      router.push(`/patientProfile/${email}`);
     }
 
     else {
@@ -77,7 +78,7 @@ const PatientForm = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            fetch(`http://127.0.0.1:5000/patientCreate/${email}`, {
+            fetch(`${BASE_URL}/patientCreate/${email}`, {
               method: "POST",
               body: JSON.stringify({
                 email: email,
@@ -97,12 +98,12 @@ const PatientForm = () => {
               .then((res) => res.json())
               .then((data) => {
                 alert("Created profile");
+                router.push(`/patientProfile/${email}`);
                 console.log(data);
               })
               .catch((error) => {
                 console.log(error);
               });
-            router.push(`/patientProfile/${email}`);
           })
         }
       )

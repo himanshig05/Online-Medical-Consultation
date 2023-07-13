@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../../helper.js";
 const PrescriptionForm = () => {
   const { data: session } = useSession();
   const [date, setDate] = useState("");
@@ -11,34 +12,35 @@ const PrescriptionForm = () => {
   const router = useRouter();
   const email = router.query.email;
   const patientPrescription = (e) => {
-    fetch(`http://127.0.0.1:5000/addPrescription/${email}`, {
+    fetch(`${BASE_URL}/addPrescription/${email}`, {
       method: "PATCH",
       body: JSON.stringify({
-          date: date,
-          medicine: medicine,
-          duration: duration,
-          amount:amount,
+        date: date,
+        medicine: medicine,
+        duration: duration,
+        amount: amount,
       }),
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        res.json();
+      })
       .then((data) => {
         alert("Created prescription");
+        router.push(`/patientProfile/${email}`);
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-    router.push(`/patientProfile/${email}`);
   };
 
   return (
     <div className="bg-white">
       <div className="flex items-center justify-center">
         <div className=" bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
-          <form method="post">
             <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">
               Create your Profile
             </div>
@@ -104,7 +106,6 @@ const PrescriptionForm = () => {
                 onClick={(e) => {
                   patientPrescription(e);
                 }}
-                type="submit"
                 
               >
                 Add Prescription
@@ -115,7 +116,6 @@ const PrescriptionForm = () => {
               <Link href={`/patientProfile/${email}`}>Show Profile</Link>
             </button>
           </div>
-          </form>
         </div>
       </div>
     </div>

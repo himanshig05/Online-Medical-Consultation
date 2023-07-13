@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import Login from '../components/Login'
 const inter = Inter({ subsets: ['latin'] })
 import { useEffect } from 'react'
+import { BASE_URL } from "../helper.js";
 
 export default function Home() {
 
@@ -12,7 +13,7 @@ export default function Home() {
      });
    }, []);
    async function getResponse() {
-     const response = await fetch("http://127.0.0.1:5000/search");
+     const response = await fetch(`${BASE_URL}/search`);
      console.log(response);
      if (!response.ok) {
        console.log(err);

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 //import "./Message.css";
 import { useRouter } from "next/router";
 import TimeAgo from "react-timeago";
+import { BASE_URL } from "../helper.js";
 
 const Message = ({ message, own }) => {
   const router = useRouter();
@@ -12,7 +13,7 @@ const Message = ({ message, own }) => {
   if (check == "@pec.edu.in") {
     useEffect(() => {
       if (router.isReady) {
-        fetch(`http://localhost:5000/search/${message?.sender}`, {
+        fetch(`${BASE_URL}/search/${message?.sender}`, {
           method: "GET",
         })
           .then((res) => res.json())
@@ -24,7 +25,7 @@ const Message = ({ message, own }) => {
   } else {
     useEffect(() => {
       if (router.isReady) {
-        fetch(`http://localhost:5000/patientProfile/${message?.sender}`, {
+        fetch(`${BASE_URL}/patientProfile/${message?.sender}`, {
           method: "GET",
         })
           .then((res) => res.json())

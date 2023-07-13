@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../../helper.js";
 const EditForm = () => {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ const EditForm = () => {
 
   const updateDoctor = (e) => {
     const email = router.query.email;
-    fetch(`http://127.0.0.1:5000/update/${email}`, {
+    fetch(`${BASE_URL}/update/${email}`, {
       method: "POST",
       body: JSON.stringify({
         name: name,
@@ -33,19 +34,18 @@ const EditForm = () => {
       .then((res) => res.json())
       .then((data) => {
         alert("Updated profile");
+        router.push(`/find/${email}`);
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-    router.push(`/find/${email}`);
   };
 
   return (
     <div className="bg-white">
       <div className="flex items-center justify-center">
       <div className=" bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
-      <form method="post">
         <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">Edit your Profile</div>
         <div className="mb-6">
         <label className="block mb-2 text-sm font-medium text-gray-900">Name: </label>
@@ -127,13 +127,11 @@ const EditForm = () => {
           onClick={(e) => {
             updateDoctor(e);
           }}
-          type="submit"
           // style={{ backgroundColor: "white", color: "black" }}
         >
           Submit
         </button>
         </div>
-      </form>
       <div className="flex items-center justify-center">
       <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
         <Link href={`/find/${session.user.email}`}>Show Profile</Link>

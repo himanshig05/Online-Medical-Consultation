@@ -9,6 +9,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { BASE_URL } from "../../helper.js";
 
 
 const DoctorForm = () => {
@@ -26,7 +27,7 @@ const DoctorForm = () => {
   const createDoctor = (e) => {
     const email = router.query.email;
     if (image === null) {
-      fetch(`http://127.0.0.1:5000/create/${email}`, {
+      fetch(`${BASE_URL}/create/${email}`, {
         method: "POST",
         body: JSON.stringify({
           email: email,
@@ -45,12 +46,12 @@ const DoctorForm = () => {
         .then((res) => res.json())
         .then((data) => {
           alert("Created profile");
+           router.push(`/find/${email}`);
           console.log(data);
         })
         .catch((error) => {
           console.log(error);
         });
-      router.push(`/find/${email}`);
     }
     
 
@@ -79,7 +80,7 @@ const DoctorForm = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            fetch(`http://127.0.0.1:5000/create/${email}`, {
+            fetch(`${BASE_URL}/create/${email}`, {
               method: "POST",
               body: JSON.stringify({
                 email: email,
@@ -99,13 +100,13 @@ const DoctorForm = () => {
               .then((res) => res.json())
               .then((data) => {
                 alert("Created profile");
+                 router.push(`/find/${email}`);
                 console.log(data);
               })
               .catch((error) => {
                 alert("Error");
                 console.log(error);
               });
-            router.push(`/find/${email}`);
           });
         }
       );

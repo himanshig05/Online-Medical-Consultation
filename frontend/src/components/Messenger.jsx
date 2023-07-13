@@ -5,6 +5,7 @@ import Conversation from "./Conversations";
 import Message from "./Message";
 import { io } from "socket.io-client";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { BASE_URL } from "../helper.js";
 import Link from "next/link";
 
 const Messenger = () => {
@@ -20,7 +21,7 @@ const Messenger = () => {
     const scrollRef = useRef();
 
    useEffect(() => {
-     socket.current = io("http://localhost:5000");
+     socket.current = io(`${BASE_URL}`);
      socket.current.on("getMessage", (data) => {
        setArrivalMessage({
          sender: data.senderId,
@@ -51,7 +52,7 @@ const Messenger = () => {
     const getConversations = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/conversations/${session.user.email}`,
+          `${BASE_URL}/conversations/${session.user.email}`,
           {
             method: "GET",
           }
@@ -69,7 +70,7 @@ const Messenger = () => {
     const getMessages = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/messages/${currentChat?._id}`,
+          `${BASE_URL}/messages/${currentChat?._id}`,
           {
             method: "GET",
           }
@@ -98,7 +99,7 @@ const Messenger = () => {
 
 
     try {
-      const res = await fetch(`http://localhost:5000/messages`, {
+      const res = await fetch(`${BASE_URL}/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
