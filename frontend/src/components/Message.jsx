@@ -10,7 +10,7 @@ const Message = ({ message, own }) => {
   const index = message?.sender.indexOf("@");
   const check = message?.sender.slice(index);
 
-  if (check == "@pec.edu.in") {
+  /*if (check == "@pec.edu.in") {
     useEffect(() => {
       if (router.isReady) {
         fetch(`${BASE_URL}/search/${message?.sender}`, {
@@ -34,7 +34,29 @@ const Message = ({ message, own }) => {
           });
       }
     }, [router.isReady]);
-  }
+  }*/
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (check == "@pec.edu.in") {
+        fetch(`${BASE_URL}/search/${message?.sender}`, {
+          method: "GET",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setUser(data);
+          });
+      } else {
+        fetch(`${BASE_URL}/patientProfile/${message?.sender}`, {
+          method: "GET",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setUser(data);
+          });
+      }
+    }
+  }, [router.isReady])
 
 
   return (
