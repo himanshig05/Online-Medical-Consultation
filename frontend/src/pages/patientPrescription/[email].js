@@ -9,9 +9,8 @@ const PrescriptionForm = () => {
     const [duration, setDuration] = useState();
   const [amount, setAmount] = useState("");
   const router = useRouter();
-
+  const email = router.query.email;
   const patientPrescription = (e) => {
-    const email = router.query.email;
     fetch(`http://127.0.0.1:5000/addPrescription/${email}`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -107,11 +106,16 @@ const PrescriptionForm = () => {
                   patientPrescription(e);
                 }}
                 type="submit"
-                style={{ backgroundColor: "white", color: "black" }}
+                
               >
                 Add Prescription
               </button>
             </div>
+            <div className="flex items-center justify-center">
+            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-9 py-2.5 text-center">
+              <Link href={`/patientProfile/${email}`}>Show Profile</Link>
+            </button>
+          </div>
           </form>
         </div>
       </div>

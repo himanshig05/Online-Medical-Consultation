@@ -21,35 +21,51 @@ const PatientProfile = () => {
   }, [router.isReady]);
   if (patient === null) {
     return (
-      <button
-        className="px-2 inline-flex text-xs leading-5
-                       font-semibold rounded-full bg-green-100 text-green-800"
-      >
-        <Link href={`/patientCreate/${email}`}>Add Profile</Link>
-      </button>
+      <div className="bg-white flex flex-col w-full h-screen">
+        <div className="flex justify-center">
+          <img
+            src="/doctor_team.png"
+            style={{ width: "600px", height: "500px" }}
+          ></img>
+        </div>
+        <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6">
+          Join us in bringing healthcare to all, register now!
+        </div>
+        <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
+          <Link
+            href={`/patientCreate/${email}`}
+            className="bg-red-500 text-white p-4 rounded-md"
+          >
+            Register Now{" "}
+          </Link>
+        </div>
+      </div>
     );
   } else {
     return (
       <>
         <div className="w-full px-2 bg-white flex justify-between items-center">
           <div className="flex justify-between">
-            <div className="text-black uppercase p-5 text-lg font-medium mt-2">
+            {/* <div className="text-black uppercase p-5 text-lg font-medium mt-2">
               <a href="/">MY PROFILE</a>
+            </div> */}
+            <div className="text-4xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700 p-5">
+              MediCare
             </div>
           </div>
           <div className="flex justify-center">
             <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
               <li className="text-lg font-medium ml-10">
-                <Link href="#">Home</Link>
+                <a href="/">Home</a>
               </li>
               <li className="text-lg font-medium ml-10">
-                <a href="#">About</a>
+                <a href="/ListDoctors">Find Doctors</a>
               </li>
               <li className="text-lg font-medium ml-10">
-                <a href="#">services</a>
+                <a href="/Messenger">chat consult</a>
               </li>
               <li className="text-lg font-medium ml-10">
-                <a href="#">Contact Us</a>
+                <a href={`/patientProfile/${session?.user?.email}`}>Profile</a>
               </li>
               <li className="text-lg font-medium ml-10">
                 <button onClick={() => signOut({ callbackUrl: "/" })}>
@@ -59,82 +75,7 @@ const PatientProfile = () => {
             </ul>
           </div>
         </div>
-        {/* <div className="flex flex-col">
-            <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Name
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Specialist
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                          Status
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        ></th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      <tr key={doctor.name}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {doctor.name}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {doctor.age}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {doctor.domain}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {doctor.qualifications}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span
-                            className="px-2 inline-flex text-xs leading-5
-                       font-semibold rounded-full bg-green-100 text-green-800"
-                          >
-                            {doctor.location}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <button
-                            className="px-2 inline-flex text-xs leading-5
-                       font-semibold rounded-full bg-green-100 text-green-800"
-                          >
-                            <Link href={`/edit/${doctor.email}`}>Edit</Link>
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div> */}
+
         <div className="bg-gray-100 w-full h-full">
           <div className="bg-white rounded-b-3xl h-full left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
             <div className="flex justify-center items-center flex-col">
@@ -149,11 +90,13 @@ const PatientProfile = () => {
                 </div>
               </div>
               <div className="text-center mt-4 space-y-4">
-                <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-                  <Link href={`/patientUpdate/${patient.email}`}>
-                    Edit Details
-                  </Link>
-                </div>
+                {session?.user?.email == email && (
+                  <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                    <Link href={`/patientUpdate/${patient.email}`}>
+                      Edit Details
+                    </Link>
+                  </div>
+                )}
                 <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
                   <Link href={`/patientPrescription/${patient.email}`}>
                     Add Prescription
@@ -209,11 +152,15 @@ const PatientProfile = () => {
                 </table>
               </div>
             </div>
-            <div className="text-black text-3xl flex justify-center font-bold mt-8">Current Medication</div>
+            <div className="text-black text-3xl flex justify-center font-bold mt-8">
+              Current Medication
+            </div>
             {patient.prescriptions?.map((p) => (
-              <div className="bg-white rounded-3xl border-red-400 pt-5 pb-5 pl-12 mb-5 mt-8">
+              <div className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8">
                 <div className="flex flex-row space-x-16">
-                  <div><img src="/download.jpeg"></img></div>
+                  <div>
+                    <img src="/download.jpeg"></img>
+                  </div>
                   <table className="border-none text-base h-[270px] w-[80%]] text-black">
                     <tbody>
                       <tr>
@@ -245,7 +192,7 @@ const PatientProfile = () => {
         </div>
       </>
     );
-        }
+  }
 };
 
 export default PatientProfile;
