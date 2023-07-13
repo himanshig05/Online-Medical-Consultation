@@ -29,7 +29,6 @@ const PrescriptionForm = () => {
         console.log(data);
       })
       .catch((error) => {
-        alert("Error");
         console.log(error);
       });
     router.push(`/patientProfile/${email}`);

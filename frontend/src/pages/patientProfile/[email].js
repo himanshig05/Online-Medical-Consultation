@@ -53,27 +53,51 @@ const PatientProfile = () => {
               MediCare
             </div>
           </div>
-          <div className="flex justify-center">
-            <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
-              <li className="text-lg font-medium ml-10">
-                <a href="/">Home</a>
-              </li>
-              <li className="text-lg font-medium ml-10">
-                <a href="/ListDoctors">Find Doctors</a>
-              </li>
-              <li className="text-lg font-medium ml-10">
-                <a href="/Messenger">chat consult</a>
-              </li>
-              <li className="text-lg font-medium ml-10">
-                <a href={`/patientProfile/${session?.user?.email}`}>Profile</a>
-              </li>
-              <li className="text-lg font-medium ml-10">
-                <button onClick={() => signOut({ callbackUrl: "/" })}>
-                  SIGN OUT
-                </button>
-              </li>
-            </ul>
-          </div>
+          {session?.user.email === email ? (
+            <>
+              <div className="flex justify-center">
+                <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
+                  <li className="text-lg font-medium ml-10">
+                    <a href="/">Home</a>
+                  </li>
+                  <li className="text-lg font-medium ml-10">
+                    <a href="/ListDoctors">Find Doctors</a>
+                  </li>
+                  <li className="text-lg font-medium ml-10">
+                    <a href="/Messenger">chat consult</a>
+                  </li>
+                  <li className="text-lg font-medium ml-10">
+                    <a href={`/patientProfile/${session?.user?.email}`}>
+                      Profile
+                    </a>
+                  </li>
+                  <li className="text-lg font-medium ml-10">
+                    <button onClick={() => signOut({ callbackUrl: "/" })}>
+                      SIGN OUT
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex justify-center">
+                <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
+                  <li className="text-lg font-medium ml-10">
+                    <Link href="/">Home</Link>
+                  </li>
+                  <li className="text-lg font-medium ml-10">
+                    <a href="/Messenger">PATIENTS</a>
+                  </li>
+                  <li className="text-lg font-medium ml-10">
+                    <button onClick={() => signOut({ callbackUrl: "/" })}>
+                      SIGN OUT
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="bg-gray-100 w-full h-full">
@@ -153,41 +177,47 @@ const PatientProfile = () => {
               </div>
             </div>
             <div className="text-black text-3xl flex justify-center font-bold mt-8">
-              Current Medication
+              Current Medications
             </div>
-            {patient.prescriptions?.map((p) => (
-              <div className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8">
-                <div className="flex flex-row space-x-16">
-                  <div>
-                    <img src="/download.jpeg"></img>
+            {patient.prescriptions?.length > 0 ? (
+              patient.prescriptions?.map((p) => (
+                <div className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8">
+                  <div className="flex flex-row space-x-16">
+                    <div>
+                      <img src="/download.jpeg"></img>
+                    </div>
+                    <table className="border-none text-base h-[270px] w-[80%]] text-black">
+                      <tbody>
+                        <tr>
+                          <td className="font-semibold">Date</td>
+                          <td>:</td>
+                          <td>{p.date}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-semibold">Medicine</td>
+                          <td>:</td>
+                          <td>{p.medicine}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-semibold">Duration</td>
+                          <td>:</td>
+                          <td>{p.duration}</td>
+                        </tr>
+                        <tr>
+                          <td className="font-semibold">Amount</td>
+                          <td>:</td>
+                          <td>{p.amount}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <table className="border-none text-base h-[270px] w-[80%]] text-black">
-                    <tbody>
-                      <tr>
-                        <td className="font-semibold">Date</td>
-                        <td>:</td>
-                        <td>{p.date}</td>
-                      </tr>
-                      <tr>
-                        <td className="font-semibold">Medicine</td>
-                        <td>:</td>
-                        <td>{p.medicine}</td>
-                      </tr>
-                      <tr>
-                        <td className="font-semibold">Duration</td>
-                        <td>:</td>
-                        <td>{p.duration}</td>
-                      </tr>
-                      <tr>
-                        <td className="font-semibold">Amount</td>
-                        <td>:</td>
-                        <td>{p.amount}</td>
-                      </tr>
-                    </tbody>
-                  </table>
                 </div>
+              ))
+            ) : (
+              <div className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8 text-black">
+                No prescriptions found
               </div>
-            ))}
+            )}
           </div>
         </div>
       </>

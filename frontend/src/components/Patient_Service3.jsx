@@ -14,6 +14,9 @@ const Patient_Service3 = () => {
           <div className="font-bold text-[#2f0563] ml-20 text-6xl m-auto">
             Medical History
           </div>
+          <p className="text-gray-500 ml-20 text-2xl m-auto italic">
+            View and edit your medical profile and prescriptions
+          </p>
           <div className="m-6 ml-20 text-lg hover:scale-[1.01] duration-500">
             <Link
               href={`/patientProfile/${session?.user.email}`}

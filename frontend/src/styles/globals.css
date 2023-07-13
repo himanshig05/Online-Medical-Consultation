@@ -179,8 +179,8 @@ body {
 .messageText {
   padding: 10px;
   border-radius: 20px;
-  background-color: #1877f2;
-  color: white;
+  background-color: rgb(229 231 235);
+  color: black;
   max-width: 300px;
 }
 
@@ -195,8 +195,8 @@ body {
 }
 
 .message.own .messageText {
-  background-color: rgb(245, 241, 241);
-  color: black;
+  background-color:rgb(126 34 206);
+  color: white;
 }
 
 

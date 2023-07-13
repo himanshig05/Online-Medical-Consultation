@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
- 
 export default function App() {
-
   const router = useRouter();
   const [doctors, setDoctors] = useState([]);
   const { data: session } = useSession();
+  const [domain, setDomain] = useState("");
+  const [searchDomain, setSearchDomain] = useState("");
   useEffect(() => {
     if (router.isReady) {
       getResponse().then((data) => {
@@ -40,30 +40,64 @@ export default function App() {
       })
         .then((res) => res.json)
         .then((data) => {
-          router.push('/Messenger');
+          router.push("/Messenger");
         });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleSearch = () => {
+    setSearchDomain(domain);
+    console.log(searchDomain);
+  };
+
+  var viewDoctors = doctors;
+  if (searchDomain !== "") {
+    viewDoctors = viewDoctors.filter(function (d) {
+      return d.domain === searchDomain;
+    })
   }
+  console.log(domain);
 
   return (
     <div className="flex flex-col">
-      
-<form>   
-    {/* <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label> */}
-    <div class="relative pl-4">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none bg-white">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
+      {/* <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label> */}
+      <div className="relative pl-4">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none bg-white">
+          <svg
+            className="w-4 h-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              strokeWidth="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
         </div>
-        <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white outline-none" placeholder="Search For Doctors By Domain..." required></input>
+        <input
+          type="search"
+          id="default-search"
+          className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white outline-none"
+          placeholder="Search For Doctors By Domain..."
+          required
+          onChange={(e)=>setDomain(e.target.value)}
+        ></input>
         {/* <div className='mr-12'> */}
-        <button type="submit" class="text-white absolute right-40 bottom-2.5 bg-black hover:scale-[1.03] focus:outline-none outline-none font-medium rounded-lg text-sm px-6 py-2">Search</button>
+        <button
+          class="text-white absolute right-40 bottom-2.5 bg-black hover:scale-[1.03] focus:outline-none outline-none font-medium rounded-lg text-sm px-6 py-2"
+          onClick={handleSearch}
+        >
+          Search
+        </button>
         {/* </div> */}
-    </div>
-</form>
+      </div>
 
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -98,7 +132,7 @@ export default function App() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {doctors.map((person) => (
+                {viewDoctors.map((person) => (
                   <tr key={person.name}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -141,7 +175,7 @@ export default function App() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <button
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-                        onClick={()=>handleClick(person)}
+                        onClick={() => handleClick(person)}
                         // style={{ backgroundColor: "black", color: "white" }}
                       >
                         Contact

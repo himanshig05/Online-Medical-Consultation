@@ -48,7 +48,6 @@ const DoctorForm = () => {
           console.log(data);
         })
         .catch((error) => {
-          alert("Error");
           console.log(error);
         });
       router.push(`/find/${email}`);

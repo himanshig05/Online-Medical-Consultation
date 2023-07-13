@@ -19,6 +19,9 @@ const Patient_Service2 = () => {
           <div className="font-bold text-[#2f0563] ml-20 text-6xl m-auto mr-20">
             Instant Online Diagnosis System
           </div>
+          <p className="text-gray-500 ml-20 text-2xl m-auto italic">
+            Instant communication with your doctors
+          </p>
           <div className="m-6 ml-20 text-lg hover:scale-[1.01] duration-500">
             <Link
               href="/Messenger"

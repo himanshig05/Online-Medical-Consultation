@@ -55,7 +55,7 @@ const DoctorTable = () => {
           <div className="flex justify-center">
             <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
               <li className="text-lg font-medium ml-10">
-                <Link href="#">Home</Link>
+                <Link href="/">Home</Link>
               </li>
               <li className="text-lg font-medium ml-10">
                 <a href="/Messenger">PATIENTS</a>

@@ -13,6 +13,7 @@ const Login = () => {
     const check = emailId.slice(index);
     if (check == "@pec.edu.in") {
       router.push(`/find/${emailId}`);
+      return null;
     }
     else {
       return (
