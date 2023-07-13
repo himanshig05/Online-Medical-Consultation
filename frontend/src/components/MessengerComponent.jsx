@@ -130,7 +130,7 @@ const Messenger = () => {
       <div className="messenger bg-white">
         <div className="chatMenu">
           <div className="chatMenuWrapper border-2 border-b-2">
-            <a href="/"> <div className="text-black text-lg flex items-center"><IoChevronBackOutline/>Back</div></a>
+            <Link href="/"> <div className="text-black text-lg flex items-center"><IoChevronBackOutline/>Back</div></Link>
             {/* <div className="flex items-center justify-between">
             <div className="text-2xl text-black justify-start">Back</div> */}
             <div className="text-2xl font-bold text-black flex justify-center">Your Chats</div>

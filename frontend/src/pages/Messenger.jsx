@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Login from "../components/login";
 import Messenger from '../components/MessengerComponent';
 
-const messenger = () => {
+const MessengerPage = () => {
     const { data: session } = useSession();
     if (!session) {
       return <Login/>
@@ -13,4 +13,4 @@ const messenger = () => {
     }
 }
 
-export default messenger;
+export default MessengerPage;
