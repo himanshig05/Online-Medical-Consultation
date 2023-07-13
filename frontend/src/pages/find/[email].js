@@ -59,7 +59,7 @@ const DoctorTable = () => {
                 <Link href="/">Home</Link>
               </li>
               <li className="text-lg font-medium ml-10">
-                <a href="/Messenger">PATIENTS</a>
+                <Link href="/Messenger">PATIENTS</Link>
               </li>
               {/* <li className="text-lg font-medium ml-10">
                 <a href="#">services</a>

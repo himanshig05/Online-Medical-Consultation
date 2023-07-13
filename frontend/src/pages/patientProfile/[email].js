@@ -82,13 +82,13 @@ const PatientProfile = () => {
               <div className="flex justify-center">
                 <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12">
                   <li className="text-lg font-medium ml-10">
-                    <a href="/">Home</a>
+                    <Link href="/">Home</Link>
                   </li>
                   <li className="text-lg font-medium ml-10">
-                    <a href="/ListDoctors">Find Doctors</a>
+                    <Link href="/ListDoctors">Find Doctors</Link>
                   </li>
                   <li className="text-lg font-medium ml-10">
-                    <a href="/Messenger">chat consult</a>
+                    <Link href="/Messenger">chat consult</Link>
                   </li>
                   <li className="text-lg font-medium ml-10">
                     <a href={`/patientProfile/${session?.user?.email}`}>
@@ -111,7 +111,7 @@ const PatientProfile = () => {
                     <Link href="/">Home</Link>
                   </li>
                   <li className="text-lg font-medium ml-10">
-                    <a href="/Messenger">PATIENTS</a>
+                    <Link href="/Messenger">PATIENTS</Link>
                   </li>
                   <li className="text-lg font-medium ml-10">
                     <button onClick={() => signOut({ callbackUrl: "/" })}>
@@ -205,7 +205,7 @@ const PatientProfile = () => {
             </div>
             {patient.prescriptions?.length > 0 ? (
               patient.prescriptions?.map((p) => (
-                <div className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8">
+                <div key={p._id} className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8">
                   <div className="flex flex-row space-x-20">
                     <div>
                       <img src="/download.jpeg"></img>
