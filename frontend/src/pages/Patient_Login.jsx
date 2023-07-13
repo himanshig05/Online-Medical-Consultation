@@ -1,12 +1,11 @@
 import React from "react";
 import { FaUserAlt } from "react-icons/fa";
-import Service1 from '../components/Patient_Service1'
-import Service2 from '../components/Patient_Service2'
-import Service3 from '../components/Patient_Service3'
+import Service1 from "../components/Patient_Service1";
+import Service2 from "../components/Patient_Service2";
+import Service3 from "../components/Patient_Service3";
 import { signOut, useSession } from "next-auth/react";
-import Login from '../components/Login.jsx'
+import LoginPage from "../components/LoginPage.jsx";
 import Link from "next/link";
-
 
 const Patient_Login = () => {
   const { data: session } = useSession();
@@ -17,7 +16,7 @@ const Patient_Login = () => {
           <div className="w-full px-2 bg-white flex justify-between items-center">
             <div className="flex justify-between">
               {/* <div className="text-black lowercase"> */}
-                {/* <img
+              {/* <img
                   src={session?.user?.image}
                   alt=""
                   style={{ width: "80px", height: "80px" }}
@@ -26,9 +25,9 @@ const Patient_Login = () => {
               <div className="text-black uppercase p-5 text-lg font-medium mt-2">
                 <a href="">MY PROFILE: {session?.user?.email}</a>
               </div> */}
-               <div className="text-4xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700 p-5">
-                  MediCare
-                </div>
+              <div className="text-4xl font-semibold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700 p-5">
+                MediCare
+              </div>
             </div>
             <div className="flex justify-center">
               <ul className="flex justify-between space-x-8 text-black uppercase p-5 mr-12 font-sans">
@@ -42,10 +41,12 @@ const Patient_Login = () => {
                   <Link href="/Messenger">CHAT CONSULT</Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <Link href={`/patientProfile/${session?.user?.email}`}>Profile</Link>
+                  <Link href={`/patientProfile/${session?.user?.email}`}>
+                    Profile
+                  </Link>
                 </li>
                 <li className="text-lg font-medium ml-10">
-                  <button onClick={()=>signOut()}>SIGN OUT</button>
+                  <button onClick={() => signOut()}>SIGN OUT</button>
                 </li>
               </ul>
             </div>
@@ -59,9 +60,9 @@ const Patient_Login = () => {
   } else {
     return (
       <div>
-        <Login />
+        <LoginPage />
       </div>
-    )
+    );
   }
 };
 

@@ -3,7 +3,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Patient_Login from "@/pages/Patient_Login";
 import { useRouter } from "next/router.js";
 
-const Login = () => {
+const LoginPage = () => {
    const router = useRouter();
   const { data: session } = useSession();
 
@@ -72,4 +72,4 @@ const Login = () => {
   
 };
 
-export default Login;
+export default LoginPage;
