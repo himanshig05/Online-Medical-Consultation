@@ -55,8 +55,9 @@ export default function App() {
 
   var viewDoctors = doctors;
   if (searchDomain !== "") {
+    var currDomain = searchDomain.charAt(0).toUpperCase() + searchDomain.slice(1).toLowerCase();
     viewDoctors = viewDoctors.filter(function (d) {
-      return d.domain === searchDomain;
+      return d.domain === currDomain;
     })
   }
   console.log(domain);

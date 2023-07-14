@@ -13,6 +13,9 @@ const Conversation = ({ conversation }) => {
   const index = receiver.indexOf("@");
   const check = receiver.slice(index);
   var doctor = false;
+  if (check == "@pec.edu.in") {
+    doctor = true;
+  }
 
   useEffect(() => {
     if (router.isReady) {
