@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser")
 const Doctor = require("./models/doctorModel");
 const Patient = require("./models/patientModel");
+const { upload, cloudinaryFile } = require('./utils/cloudinary.js');
 const dbConnect = require("./utils/dbConnect");
 const cors = require("cors");
 const conversationRoutes = require("./routes/conversationRoutes");
@@ -65,27 +66,27 @@ app.post("/create/:email", async function (req, res) {
   res.json(doctor);
 });
 
-app.post("/update/:email", async function (req, res) {
-  const doctor = await Doctor.findOneAndUpdate(
-    {
-      email: req.params.email,
-    },
-    {
-      $set: {
-        name: req.body.name,
-        age: req.body.age,
-        domain: req.body.domain,
-        experience: req.body.experience,
-        qualifications: req.body.qualifications,
-        location: req.body.location,
-        hours: req.body.hours,
-      },
-    },
-    {
-      new: true,
-    }
-  );
-  res.json(doctor);
+//doctor update
+app.post("/update/:email",upload, cloudinaryFile, async function (req, res) {
+  const doctor = await Doctor.findOne({email: req.params.email});
+  if(!doctor){
+    return res.send(404).json({"error":"Doctor not found"});
+  }
+  const updated={
+        name: req.body.name??doctor.name,
+        age: req.body.age??doctor.age,
+        domain: req.body.domain??doctor.domain,
+        experience: req.body.experience??doctor.experience,
+        qualifications: req.body.qualifications??doctor.qualifications,
+        location: req.body.location??doctor.location,
+        hours: req.body.hours??doctor.hours,
+        picturePath:req.body.picturePath??doctor.picturePath,
+      };
+  const doctor1=await Doctor.findOneAndUpdate({ email: req.params.email },
+        { $set: updated },
+        { new: true });
+
+  res.json(doctor1);
 });
 
 
@@ -118,27 +119,38 @@ app.get("/patientProfile/:email", async function (req, res) {
 
 
 // update patient profile
-app.post("/patientUpdate/:email", async function (req, res) {
-  const patient = await Patient.findOneAndUpdate(
+app.post("/patientUpdate/:email", upload, cloudinaryFile,async function (req, res) {
+  try{
+  console.log(req.params.email);
+  const emailid=req.params.email;
+  const patient = await Patient.findOne(
     {
-      email: req.params.email,
-    },
-    {
-      $set: {
-        name: req.body.name,
-        age: req.body.age,
-        gender: req.body.gender,
-        height: req.body.height,
-        weight: req.body.weight,
-        bloodGroup: req.body.bloodGroup,
-        conditions: req.body.conditions,
-      },
-    },
-    {
-      new: true,
+      email: emailid,
+    });
+    console.log(patient);
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
     }
-  );
-  res.json(patient);
+    const updated=
+    {
+        name: req.body.name??patient.name,
+        age: req.body.age??patient.age,
+        gender: req.body.gender??patient.gender,
+        height: req.body.height??patient.height,
+        weight: req.body.weight??patient.weight,
+        bloodGroup: req.body.bloodGroup??patient.bloodGroup,
+        conditions: req.body.conditions??patient.conditions,
+        picturePath:req.body.picturePath??patient.picturePath,
+      };
+    const patient1=await Patient.findOneAndUpdate({ email: req.params.email },
+      { $set: updated },
+      { new: true });
+  console.log(patient1); 
+  res.json(patient1);}
+  catch(error){
+    console.log("error");
+    res.send(500).json({"error":error});
+  }
 });
 
 // add prescription
