@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser")
 const Doctor = require("./models/doctorModel");
 const Patient = require("./models/patientModel");
-const { upload, cloudinaryFile } = require('./utils/cloudinary.js');
 const dbConnect = require("./utils/dbConnect");
 const cors = require("cors");
 const conversationRoutes = require("./routes/conversationRoutes");
@@ -67,7 +66,7 @@ app.post("/create/:email", async function (req, res) {
 });
 
 //doctor update
-app.post("/update/:email",upload, cloudinaryFile, async function (req, res) {
+app.post("/update/:email", async function (req, res) {
   const doctor = await Doctor.findOne({email: req.params.email});
   if(!doctor){
     return res.send(404).json({"error":"Doctor not found"});
@@ -119,7 +118,7 @@ app.get("/patientProfile/:email", async function (req, res) {
 
 
 // update patient profile
-app.post("/patientUpdate/:email", upload, cloudinaryFile,async function (req, res) {
+app.post("/patientUpdate/:email", async function (req, res) {
   try{
   console.log(req.params.email);
   const emailid=req.params.email;

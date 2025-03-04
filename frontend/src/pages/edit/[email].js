@@ -3,6 +3,13 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BASE_URL } from "../../helper.js";
+import app from "../../firebase.js";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 const EditForm = () => {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -15,60 +22,95 @@ const EditForm = () => {
   const [profilePic, setprofilePic]=useState("");
   const router = useRouter();
   const email = router.query.email;
-  const handleImageUpload = async (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-      console.log(file);
-      const formData = new FormData();
-      formData.append("picture", file);
-      formData.append("email",email);
-      console.log(formData);
-      console.log("i am printing",formData.get("picture"));
-       try {
-       
-        const response = await fetch(`${BASE_URL}/update/${email}`, {
-          method: "POST",
-          body: formData,
-          
-        });
-  
-        const data = await response.json();
-        console.log("i am now printing the data",data);
-        console.log("what is the updated picturePath?",data.picturePath);
-        if (data.picturePath) {
-          setprofilePic(data.picturePath); 
+
+const updateDoctor=async(e)=>{
+  const image=profilePic;
+  if(!image)
+  {
+    fetch(`${BASE_URL}/update/${email}`, {
+            method: "POST",
+            body: JSON.stringify({
+              email: email,
+                name: name||undefined,
+                age: age||undefined,
+                domain: domain||undefined,
+                experience: experience||undefined,
+                qualifications: qualifications||undefined,
+                location: location||undefined,
+                hours: hours||undefined,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              alert("Update profile");
+               router.push(`/find/${email}`);
+              console.log(data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+  }
+  else{
+  const fileName = new Date().getTime() + image.name;
+      const storage = getStorage(app);
+      const StorageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(StorageRef, image);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          console.group(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            fetch(`${BASE_URL}/update/${email}`, {
+              method: "POST",
+              body: JSON.stringify({
+                email: email,
+                name: name||undefined,
+                age: age||undefined,
+                domain: domain||undefined,
+                experience: experience||undefined,
+                qualifications: qualifications||undefined,
+                location: location||undefined,
+                hours: hours||undefined,
+                picturePath: downloadURL,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                alert("Updated profile");
+                 router.push(`/find/${email}`);
+                console.log(data);
+              })
+              .catch((error) => {
+                alert("Error");
+                console.log(error);
+              });
+          });
         }
-      } catch (error) {
-        console.error("Error uploading image:", error);
-      }
-    };
- const updateDoctor = async (e) => {
-    
-    await fetch(`${BASE_URL}/update/${email}`, {
-      method: "POST",
-      body: JSON.stringify({
-        name: name||undefined,
-        age: age||undefined,
-        domain: domain||undefined,
-        experience: experience||undefined,
-        qualifications: qualifications||undefined,
-        location: location||undefined,
-        hours: hours||undefined,
-        }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        alert("Updated profile");
-        router.push(`/find/${email}`);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      );
+    }
   };
+
 
   return (
     <div className="bg-white">
@@ -157,14 +199,14 @@ const EditForm = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={handleImageUpload}
+              onChange={(e) => setprofilePic(e.target.files[0])}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             />
           </div>
           {profilePic && (
             <div className="mb-6 flex justify-center">
               <img
-                src={profilePic}
+                src={URL.createObjectURL(profilePic)}
                 alt="Profile Preview"
                 className="w-32 h-32 object-cover"
               />
