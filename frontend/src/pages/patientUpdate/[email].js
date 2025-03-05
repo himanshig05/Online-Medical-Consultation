@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -23,6 +23,25 @@ const PatientUpdateForm = () => {
   const router = useRouter();
   const email = router.query.email;
   
+  // Fetch initial patient data from the backend
+  useEffect(() => {
+    if (email) {
+      fetch(`${BASE_URL}/patientProfile/${email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setName(data.name || "");
+          setAge(data.age || "");
+          setGender(data.gender || "");
+          setHeight(data.height || "");
+          setWeight(data.weight || "");
+          setBloodGroup(data.bloodGroup || "");
+          setConditions(data.conditions || "");
+          setprofilePic(data.profilePic || "");
+        })
+        .catch((error) => console.error("Error fetching patient data:", error));
+    }
+  }, [email]);
+
   
   const patientUpdate=async(e)=>{
     const image=profilePic;
@@ -134,6 +153,7 @@ const PatientUpdateForm = () => {
                   setName(e.target.value);
                 }}
                 type="text"
+                value={name}
                 name="name"
                 style={{ color: "black" }}
               />
@@ -148,6 +168,7 @@ const PatientUpdateForm = () => {
                   setAge(e.target.value);
                 }}
                 type="number"
+                value={age}
                 name="age"
                 style={{ color: "black" }}
               />
@@ -162,6 +183,7 @@ const PatientUpdateForm = () => {
                   setGender(e.target.value);
                 }}
                 type="text"
+                value={gender}
                 name="domain"
                 style={{ color: "black" }}
               />
@@ -175,6 +197,7 @@ const PatientUpdateForm = () => {
                 setHeight(e.target.value);
               }}
               type="number"
+              value={height}
               name="experience"
               style={{ color: "black" }}
             />
@@ -186,6 +209,7 @@ const PatientUpdateForm = () => {
               onChange={(e) => {
                 setWeight(e.target.value);
               }}
+              value={weight}
               type="number"
               name="experience"
               style={{ color: "black" }}
@@ -199,6 +223,7 @@ const PatientUpdateForm = () => {
                 onChange={(e) => {
                   setBloodGroup(e.target.value);
                 }}
+                value={bloodGroup}
                 type="text"
                 name="qualifications"
                 style={{ color: "black" }}
@@ -213,6 +238,7 @@ const PatientUpdateForm = () => {
                 onChange={(e) => {
                   setConditions(e.target.value);
                 }}
+                value={conditions}
                 type="text"
                 name="location"
                 style={{ color: "black" }}
@@ -225,6 +251,7 @@ const PatientUpdateForm = () => {
             <input
               type="file"
               accept="image/*"
+              
               onChange={(e) => setprofilePic(e.target.files[0])}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             />
