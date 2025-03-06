@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,6 +10,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+
 const EditForm = () => {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -23,7 +24,36 @@ const EditForm = () => {
   const router = useRouter();
   const email = router.query.email;
 
-const updateDoctor=async(e)=>{
+  useEffect(() => {
+    if (!email) return; // Prevent fetching if email is not available
+  
+    const fetchDoctorData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/search/${email}`);
+        if (!response.ok) throw new Error("Failed to fetch doctor details");
+  
+        const data = await response.json();
+        
+        // Populate state with fetched data
+        setName(data.name || "");
+        setAge(data.age || "");
+        setDomain(data.domain || "");
+        setExperience(data.experience || "");
+        setQualifications(data.qualifications || "");
+        setLocation(data.location || "");
+        setHours(data.hours || "");
+        setprofilePic(data.profilePic || "");
+      } catch (error) {
+        console.error("Error fetching doctor data:", error);
+      }
+    };
+  
+    fetchDoctorData();
+  }, [email]); // Runs when email changes
+
+  const updateDoctor=async(e)=>{
+
+
   const image=profilePic;
   if(!image)
   {
@@ -124,6 +154,7 @@ const updateDoctor=async(e)=>{
             setName(e.target.value);
           }}
           type="text"
+          value={name}
           name="name"
           style={{ color: "black" }}
         />
@@ -136,6 +167,7 @@ const updateDoctor=async(e)=>{
           }}
           type="number"
           name="age"
+          value={age}
           style={{ color: "black" }}
         />
         </div>
@@ -146,6 +178,7 @@ const updateDoctor=async(e)=>{
             setDomain(e.target.value);
           }}
           type="text"
+          value={domain}
           name="domain"
           style={{ color: "black" }}
         />
@@ -156,6 +189,7 @@ const updateDoctor=async(e)=>{
             setExperience(e.target.value);
           }}
           type="number"
+          value={experience}
           name="experience"
           style={{ color: "black" }}
         />
@@ -166,6 +200,7 @@ const updateDoctor=async(e)=>{
             setQualifications(e.target.value);
           }}
           type="text"
+          value={qualifications}
           name="qualifications"
           style={{ color: "black" }}
         />
@@ -177,6 +212,7 @@ const updateDoctor=async(e)=>{
             setLocation(e.target.value);
           }}
           type="text"
+          value={location}
           name="location"
           style={{ color: "black" }}
         />
@@ -188,6 +224,7 @@ const updateDoctor=async(e)=>{
             setHours(e.target.value);
           }}
           type="text"
+          value={hours}
           name="hours"
           style={{ color: "black" }}
         />
@@ -204,14 +241,15 @@ const updateDoctor=async(e)=>{
             />
           </div>
           {profilePic && (
-            <div className="mb-6 flex justify-center">
-              <img
-                src={URL.createObjectURL(profilePic)}
-                alt="Profile Preview"
-                className="w-32 h-32 object-cover"
-              />
-            </div>
-          )}
+          <div className="mb-6 flex justify-center">
+            <img
+              src={typeof profilePic === "string" ? profilePic : URL.createObjectURL(profilePic)}
+              alt="Profile Preview"
+              className="w-32 h-32 object-cover"
+            />
+          </div>
+        )}
+
         <div className="mb-6 flex items-center justify-center">
         <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
           onClick={(e) => {
