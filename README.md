@@ -14,6 +14,7 @@ This is a full-featured online medical consultation application built using Next
 - Doctors can add prescriptions for patients
 - Doctors can update patient details
 - Secure data handling with MongoDB
+- Integrated Medical Chatbot 
 
 ## Tech Stack
 ### Frontend:
