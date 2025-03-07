@@ -170,4 +170,31 @@ router.get("/reviews/:doctorEmail", async (req, res) => {
       res.status(500).json({ message: "Error fetching reviews" });
     }
   });
+
+  router.get("/reviews/:doctorEmail/:userEmail", async (req, res) => {
+    try {
+        const { doctorEmail, userEmail } = req.params;
+
+        if (!doctorEmail || !userEmail) {
+            return res.status(400).json({ message: "Doctor email and user email are required" });
+        }
+
+        console.log("Checking review for doctor:", doctorEmail, "by user:", userEmail);
+
+        const existingReview = await Review.findOne({
+            doctorEmail: doctorEmail.toLowerCase(),
+            userEmail: userEmail.toLowerCase(),
+        });
+
+        if (existingReview) {
+            return res.status(200).json({ reviewed: true });
+        } else {
+            return res.status(200).json({ reviewed: false });
+        }
+    } catch (error) {
+        console.error("Error checking review:", error);
+        res.status(500).json({ message: "Error checking review" });
+    }
+});
+
 module.exports = router;

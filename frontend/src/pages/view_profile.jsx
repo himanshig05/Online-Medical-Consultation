@@ -9,10 +9,11 @@ const DoctorTable = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [doctor, setDoctor] = useState(null);
-  const [reviews, setReviews] = useState([]); // Fixed missing state
+  const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false); // New State
   const email = router.query.email;
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const DoctorTable = () => {
           setDoctor(data);
         });
     }
-  }, [router.isReady]);
+  }, [router.isReady, email]);
 
   useEffect(() => {
     const fetchDoctorReviews = async () => {
@@ -34,6 +35,12 @@ const DoctorTable = () => {
         const data = await response.json();
         console.log("Doctor Reviews:", data);
         setReviews(data);
+
+        // Check if user has already reviewed
+        if (session?.user?.email) {
+          const userReview = data.find((rev) => rev.patientEmail === session.user.email);
+          if (userReview) setHasReviewed(true);
+        }
       } catch (error) {
         console.error("Error fetching doctor reviews:", error);
       }
@@ -42,7 +49,7 @@ const DoctorTable = () => {
     if (email) {
       fetchDoctorReviews();
     }
-  }, [email]);
+  }, [email, session]);
 
   const handleReviewSubmit = async () => {
     if (!rating || !review.trim()) return alert("Please provide a rating and review!");
@@ -74,6 +81,7 @@ const DoctorTable = () => {
       setRating(0);
       setReview("");
       setSubmitted(true);
+      setHasReviewed(true); // Set hasReviewed to true after submission
     } catch (error) {
       console.error("Error submitting review:", error.message);
       alert("Failed to submit review. Check console for details.");
@@ -144,49 +152,49 @@ const DoctorTable = () => {
         </section>
 
         {/* Review Submission */}
-        <section className="mt-8 bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold mb-4">Rate and Review</h2>
-          <div className="flex space-x-2">
-            {[...Array(5)].map((_, index) => (
-              <FaStar
-                key={index}
-                color={index < rating ? "#FFD700" : "#ccc"}
-                onClick={() => setRating(index + 1)}
-                className="cursor-pointer text-2xl"
+        <div>
+          {hasReviewed ? (
+            <div className="bg-green-100 p-4 rounded-md mt-8 text-center">
+              ✅ You have already reviewed the doctor!
+            </div>
+          ) : (
+            <section className="mt-8 bg-white p-6 rounded-lg shadow-lg">
+              <h2 className="text-3xl font-semibold mb-4">Rate and Review</h2>
+              <div className="flex space-x-2">
+                {[...Array(5)].map((_, index) => (
+                  <FaStar
+                    key={index}
+                    color={index < rating ? "#FFD700" : "#ccc"}
+                    onClick={() => setRating(index + 1)}
+                    className="cursor-pointer text-2xl"
+                  />
+                ))}
+              </div>
+              <textarea
+                className="w-full mt-3 p-2 border rounded"
+                placeholder="Write your review..."
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
               />
-            ))}
-          </div>
-          <textarea
-            className="w-full mt-3 p-2 border rounded"
-            placeholder="Write your review..."
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-          />
-          <button
-            className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleReviewSubmit}
-            disabled={submitted}
-          >
-            {submitted ? "Submitted" : "Submit Review"}
-          </button>
-        </section>
+              <button
+                className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={handleReviewSubmit}
+                disabled={submitted}
+              >
+                {submitted ? "Submitted" : "Submit Review"}
+              </button>
+            </section>
+          )}
+        </div>
 
         {/* Reviews Table */}
         <section className="mt-8 bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-3xl font-semibold mb-4">Reviews</h2>
           {reviews.length > 0 ? (
             <table className="w-full border-collapse border border-gray-300">
-              <thead>
-                <tr className="bg-gray-200">
-                  {/* <th className="border border-gray-300 px-4 py-2 text-left">Patient Email</th> */}
-                  <th className="border border-gray-300 px-4 py-2 text-left">Rating</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">Feedback</th>
-                </tr>
-              </thead>
               <tbody>
                 {reviews.map((review, index) => (
                   <tr key={index} className="hover:bg-gray-100">
-                    {/* <td className="border border-gray-300 px-4 py-2">{review.patientEmail}</td> */}
                     <td className="border border-gray-300 px-4 py-2">{`⭐`.repeat(review.rating)}</td>
                     <td className="border border-gray-300 px-4 py-2">{review.feedback}</td>
                   </tr>
