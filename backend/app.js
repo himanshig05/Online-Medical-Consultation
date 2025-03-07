@@ -7,8 +7,12 @@ const dbConnect = require("./utils/dbConnect");
 const cors = require("cors");
 const conversationRoutes = require("./routes/conversationRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const reviewRoutes= require("./routes/reviewRoutes");
+import '../components/view.css';
+
 
 const app = express();
+
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -18,6 +22,15 @@ const io = require("socket.io")(server, {
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 dbConnect();
+// const dbConnect = async () => {
+//   try {
+//     await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+//     console.log("MongoDB connected!");
+//   } catch (err) {
+//     console.error("DB connection error:", err);
+//     process.exit(1); // Stop server if DB fails
+//   }
+// };
 
 const corsOptions = {
   origin: "*",
@@ -69,7 +82,9 @@ app.post("/create/:email", async function (req, res) {
 app.post("/update/:email", async function (req, res) {
   const doctor = await Doctor.findOne({email: req.params.email});
   if(!doctor){
-    return res.send(404).json({"error":"Doctor not found"});
+    // return res.send(404).json({"error":"Doctor not found"});
+    return res.status(404).json({ "error": "Doctor not found" });
+
   }
   const updated={
         name: req.body.name??doctor.name,
@@ -190,14 +205,12 @@ app.patch("/deletePrescription/:email/:prescriptionId", async function (req, res
 
 
 
+
 // CHAT ROUTES
 
 app.use("/conversations", conversationRoutes);
 app.use("/messages", messageRoutes);
-
-
-
-
+app.use("/rating",reviewRoutes);
 
 let users = [];
 
@@ -240,7 +253,10 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 server.listen(PORT, function (req, res) {
   console.log(`Server running on port ${PORT}.`);
+});
+app.get("/", (req, res) => {
+  res.send("Server is running!");
 });

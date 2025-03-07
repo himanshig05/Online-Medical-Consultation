@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const doctorSchema = new mongoose.Schema({
   email: {
     type: String,
+    required: true,
+    unique: true,
   },
   name: {
     type: String,
@@ -28,6 +30,10 @@ const doctorSchema = new mongoose.Schema({
   picturePath: {
     type: String,
     default: "",
+  },
+  averageRating: {
+    type: Number,
+    default: 0, 
   },
 });
 
