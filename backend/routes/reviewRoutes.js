@@ -151,15 +151,23 @@ router.post("/rating", async (req, res) => {
   }
 });
 
-// Get all reviews
-router.get("/reviews", async (req, res) => {
-  try {
-    const reviews = await Review.find().lean(); // .lean() improves query performance
-    res.status(200).json(reviews);
-  } catch (err) {
-    console.error("Error fetching reviews:", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
+router.get("/reviews/:doctorEmail", async (req, res) => {
+    try {
+      const  doctorEmail  = req.params.doctorEmail;
+      
+  
+      if (!doctorEmail) {
+        return res.status(400).json({ message: "Doctor email is required" });
+      }
+  
+      console.log("Fetching reviews for doctor:", doctorEmail);
+  
+      const reviews = await Review.find({ doctorEmail: doctorEmail.toLowerCase() });
+  
+      res.status(200).json(reviews);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      res.status(500).json({ message: "Error fetching reviews" });
+    }
+  });
 module.exports = router;

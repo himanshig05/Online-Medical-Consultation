@@ -8,8 +8,6 @@ const cors = require("cors");
 const conversationRoutes = require("./routes/conversationRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const reviewRoutes= require("./routes/reviewRoutes");
-import '../components/view.css';
-
 
 const app = express();
 

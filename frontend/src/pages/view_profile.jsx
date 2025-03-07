@@ -9,6 +9,7 @@ const DoctorTable = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [doctor, setDoctor] = useState(null);
+  const [reviews, setReviews] = useState([]); // Fixed missing state
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -16,7 +17,7 @@ const DoctorTable = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      fetch(`${BASE_URL}/search/${email}`, { method: "GET" })
+      fetch(`${BASE_URL}/search/${email}`)
         .then((res) => res.json())
         .then((data) => {
           setDoctor(data);
@@ -24,40 +25,59 @@ const DoctorTable = () => {
     }
   }, [router.isReady]);
 
+  useEffect(() => {
+    const fetchDoctorReviews = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/rating/reviews/${email}`);
+        if (!response.ok) throw new Error("Failed to fetch reviews");
+
+        const data = await response.json();
+        console.log("Doctor Reviews:", data);
+        setReviews(data);
+      } catch (error) {
+        console.error("Error fetching doctor reviews:", error);
+      }
+    };
+
+    if (email) {
+      fetchDoctorReviews();
+    }
+  }, [email]);
+
   const handleReviewSubmit = async () => {
     if (!rating || !review.trim()) return alert("Please provide a rating and review!");
 
     const newReview = {
-      user: { name: session?.user?.name || "Anonymous" },
+      patientEmail: session?.user?.email || "Anonymous",
       rating,
-      comment: review,
+      feedback: review,
     };
 
-    const updatedReviews = [...(doctor.reviews || []), newReview];
-    const newAverageRating = (
-      updatedReviews.reduce((sum, r) => sum + r.rating, 0) / updatedReviews.length
-    ).toFixed(1);
+    try {
+      const response = await fetch(`${BASE_URL}/rating/rating`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          doctorEmail: email,
+          patientEmail: session?.user?.email,
+          rating,
+          feedback: review,
+        }),
+      });
 
-    setDoctor((prev) => ({
-      ...prev,
-      reviews: updatedReviews,
-      averageRating: newAverageRating,
-    }));
+      const data = await response.json();
+      console.log("Server Response:", data);
 
-    await fetch(`${BASE_URL}/rating`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        doctorEmail: email,
-        patientEmail: session?.user?.email,
-        rating,
-        feedback: review,
-      }),
-    });
+      if (!response.ok) throw new Error(data.message || "Failed to submit review");
 
-    setSubmitted(true);
-    setRating(0);
-    setReview("");
+      setReviews((prev) => [...prev, newReview]); // Update reviews locally
+      setRating(0);
+      setReview("");
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting review:", error.message);
+      alert("Failed to submit review. Check console for details.");
+    }
   };
 
   if (!doctor) {
@@ -67,7 +87,10 @@ const DoctorTable = () => {
         <h1 className="text-5xl font-bold text-[#2f0563] mt-6 text-center">
           Join us in bringing healthcare to all, register now!
         </h1>
-        <Link href={`/create/${email}`} className="mt-8 bg-red-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:scale-105 transition">
+        <Link
+          href={`/create/${email}`}
+          className="mt-8 bg-red-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:scale-105 transition"
+        >
           Register Now
         </Link>
       </div>
@@ -88,6 +111,7 @@ const DoctorTable = () => {
       </header>
 
       <main className="max-w-5xl mx-auto py-10">
+        {/* Doctor Profile */}
         <section className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-3xl font-semibold mb-4">Doctor Profile</h2>
           <table className="w-full border-collapse">
@@ -110,15 +134,16 @@ const DoctorTable = () => {
                 <td className="py-2 font-medium">Average Rating</td>
                 <td className="py-2 flex items-center">
                   {[...Array(5)].map((_, index) => (
-                    <FaStar key={index} color={index < doctor.averageRating ? "#FFD700" : "#ccc"} />
+                    <FaStar key={index} color={index < (doctor.averageRating || 0) ? "#FFD700" : "#ccc"} />
                   ))}
-                  ({doctor.averageRating})
+                  ({doctor.averageRating || "No ratings yet"})
                 </td>
               </tr>
             </tbody>
           </table>
         </section>
 
+        {/* Review Submission */}
         <section className="mt-8 bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-3xl font-semibold mb-4">Rate and Review</h2>
           <div className="flex space-x-2">
@@ -146,16 +171,28 @@ const DoctorTable = () => {
           </button>
         </section>
 
+        {/* Reviews Table */}
         <section className="mt-8 bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-3xl font-semibold mb-4">Reviews</h2>
-          {doctor.reviews && doctor.reviews.length > 0 ? (
-            <ul className="space-y-4">
-              {doctor.reviews.map((review, index) => (
-                <li key={index} className="p-4 border rounded-md shadow">
-                  <p className="text-lg font-medium">{review.comment}</p>
-                </li>
-              ))}
-            </ul>
+          {reviews.length > 0 ? (
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-200">
+                  {/* <th className="border border-gray-300 px-4 py-2 text-left">Patient Email</th> */}
+                  <th className="border border-gray-300 px-4 py-2 text-left">Rating</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">Feedback</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reviews.map((review, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    {/* <td className="border border-gray-300 px-4 py-2">{review.patientEmail}</td> */}
+                    <td className="border border-gray-300 px-4 py-2">{`⭐`.repeat(review.rating)}</td>
+                    <td className="border border-gray-300 px-4 py-2">{review.feedback}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <p>No reviews yet.</p>
           )}
