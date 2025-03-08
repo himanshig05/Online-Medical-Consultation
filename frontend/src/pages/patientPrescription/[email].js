@@ -12,6 +12,7 @@ const PrescriptionForm = () => {
   const router = useRouter();
   const email = router.query.email;
   const patientPrescription = (e) => {
+    const curr_user = session.user.email;
     fetch(`${BASE_URL}/addPrescription/${email}`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -19,18 +20,17 @@ const PrescriptionForm = () => {
         medicine: medicine,
         duration: duration,
         amount: amount,
+        current: curr_user
       }),
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        res.json();
-      })
+      .then((res) => res.json()) 
       .then((data) => {
         alert("Created prescription");
+        console.log("response from the backend, ", data);
         router.push(`/patientProfile/${email}`);
-        console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -42,22 +42,18 @@ const PrescriptionForm = () => {
       <div className="flex items-center justify-center">
         <div className=" bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
             <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">
-              Create your Profile
+              Add a prescription
             </div>
             <div className="mb-6">
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Date:{" "}
-              </label>
-              <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                onChange={(e) => {
-                  setDate(e.target.value);
-                }}
-                type="text"
-                name="name"
-                style={{ color: "black" }}
-              />
-            </div>
+        <label className="block mb-2 text-sm font-medium text-gray-900">Date:</label>
+        <input
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            style={{ color: "black" }}
+        />
+        </div>
             <div className="mb-6">
               <label className="block mb-2 text-sm font-medium text-gray-900">
                 Medicine:{" "}

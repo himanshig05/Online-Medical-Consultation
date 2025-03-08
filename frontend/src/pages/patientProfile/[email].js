@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+// import { useSession } from "next-auth/react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { BASE_URL } from "../../helper.js";
+
 // import styles from '../../styles/profile.css'
 import { MdDelete } from "react-icons/md";
 const PatientProfile = () => {
@@ -10,6 +12,8 @@ const PatientProfile = () => {
   const { data: session } = useSession();
   const [patient, setPatient] = useState({});
   const email = router.query.email;
+  // const curr_user = session.user.email;
+  // console.log("this is the session info, ", session);
   useEffect(() => {
     if (router.isReady) {
       fetch(`${BASE_URL}/patientProfile/${email}`, {
@@ -23,10 +27,16 @@ const PatientProfile = () => {
   }, [router.isReady]);
 
   const handleDelete = async (prescriptionId) => {
+    const curr_user = session.user.email;
     fetch(
-      `${BASE_URL}/deletePrescription/${email}/${prescriptionId}`,
+      `${BASE_URL}/deletePrescription`,
       {
         method: "PATCH",
+        body: JSON.stringify({
+          email, 
+          prescriptionId,
+          curr_user
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -34,13 +44,21 @@ const PatientProfile = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        alert("Deleted prescription");
-        router.reload(`/patientProfile/${email}`);
+        if (data.deleted == true) {
+          alert("Deleted prescription");
+          router.reload(`/patientProfile/${email}`);
+        }
+        else
+          alert("You cannot delete that prescription!");
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  const handleEdit = async (prescriptionId) => {
+    router.push(`/editPrescription/${email}/${prescriptionId}`);
   }
 
   if (patient === null) {
@@ -206,7 +224,7 @@ const PatientProfile = () => {
             {patient.prescriptions?.length > 0 ? (
               patient.prescriptions?.map((p) => (
                 <div key={p._id} className="bg-white rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8">
-                  <div className="flex flex-row space-x-20">
+                  <div className="relative flex flex-row items-start space-x-20">
                     <div>
                       <img src="/download.jpeg"></img>
                     </div>
@@ -232,9 +250,27 @@ const PatientProfile = () => {
                           <td>:</td>
                           <td>{p.amount}</td>
                         </tr>
+                        <tr>
+                      <td className="font-semibold">Status</td>
+                      <td>:</td>
+                      <td>
+                        <span
+                          className={`px-3 py-1 rounded-lg font-bold ${
+                            p.status === "active"
+                              ? "bg-green-500 text-white"
+                              : p.status === "pending"
+                              ? "bg-yellow-500 text-black"
+                              : "bg-blue-500 text-white"
+                          }`}
+                        >
+                          {p.status}
+                        </span>
+                      </td>
+                    </tr>
                       </tbody>
                     </table>
-                    <div className="">
+                    <div className="flex space-x-4 absolute top-5 right-5">
+                      {p.doctor === session?.user?.email && (
                       <button className="inline-flex items-center px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md"
                         onClick={()=>handleDelete(p._id)}
                       >
@@ -254,16 +290,24 @@ const PatientProfile = () => {
                         </svg>
                         Delete
                       </button>
+                      )}
+                      {p.doctor === session?.user?.email && (
+                      <button className="inline-flex items-center px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md"
+                        onClick={() => handleEdit(p._id)}
+                      >
+                        Edit
+                      </button>
+                    )}
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="bg-gray-100 flex justify-center p-8 h-[250px]">
-                <div className="bg-white rounded-3xl p-6 w-[700px] flex justify-center text-black">
-                  No prescriptions found
-                </div>
+            <div className="bg-gray-100 flex justify-center p-8 h-[250px]">
+              <div className="bg-white rounded-3xl p-6 w-[700px] flex justify-center text-black">
+                No prescriptions found
               </div>
+            </div>
             )}
           </div>
         </div>

@@ -167,40 +167,81 @@ app.post("/patientUpdate/:email", async function (req, res) {
 
 // add prescription
 app.patch("/addPrescription/:email", async function (req, res) {
-  const email = req.params.email;
-  const { date, medicine, duration, amount } = req.body;
-  const newPrescription = { date, medicine, duration, amount };
-  const patient = await Patient.findOne({ email: email });
-  patient.prescriptions.push(newPrescription);
-  const updatedPatient = await Patient.findOneAndUpdate(
-    {
-      email: email,
-    },
-    { prescriptions: patient.prescriptions },
-    { new: true }
-  );
-  res.json(updatedPatient);
+
+  try {
+    const email = req.params.email;
+    const { date, medicine, duration, amount, current } = req.body;
+
+    const newPrescription = {
+      date,
+      medicine,
+      duration,
+      amount,
+      doctor: current,
+      status: "active"
+    }
+
+    const updatedPatient = await Patient.findOneAndUpdate(
+      { email: email },
+      { $push: { prescriptions: newPrescription } },  
+      { new: true }
+    ); 
+    
+    console.log(updatedPatient.prescriptions);
+    res.json(updatedPatient);
+  } catch (error) {
+    console.log("here is an error lmao ", error);
+    res.send("there has been an error");
+  }
 })
 
 // delete prescription
-app.patch("/deletePrescription/:email/:prescriptionId", async function (req, res) {
-  const email = req.params.email;
-  const patient = await Patient.findOne({ email: email });
-  for (var i = patient.prescriptions.length - 1; i >= 0; i--){
-    if (patient.prescriptions[i]._id == req.params.prescriptionId) {
-      patient.prescriptions.splice(i, 1);
-    }
-  }
-  const updatedPatient = await Patient.findOneAndUpdate(
-    {
-      email: email,
-    },
-    { prescriptions: patient.prescriptions },
-    { new: true }
-  );
-  res.json(updatedPatient);
-})
+app.patch("/deletePrescription", async function (req, res) {
+  const email = req.body.email;
+  const prescription_id_objectId = new mongoose.Types.ObjectId(req.body.prescriptionId);
+  const curr_user = req.body.curr_user;
 
+  if (curr_user == email) {
+    return res.json({"deleted": false});
+  } else {
+    const deletedPrescription = await Patient.updateOne({
+      email: email,
+    }, {
+      $pull: { prescriptions: {_id: prescription_id_objectId, doctor: curr_user}}
+    })
+    console.log(deletedPrescription);
+    if (deletedPrescription.modifiedCount == 0) {
+      return res.json({deleted: false});
+    }
+    res.json({deleted: true});  
+  }
+  }
+  )
+  
+//edit prescription
+app.patch("/editPrescription", async function (req, res) {
+  const email = req.body.email;
+  const prescription_id = new mongoose.Types.ObjectId(req.body.prescriptionId);
+  //since the edit button is available to only that person who has created the prescription, we don't need to check here
+  // console.log(req.body);
+  
+    const curr_patient = await Patient.findOne({email: email});
+    for (let i = 0; i < curr_patient.prescriptions.length; i++) {
+      if (curr_patient.prescriptions[i]._id.equals(prescription_id)) {
+
+        curr_patient.prescriptions[i].date = req.body.date || curr_patient.prescriptions[i].date;
+        curr_patient.prescriptions[i].medicine = req.body.medicine || curr_patient.prescriptions[i].medicine;
+        curr_patient.prescriptions[i].duration = req.body.duration || curr_patient.prescriptions[i].duration;
+        curr_patient.prescriptions[i].amount = req.body.amount || curr_patient.prescriptions[i].amount;
+        curr_patient.prescriptions[i].status = req.body.status || curr_patient.prescriptions[i].status;
+        
+        break; 
+      }
+    }
+    curr_patient.save();
+    res.json({"edited": true});     
+  }
+)
 
 
 
@@ -251,7 +292,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6050;
 // const PORT = process.env.PORT || 5002;
 server.listen(PORT, function (req, res) {
   console.log(`Server running on port ${PORT}.`);

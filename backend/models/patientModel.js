@@ -29,22 +29,26 @@ const patientSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  prescriptions: [
-    {
-      date: {
-        type: String,
-      },
-      medicine: {
-        type: String,
-      },
-      duration: {
-        type: String,
-      },
-      amount: {
-        type: String,
-      },
+  prescriptions:[{ //array of prescriptions
+    date: {
+      type: String,
     },
-  ],
+    medicine: {
+        type: String,
+    },
+    duration: {
+        type: String,
+    },
+    amount: {
+        type: String,
+    },
+    doctor: {
+        type: String,
+    },
+    status: {
+        type: String
+    }
+    }],
 });
 
 const Patient = mongoose.models.Patient || mongoose.model("Patient", patientSchema);
