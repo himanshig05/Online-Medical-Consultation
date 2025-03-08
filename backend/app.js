@@ -201,20 +201,25 @@ app.patch("/deletePrescription", async function (req, res) {
   const prescription_id_objectId = new mongoose.Types.ObjectId(req.body.prescriptionId);
   const curr_user = req.body.curr_user;
 
-  if (curr_user == email) {
-    return res.json({"deleted": false});
-  } else {
+  if (email == curr_user) {
     const deletedPrescription = await Patient.updateOne({
       email: email,
     }, {
-      $pull: { prescriptions: {_id: prescription_id_objectId, doctor: curr_user}}
+      $pull: { prescriptions: {_id: prescription_id_objectId}}
     })
-    console.log(deletedPrescription);
-    if (deletedPrescription.modifiedCount == 0) {
-      return res.json({deleted: false});
-    }
-    res.json({deleted: true});  
+    return res.json({deleted: true});  
   }
+
+  const deletedPrescription = await Patient.updateOne({
+    email: email,
+  }, {
+    $pull: { prescriptions: {_id: prescription_id_objectId, doctor: curr_user}}
+  })
+  console.log(deletedPrescription);
+  if (deletedPrescription.modifiedCount == 0) {
+    return res.json({deleted: false});
+  }
+  res.json({deleted: true});  
   }
   )
   
@@ -292,7 +297,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 6050;
+const PORT = process.env.PORT || 5000;
 // const PORT = process.env.PORT || 5002;
 server.listen(PORT, function (req, res) {
   console.log(`Server running on port ${PORT}.`);
