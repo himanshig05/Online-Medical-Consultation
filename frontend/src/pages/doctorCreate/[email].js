@@ -46,7 +46,7 @@ const DoctorForm = () => {
         .then((res) => res.json())
         .then((data) => {
           alert("Created profile");
-           router.push(`/find/${email}`);
+           router.push(`/findDoctor/${email}`);
           console.log(data);
         })
         .catch((error) => {
@@ -100,7 +100,7 @@ const DoctorForm = () => {
               .then((res) => res.json())
               .then((data) => {
                 alert("Created profile");
-                 router.push(`/find/${email}`);
+                 router.push(`/findDoctor/${email}`);
                 console.log(data);
               })
               .catch((error) => {

@@ -12,7 +12,7 @@ const LoginPage = () => {
     const index = emailId.indexOf("@");
     const check = emailId.slice(index);
     if (check == "@pec.edu.in") {
-      router.push(`/find/${emailId}`);
+      router.push(`/findDoctor/${emailId}`);
       return null;
     }
     else {
