@@ -27,7 +27,7 @@ const DoctorTable = () => {
         <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6">Join us in bringing healthcare to all, register now!</div>
         <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
             <Link
-              href={`/create/${email}`}
+              href={`/doctorCreate/${email}`}
               className="bg-red-500 text-white p-4 rounded-md"
             >
               Register Now{" "}
@@ -166,7 +166,7 @@ const DoctorTable = () => {
               </div>
               <div className="text-center mt-4 space-y-4">
                 <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
-                  <Link href={`/edit/${session?.user.email}`}>
+                  <Link href={`/editDoctor/${session?.user.email}`}>
                     Edit Details
                   </Link>
                 </div>

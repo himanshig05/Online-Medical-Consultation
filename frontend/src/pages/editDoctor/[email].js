@@ -76,7 +76,7 @@ const EditForm = () => {
             .then((res) => res.json())
             .then((data) => {
               alert("Update profile");
-               router.push(`/find/${email}`);
+               router.push(`/findDoctor/${email}`);
               console.log(data);
             })
             .catch((error) => {
@@ -128,7 +128,7 @@ const EditForm = () => {
               .then((res) => res.json())
               .then((data) => {
                 alert("Updated profile");
-                 router.push(`/find/${email}`);
+                 router.push(`/findDoctor/${email}`);
                 console.log(data);
               })
               .catch((error) => {
@@ -262,7 +262,7 @@ const EditForm = () => {
         </div>
       <div className="flex items-center justify-center">
       <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
-        <Link href={`/find/${session?.user.email}`}>Show Profile</Link>
+        <Link href={`/findDoctor/${session?.user.email}`}>Show Profile</Link>
       </button>
       </div>
       </div>

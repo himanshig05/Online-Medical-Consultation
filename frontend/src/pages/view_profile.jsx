@@ -96,7 +96,7 @@ const DoctorTable = () => {
           Join us in bringing healthcare to all, register now!
         </h1>
         <Link
-          href={`/create/${email}`}
+          href={`/doctorCreate/${email}`}
           className="mt-8 bg-red-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:scale-105 transition"
         >
           Register Now
