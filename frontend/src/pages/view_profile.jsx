@@ -4,13 +4,18 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { BASE_URL } from "../helper.js";
 import { FaStar } from "react-icons/fa";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext"; 
+
+
+
 import { FaMoon, FaSun } from "react-icons/fa";
+
 
 
 const DoctorTable = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  // const { theme, toggleTheme } = useContext(ThemeContext);
   const [doctor, setDoctor] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
@@ -18,6 +23,7 @@ const DoctorTable = () => {
   const [submitted, setSubmitted] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false); // New State
   const { theme, toggleTheme } = useTheme();
+  
   const email = router.query.email;
 
   useEffect(() => {

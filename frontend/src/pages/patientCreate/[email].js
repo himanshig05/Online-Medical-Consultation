@@ -3,6 +3,8 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import app from "../../firebase.js";
+import { useTheme } from "../../../context/ThemeContext";
+import { FaMoon, FaSun } from "react-icons/fa";
 import {
   getStorage,
   ref,
@@ -21,6 +23,8 @@ const PatientForm = () => {
     const [bloodGroup, setBloodGroup] = useState("");
   const [conditions, setConditions] = useState("");
   const [image, setImage] = useState(null);
+  const { theme, setTheme } = useTheme();
+
   const router = useRouter();
 
   const patientCreate = (e) => {
@@ -113,7 +117,8 @@ const PatientForm = () => {
   };
 
   return (
-    <div className="bg-white">
+    <div className={theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}>
+
       <div className="flex items-center justify-center">
         <div className=" bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
             <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">

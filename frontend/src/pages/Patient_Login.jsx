@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect } from "react"; 
 import { FaMoon, FaSun } from "react-icons/fa";
 import Service1 from "../components/Patient_Service1";
 import Service2 from "../components/Patient_Service2";
@@ -10,14 +10,28 @@ import LoginPage from "../components/LoginPage.jsx";
 import Link from "next/link";
 import { useTheme } from "../../context/ThemeContext";
 
-
-
 const Patient_Login = () => {
   const { data: session } = useSession();
- const { theme, toggleTheme } = useTheme();
-
   const [showPopup, setShowPopup] = useState(false); 
+  const [theme, setTheme] = useState("light");
 
+useEffect(() => {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    setTheme(savedTheme);
+  }
+}, []);
+
+useEffect(() => {
+  localStorage.setItem("theme", theme);
+}, [theme]);
+
+const toggleTheme = () => {
+  const newTheme = theme === "light" ? "dark" : "light";
+  setTheme(newTheme);
+  localStorage.setItem("theme", newTheme);
+  document.documentElement.classList.toggle("dark", newTheme === "dark");
+}
 
   if (session) {
     return (
@@ -67,9 +81,11 @@ const Patient_Login = () => {
           </div>
 
           {/* Services */}
-          <Service1 />
-          <Service2 />
-          <Service3 />
+          <Service1 theme={theme} />
+<Service2 theme={theme} />
+<Service3 theme={theme} session={session} />
+
+
 
           {/* Help Button / Popup (Fixed to Bottom-Right) */}
           <div className="fixed bottom-5 right-5 z-50">
