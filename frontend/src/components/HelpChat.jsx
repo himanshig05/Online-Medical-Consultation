@@ -3,7 +3,7 @@ import { useChat } from "@ai-sdk/react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useEffect, useRef } from "react";
-
+import VoiceSearch from "../utils/voicespeech.jsx";
 export default function HelpChat({ onClose }) {
   const {
     messages,
@@ -92,21 +92,25 @@ export default function HelpChat({ onClose }) {
         <div ref={messagesEndRef} />
       </div>
       <div className="flex flex-col gap-2">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <textarea
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Type your message here..."
-            className="w-full h-24 p-3 rounded-lg border border-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm bg-gray-800 text-white"
-          />
-          <button
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <textarea
+        value={input}
+        onChange={handleInputChange}
+        placeholder="Type your message here..."
+        className="w-full h-24 p-3 rounded-lg border border-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm bg-gray-800 text-white"
+    />
+    <div className="flex gap-2">
+        <button
             type="submit"
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-500 font-bold transition"
             disabled={status === "loading"}
-          >
+        >
             {status === "loading" ? "Loading..." : "Ask"}
-          </button>
-        </form>
+        </button>
+        <VoiceSearch onSearch={(text) => handleInputChange({ target: { value: text } })} />
+    </div>
+</form>
+
         {error && (
           <div className="text-center text-red-300 mt-2">
             <p>Error</p>
