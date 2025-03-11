@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import app from "../../firebase.js";
+
 import {
   getStorage,
   ref,
@@ -10,6 +11,8 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { BASE_URL } from "../../helper.js";
+import { useTheme } from "../../../context/ThemeContext";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 
 const DoctorForm = () => {
@@ -23,7 +26,17 @@ const DoctorForm = () => {
   const [hours, setHours] = useState("");
   const [image, setImage] = useState(null);
   const router = useRouter();
+  // const [theme, setTheme] = useState(() => {
+  //   return localStorage.getItem("theme") || "light";
+  // });
+  // useEffect(() => {
+  //   localStorage.setItem("theme", theme);
+  //   document.documentElement.classList.toggle("dark", theme === "dark");
+  // }, [theme]);
 
+  // const toggleTheme = () => {
+  //   setTheme(theme === "dark" ? "light" : "dark");
+  // };
   const createDoctor = (e) => {
     const email = router.query.email;
     if (image === null) {
