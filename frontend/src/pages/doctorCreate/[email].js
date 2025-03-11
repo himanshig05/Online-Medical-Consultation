@@ -26,17 +26,17 @@ const DoctorForm = () => {
   const [hours, setHours] = useState("");
   const [image, setImage] = useState(null);
   const router = useRouter();
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("theme") || "light";
-  });
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
+  // const [theme, setTheme] = useState(() => {
+  //   return localStorage.getItem("theme") || "light";
+  // });
+  // useEffect(() => {
+  //   localStorage.setItem("theme", theme);
+  //   document.documentElement.classList.toggle("dark", theme === "dark");
+  // }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  // const toggleTheme = () => {
+  //   setTheme(theme === "dark" ? "light" : "dark");
+  // };
   const createDoctor = (e) => {
     const email = router.query.email;
     if (image === null) {
