@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -14,5 +13,6 @@ module.exports = {
       },
     },
   },
+  darkMode: 'class', // Enable dark mode using class strategy
   plugins: [],
 }

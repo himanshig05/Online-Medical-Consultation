@@ -225,3 +225,46 @@ body {
   min-height: 1px;
   padding: 1rem;
 }
+
+/* FOR DARK MODE AND LIGHT MODE */
+.dark {
+  background-color: #333;
+  color: #fff;
+}
+
+.dark .bg-gray-100 {
+  background-color: #444;
+}
+
+.dark .text-gray-900 {
+  color: #fff;
+}
+/* global.css or styles/globals.css */
+:root {
+  --background-color: #fff;
+  --text-color: #000;
+  --border-color: #ddd;
+  --input-background: #f0f0f0;
+}
+
+body.dark {
+  --background-color: #1f2023;
+  --text-color: #efefef;
+  --border-color: #333;
+  --input-background: #333;
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background-color: var(--input-background);
+}
