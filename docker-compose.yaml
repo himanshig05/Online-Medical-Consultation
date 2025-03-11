@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: backend
+    ports:
+      - "6050:6050"
+    networks:
+      - omc-network
+    volumes:
+      - ./backend/.env:/app/.env
+
+  frontend:
+    build: frontend
+    ports:
+      - "3000:3000"  
+    networks:
+      - omc-network
+    volumes:
+      - ./frontend/.env:/app/.env
+
+networks:
+  omc-network:
+    driver: bridge 
