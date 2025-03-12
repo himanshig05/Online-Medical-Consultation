@@ -1,4 +1,7 @@
 const Patient = require("../models/patientModel");
+const RequestModel = require("../models/requestModel"); 
+
+
 const mongoose=require("mongoose");
 const createPatient= async function (req, res) {
   const patient = new Patient({
@@ -140,5 +143,47 @@ const editPrescription= async function (req, res) {
     curr_patient.save();
     res.json({"edited": true});     
   };
+  const sendRequest = async (req, res) => {
+    try {
+        console.log("Received request:", req.body);
 
-module.exports={createPatient, getPatient,updatePatient,editPrescription,deletePrescription,addPrescription};
+        const { doctorEmail, patientEmail } = req.body;
+
+        if (!doctorEmail || !patientEmail) {
+            return res.status(400).json({ message: "Doctor and Patient email are required" });
+        }
+
+        // Check if request already exists
+        const existingRequest = await RequestModel.findOne({ doctorEmail, patientEmail });
+
+        if (existingRequest) {
+            return res.status(400).json({ message: "Request already exists" });
+        }
+
+        // Create a new request
+        const newRequest = new RequestModel({ doctorEmail, patientEmail, status: "pending" });
+        await newRequest.save();
+
+        res.status(201).json({ message: "Request sent successfully", request: newRequest });
+    } catch (error) {
+        console.error("Error in sendRequest:", error);
+        res.status(500).json({ message: "Internal Server Error.", error: error.message });
+    }
+};
+
+const getRequestStatus = async (req, res) => {
+  const { doctorEmail, patientEmail } = req.body;
+  try {
+      const request = await RequestModel.findOne({ doctorEmail, patientEmail });
+      if (!request) {
+          return res.status(404).json({ message: "Request not found" });
+      }
+      res.json({ status: request.status });
+  } catch (error) {
+      res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+module.exports={getRequestStatus , sendRequest,createPatient, getPatient,updatePatient,editPrescription,deletePrescription,addPrescription};
