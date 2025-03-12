@@ -23,8 +23,47 @@ const DoctorTable = () => {
   const [submitted, setSubmitted] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false); // New State
   const { theme, toggleTheme } = useTheme();
-  
+  const [status, setStatus] = useState(null);
   const email = router.query.email;
+
+  useEffect(() => {
+    const fetchRequestStatus = async () => {
+      try {
+        const response = await axios.post('/api/getRequestStatus', {
+          doctorEmail: email,
+          patientEmail: session?.user?.email
+        });
+
+        if (response.data.status) {
+          setStatus(response.data.status);
+        }
+      } catch (error) {
+        console.error("Error fetching request status:", error);
+      }
+    };
+
+    if (email && session?.user?.email) {
+      fetchRequestStatus();
+    }
+  }, [email, session]);
+
+  const sendRequest = async () => {
+    try {
+      const response = await axios.post('/api/sendRequest', {
+        doctorEmail: email,
+        patientEmail: session?.user?.email
+      });
+
+      if (response.data.request) {
+        setStatus(response.data.request.status);
+        alert("Request sent successfully!");
+      }
+    } catch (error) {
+      console.error("Error in sendRequest:", error);
+      alert("Error sending request. Please try again.");
+    }
+  };
+
 
   useEffect(() => {
     if (router.isReady) {
@@ -170,7 +209,7 @@ const DoctorTable = () => {
         </section>
 
         {/* Review Submission */}
-        <div>
+        {/* <div>
           {hasReviewed ? (
             <div className={`p-4 rounded-md mt-8 text-center ${theme === "dark" ? "bg-green-700" : "bg-green-100"}`}>
               ✅ You have already reviewed the doctor!
@@ -203,7 +242,23 @@ const DoctorTable = () => {
               </button>
             </section>
           )}
-        </div>
+        </div> */}
+        <section className="mt-8 p-6 rounded-lg shadow-lg bg-white text-black">
+          {status === "approved" ? (
+            <p>Hi Ananya! Your request has been approved.</p>
+          ) : status === "rejected" ? (
+            <p>Your request has been rejected.</p>
+          ) : status === "pending" ? (
+            <p>Your request is pending approval.</p>
+          ) : (
+            <button
+              onClick={sendRequest}
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Send Request
+            </button>
+          )}
+        </section>
 
         {/* Reviews Table */}
         <section className={`mt-8 p-6 rounded-lg shadow-lg ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
