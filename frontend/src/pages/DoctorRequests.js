@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { signOut } from 'next-auth/react'; // Ensure next-auth is correctly set up for signOut
+import Link from 'next/link'; // Ensure Link is imported
+import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for dark mode toggle
 
 const DoctorRequests = () => {
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState(null);
+  const [darkMode, setDarkMode] = useState(false); // State for Dark Mode
   const doctorEmail = "ananyaapriyadarshini.bt23cse@pec.edu.in"; // Replace with dynamic value if needed
 
-  // ✅ Function to Fetch Requests
+  // Function to toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    document.body.classList.toggle('dark', !darkMode); // Toggle dark mode globally
+  };
+
+  // Fetch Requests function
   const fetchRequests = async () => {
     try {
       setError(null);
@@ -23,7 +33,7 @@ const DoctorRequests = () => {
     }
   };
 
-  // ✅ Function to Update Request Status
+  // Update Request Status function
   const updateRequest = async (patientEmail, newStatus) => {
     try {
       const response = await fetch("http://localhost:5000/api/requests/UpdateRequest", {
@@ -38,7 +48,6 @@ const DoctorRequests = () => {
         throw new Error(data.message || "Failed to update request");
       }
 
-      // ✅ Update UI Immediately
       setRequests((prevRequests) =>
         prevRequests.map((req) =>
           req.patientEmail === patientEmail ? { ...req, status: newStatus } : req
@@ -49,13 +58,44 @@ const DoctorRequests = () => {
     }
   };
 
-  // ✅ Call fetchRequests Inside useEffect
+  // Call fetchRequests Inside useEffect
   useEffect(() => {
     fetchRequests();
   }, [doctorEmail]);
 
   return (
     <div style={styles.container}>
+      {/* Navbar */}
+      <div className="w-full px-2 flex justify-between items-center">
+        <div className="flex justify-between">
+          <div className="text-4xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700 p-5">
+            MediCare
+          </div>
+        </div>
+        <div className="flex justify-center" style={{ color: 'black' }}>
+          <ul className="flex justify-between space-x-8 uppercase p-5 mr-12">
+            <li className="text-lg font-medium ml-10">
+              <Link href="/">Home</Link>
+            </li>
+            <li className="text-lg font-medium ml-10">
+              <Link href="/Messenger">PATIENTS</Link>
+            </li>
+            <li className="text-lg font-medium ml-10">
+              <Link href="/DoctorRequests">VERIFY REQUESTS</Link>
+            </li>
+            <li className="text-lg font-medium ml-10">
+              <button onClick={() => signOut({ callbackUrl: "/" })}>SIGN OUT</button>
+            </li>
+            <button
+              onClick={toggleDarkMode}
+              className="flex items-center space-x-2 text-lg font-medium text-blue-700 hover:text-blue-500"
+            >
+              {darkMode ? <FaSun className="text-yellow-400" size={20} /> : <FaMoon className="text-blue-500" size={20} />}
+            </button>
+          </ul>
+        </div>
+      </div>
+
       <h1 style={styles.title}>Doctor Requests</h1>
       {error && <p style={styles.errorText}>Error: {error}</p>}
 
@@ -118,7 +158,7 @@ const DoctorRequests = () => {
   );
 };
 
-// ✅ Styling Improvements
+// Styling improvements
 const styles = {
   container: {
     padding: '30px',
