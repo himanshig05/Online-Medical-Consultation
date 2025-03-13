@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import app from "../../firebase.js";
 import { useTheme } from "../../../context/ThemeContext";
+import axios from "axios";
 import { FaMoon, FaSun } from "react-icons/fa";
 import {
   getStorage,
@@ -27,7 +28,7 @@ const PatientForm = () => {
 
   const router = useRouter();
 
-  const patientCreate = (e) => {
+  const patientCreate = async(e) => {
     const email = router.query.email;
     if (image===null) {
       fetch(`${BASE_URL}/patientCreate/${email}`, {
@@ -59,63 +60,108 @@ const PatientForm = () => {
         });
     }
 
-    else {
-      const fileName = new Date().getTime() + image.name;
-      const storage = getStorage(app);
-      const StorageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(StorageRef, image);
-      uploadTask.on('state_changed', (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-        (error) => {
-          console.group(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            fetch(`${BASE_URL}/patientCreate/${email}`, {
-              method: "POST",
-              body: JSON.stringify({
-                email: email,
-                name: name,
-                age: age,
-                gender: gender,
-                height: height,
-                weight: weight,
-                bloodGroup: bloodGroup,
-                conditions: conditions,
-                picturePath: downloadURL,
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                alert("Created profile");
-                router.push(`/patientProfile/${email}`);
-                console.log(data);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          })
-        }
-      )
+  //   else {
+  //     const fileName = new Date().getTime() + image.name;
+  //     const storage = getStorage(app);
+  //     const StorageRef = ref(storage, fileName);
+  //     const uploadTask = uploadBytesResumable(StorageRef, image);
+  //     uploadTask.on('state_changed', (snapshot) => {
+  //       const progress =
+  //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //       console.log("Upload is " + progress + "% done");
+  //       switch (snapshot.state) {
+  //         case "paused":
+  //           console.log("Upload is paused");
+  //           break;
+  //         case "running":
+  //           console.log("Upload is running");
+  //           break;
+  //       }
+  //     },
+  //       (error) => {
+  //         console.group(error);
+  //       },
+  //       () => {
+  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  //           fetch(`${BASE_URL}/patientCreate/${email}`, {
+  //             method: "POST",
+  //             body: JSON.stringify({
+  //               email: email,
+  //               name: name,
+  //               age: age,
+  //               gender: gender,
+  //               height: height,
+  //               weight: weight,
+  //               bloodGroup: bloodGroup,
+  //               conditions: conditions,
+  //               picturePath: downloadURL,
+  //             }),
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //             },
+  //           })
+  //             .then((res) => res.json())
+  //             .then((data) => {
+  //               alert("Created profile");
+  //               router.push(`/patientProfile/${email}`);
+  //               console.log(data);
+  //             })
+  //             .catch((error) => {
+  //               console.log(error);
+  //             });
+  //         })
+  //       }
+  //     )
      
       
+  //   }
+  // };
+  else {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "images");
+  
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dsbslae89/image/upload",
+        formData
+      );
+      if (!response.data.secure_url) {
+        throw new Error("Cloudinary upload failed");
+      }
+      const cloudinaryUrl = response.data.secure_url;
+      fetch(`${BASE_URL}/patientCreate/${email}`, {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          name: name || undefined,
+          age: age || undefined,
+          gender: gender || undefined,
+          height: height || undefined,
+          weight: weight || undefined,
+          bloodGroup: bloodGroup || undefined,
+          conditions: conditions || undefined,
+          picturePath: cloudinaryUrl,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          alert("Created profile");
+          router.push(`/patientProfile/${email}`);
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+  
+    } catch (error) {
+      console.error("Error uploading image:", error);
     }
-  };
-
+  }
+}    
   return (
     <div className={theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}>
 
@@ -232,6 +278,11 @@ const PatientForm = () => {
                 style={{ color: "black" }}
               />
             </div>
+            {image && (
+              <div className="mb-6 flex justify-center">
+                <img src={URL.createObjectURL(image)} alt="Profile Preview" className="w-32 h-32 object-cover " />
+              </div>
+            )}
             <div className="mb-6 flex items-center justify-center">
               <button
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
