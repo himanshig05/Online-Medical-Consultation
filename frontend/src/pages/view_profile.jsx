@@ -57,7 +57,7 @@ const DoctorTable = () => {
   useEffect(() => {
     const fetchRequestStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/requests/getRequestStatus`, {
+        const response = await fetch(`${BASE_URL}/api/requests/getRequestStatus`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -119,7 +119,7 @@ const DoctorTable = () => {
 
   const handleSendRequest = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/requests/sendRequest", {
+      const response = await fetch(`${BASE_URL}/api/requests/sendRequest`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
