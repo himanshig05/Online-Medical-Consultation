@@ -12,6 +12,7 @@ import {
 } from "firebase/storage";
 import { BASE_URL } from "../../helper.js";
 import { useTheme } from "../../../context/ThemeContext";
+import axios from "axios";
 import { FaMoon, FaSun } from "react-icons/fa";
 
 
@@ -37,7 +38,7 @@ const DoctorForm = () => {
   // const toggleTheme = () => {
   //   setTheme(theme === "dark" ? "light" : "dark");
   // };
-  const createDoctor = (e) => {
+  const createDoctor = async(e) => {
     const email = router.query.email;
     if (image === null) {
       fetch(`${BASE_URL}/create/${email}`, {
@@ -68,35 +69,80 @@ const DoctorForm = () => {
     }
     
 
+    // else {
+    //   const fileName = new Date().getTime() + image.name;
+    //   const storage = getStorage(app);
+    //   const StorageRef = ref(storage, fileName);
+    //   const uploadTask = uploadBytesResumable(StorageRef, image);
+    //   uploadTask.on(
+    //     "state_changed",
+    //     (snapshot) => {
+    //       const progress =
+    //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //       console.log("Upload is " + progress + "% done");
+    //       switch (snapshot.state) {
+    //         case "paused":
+    //           console.log("Upload is paused");
+    //           break;
+    //         case "running":
+    //           console.log("Upload is running");
+    //           break;
+    //       }
+    //     },
+    //     (error) => {
+    //       console.group(error);
+    //     },
+    //     () => {
+    //       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+    //         fetch(`${BASE_URL}/create/${email}`, {
+    //           method: "POST",
+    //           body: JSON.stringify({
+    //             email: email,
+    //             name: name,
+    //             age: age,
+    //             domain: domain,
+    //             experience: experience,
+    //             qualifications: qualifications,
+    //             location: location,
+    //             hours: hours,
+    //             picturePath: downloadURL,
+    //           }),
+    //           headers: {
+    //             "Content-Type": "application/json",
+    //           },
+    //         })
+    //           .then((res) => res.json())
+    //           .then((data) => {
+    //             alert("Created profile");
+    //              router.push(`/findDoctor/${email}`);
+    //             console.log(data);
+    //           })
+    //           .catch((error) => {
+    //             alert("Error");
+    //             console.log(error);
+    //           });
+    //       });
+    //     }
+    //   );
+    // }
     else {
-      const fileName = new Date().getTime() + image.name;
-      const storage = getStorage(app);
-      const StorageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(StorageRef, image);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {
-          console.group(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            fetch(`${BASE_URL}/create/${email}`, {
-              method: "POST",
-              body: JSON.stringify({
-                email: email,
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", "images");
+    
+      try {
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/dsbslae89/image/upload",
+          formData
+        );
+        if (!response.data.secure_url) {
+          throw new Error("Cloudinary upload failed");
+        }
+        const cloudinaryUrl = response.data.secure_url;
+        fetch(`${BASE_URL}/create/${email}`, {
+          method: "POST",
+          body: JSON.stringify({
+            email: email,
                 name: name,
                 age: age,
                 domain: domain,
@@ -104,25 +150,25 @@ const DoctorForm = () => {
                 qualifications: qualifications,
                 location: location,
                 hours: hours,
-                picturePath: downloadURL,
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                alert("Created profile");
-                 router.push(`/findDoctor/${email}`);
-                console.log(data);
-              })
-              .catch((error) => {
-                alert("Error");
-                console.log(error);
-              });
+                picturePath: cloudinaryUrl,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            alert("Created profile");
+            router.push(`/findDoctor/${email}`);
+            console.log(data);
+          })
+          .catch((error) => {
+            console.log(error);
           });
-        }
-      );
+    
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
 
@@ -243,6 +289,11 @@ const DoctorForm = () => {
               style={{ color: "black" }}
             />
           </div>
+          {image && (
+              <div className="mb-6 flex justify-center">
+                <img src={URL.createObjectURL(image)} alt="Profile Preview" className="w-32 h-32 object-cover " />
+              </div>
+            )}
           <div className="mb-6 flex items-center justify-center">
             <button
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
