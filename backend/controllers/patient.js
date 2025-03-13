@@ -157,7 +157,9 @@ const editPrescription= async function (req, res) {
         const existingRequest = await RequestModel.findOne({ doctorEmail, patientEmail });
 
         if (existingRequest) {
-            return res.status(400).json({ message: "Request already exists" });
+          existingRequest.status = "pending";
+          await existingRequest.save();
+          return res.status(200).json({ message: "Request status updated to pending", request: existingRequest });
         }
 
         // Create a new request

@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import { signOut } from 'next-auth/react'; // Ensure next-auth is correctly set up for signOut
+import { signOut, useSession } from 'next-auth/react'; // Ensure next-auth is correctly set up for signOut
 import Link from 'next/link'; // Ensure Link is imported
 import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for dark mode toggle
 
 const DoctorRequests = () => {
+    const { data: session, status } = useSession();
+   
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false); // State for Dark Mode
-  const doctorEmail = "ananyaapriyadarshini.bt23cse@pec.edu.in"; // Replace with dynamic value if needed
-
+  const doctorEmail = session?.user?.email; // Get doctor email from session
   // Function to toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.body.classList.toggle('dark', !darkMode); // Toggle dark mode globally
   };
 
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.email) {
+      fetchRequests(session.user.email);
+    }
+  }, [status, session]);
+
   // Fetch Requests function
   const fetchRequests = async () => {
     try {
       setError(null);
+      console.log("doctorEmail: ", doctorEmail);
       const response = await fetch(`http://localhost:5000/api/requests/getAllRequests/${doctorEmail}`);
       const data = await response.json();
 
@@ -33,6 +41,9 @@ const DoctorRequests = () => {
     }
   };
 
+  if (status === "loading") {
+    return <div className="flex items-center justify-center min-h-screen text-xl">Loading...</div>;
+  }
   // Update Request Status function
   const updateRequest = async (patientEmail, newStatus) => {
     try {
@@ -59,9 +70,9 @@ const DoctorRequests = () => {
   };
 
   // Call fetchRequests Inside useEffect
-  useEffect(() => {
-    fetchRequests();
-  }, [doctorEmail]);
+  // useEffect(() => {
+  //   fetchRequests();
+  // }, [doctorEmail]);
 
   return (
     <div style={styles.container}>
