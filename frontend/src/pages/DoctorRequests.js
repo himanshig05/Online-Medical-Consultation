@@ -28,7 +28,8 @@ const DoctorRequests = () => {
     try {
       setError(null);
       console.log("doctorEmail: ", doctorEmail);
-      const response = await fetch(`http://localhost:5000/api/requests/getAllRequests/${doctorEmail}`);
+      const response = await fetch(`${BASE_URL}/api/requests/getAllRequests/${doctorEmail}`);
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -47,7 +48,7 @@ const DoctorRequests = () => {
   // Update Request Status function
   const updateRequest = async (patientEmail, newStatus) => {
     try {
-      const response = await fetch("http://localhost:5000/api/requests/UpdateRequest", {
+      const response = await fetch(`${BASE_URL}/api/requests/UpdateRequest`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ doctorEmail, patientEmail, status: newStatus }),
