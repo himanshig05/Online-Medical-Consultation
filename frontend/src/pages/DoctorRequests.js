@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { signOut, useSession } from 'next-auth/react'; // Ensure next-auth is correctly set up for signOut
 import Link from 'next/link'; // Ensure Link is imported
 import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for dark mode toggle
-
+import { BASE_URL } from "../helper.js"; 
 const DoctorRequests = () => {
     const { data: session, status } = useSession();
    
