@@ -32,7 +32,6 @@ app.use(cors(corsOptions));
 app.use("/",doctorRoutes);
 app.use("/",patientRoutes); //using the same root since the subsequent routes are different, no overlap
 app.use("/",prescriptionRoutes);
-app.use(cors());
 // CHAT ROUTES
 app.use("/conversations", conversationRoutes);
 app.use("/messages", messageRoutes);
