@@ -119,11 +119,11 @@ const PatientForm = () => {
   else {
     const formData = new FormData();
     formData.append("file", image);
-    formData.append("upload_preset", "images");
+    formData.append("upload_preset", "MediCare");
   
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dsbslae89/image/upload",
+        "https://api.cloudinary.com/v1_1/ddenfqz4u/image/upload",
         formData
       );
       if (!response.data.secure_url) {
