@@ -4,6 +4,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useEffect, useRef } from "react";
 import VoiceSearch from "../utils/voicespeech.jsx";
+
 export default function HelpChat({ onClose }) {
   const {
     messages,
@@ -15,11 +16,19 @@ export default function HelpChat({ onClose }) {
     reload,
     error,
   } = useChat({ api: "/api/gemini" });
+
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const speak = (text) => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+  };
 
   return (
     <div className="fixed bottom-5 right-5 w-[400px] p-6 bg-gradient-to-br from-purple-600 via-blue-600 to-red-500 text-white shadow-2xl rounded-2xl z-50 font-sans border border-gray-300 transition-all transform scale-105 animate-gradient-move">
@@ -39,8 +48,8 @@ export default function HelpChat({ onClose }) {
         {messages?.map((message, index) => (
           <div
             key={index}
-            className={`flex mb-2 ${
-              message.role === "user" ? "justify-end" : "justify-start"
+            className={`flex flex-col gap-1 ${
+              message.role === "user" ? "items-end" : "items-start"
             }`}
           >
             <div
@@ -75,6 +84,15 @@ export default function HelpChat({ onClose }) {
                 {message.content}
               </Markdown>
             </div>
+            {message.role !== "user" && (
+              <button
+                className="mt-1 px-3 py-1 flex items-center gap-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md 
+                hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                onClick={() => speak(message.content)}
+              >
+                <span role="img" aria-label="speaker" className="animate-bounce">🔊</span> Read Aloud
+              </button>
+            )}
           </div>
         ))}
         {status === "loading" && (
@@ -92,24 +110,24 @@ export default function HelpChat({ onClose }) {
         <div ref={messagesEndRef} />
       </div>
       <div className="flex flex-col gap-2">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-    <textarea
-        value={input}
-        onChange={handleInputChange}
-        placeholder="Type your message here..."
-        className="w-full h-24 p-3 rounded-lg border border-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm bg-gray-800 text-white"
-    />
-    <div className="flex gap-2">
-        <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-500 font-bold transition"
-            disabled={status === "loading"}
-        >
-            {status === "loading" ? "Loading..." : "Ask"}
-        </button>
-        <VoiceSearch onSearch={(text) => handleInputChange({ target: { value: text } })} />
-    </div>
-</form>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+          <textarea
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Type your message here..."
+            className="w-full h-24 p-3 rounded-lg border border-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm bg-gray-800 text-white"
+          />
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-500 font-bold transition"
+              disabled={status === "loading"}
+            >
+              {status === "loading" ? "Loading..." : "Ask"}
+            </button>
+            <VoiceSearch onSearch={(text) => handleInputChange({ target: { value: text } })} />
+          </div>
+        </form>
 
         {error && (
           <div className="text-center text-red-300 mt-2">
