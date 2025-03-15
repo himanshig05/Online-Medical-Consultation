@@ -8,7 +8,6 @@ import { useTheme } from "../../context/ThemeContext";
 import { FaMoon, FaSun } from "react-icons/fa";
 import Conversation from "./Conversations";
 import Message from "./Message";
-import { useSpeechSynthesis } from "react-speech-kit";
 import { useContext } from "react";
 
 
@@ -23,11 +22,10 @@ const Messenger = () => {
   const socket = useRef();
   const scrollRef = useRef();
   const { theme, toggleTheme } = useTheme();
-  const { speak } = useSpeechSynthesis();
 
 
-  // console.log("Theme:", theme);
-  // console.log("toggleTheme:", setTheme);
+// console.log("Theme:", theme);
+// console.log("toggleTheme:", setTheme);
 
 
   useEffect(() => {
@@ -141,19 +139,20 @@ const Messenger = () => {
 
             {/* Dark Mode Toggle */}
             <button
-              className="p-2 rounded-full transition-all hover:scale-110"
-              onClick={toggleTheme}
-            >
-              {theme === "dark" ? <FaSun size={24} /> : <FaMoon size={24} />}
-            </button>
+  className="p-2 rounded-full transition-all hover:scale-110"
+  onClick={toggleTheme}
+>
+  {theme === "dark" ? <FaSun size={24} /> : <FaMoon size={24} />}
+</button>
 
           </div>
 
           {conversations.map((c, index) => (
             <div
               key={index}
-              className={`text-lg font-semibold border-b-2 cursor-pointer ${theme === "dark" ? "text-white" : "text-black"
-                }`}
+              className={`text-lg font-semibold border-b-2 cursor-pointer ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
               onClick={() => setCurrentChat(c)}
             >
               <Conversation conversation={c} />
@@ -168,23 +167,16 @@ const Messenger = () => {
             <>
               <div className="chatBoxTop pl-4">
                 {messages.map((m, index) => (
-                  <div key={index} ref={scrollRef} className={`flex flex-col ${m.sender === session.user.email ? "items-end" : "items-start"}`}>
+                  <div key={index} ref={scrollRef}>
                     <Message message={m} own={m?.sender === session.user.email} />
-                    <button
-                      className="mt-1 px-3 py-1 flex items-center gap-1 bg-blue-500 text-white text-xs font-semibold rounded-full shadow-md
-      hover:bg-blue-600 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out animate-pulse"
-                      onClick={() => speak({ text: m.text })}
-                    >
-                      <span role="img" aria-label="speaker" className="animate-bounce">🔊</span> Read Aloud
-                    </button>
                   </div>
                 ))}
-
               </div>
               <div className="chatBoxBottom space-x-12 pl-5">
                 <textarea
-                  className={`chatMessageInput w-full rounded-full border p-6 bg-gray-100 ${theme === "dark" ? "border-gray-600 bg-gray-800 text-white" : "border-gray-200"
-                    }`}
+                  className={`chatMessageInput w-full rounded-full border p-6 bg-gray-100 ${
+                    theme === "dark" ? "border-gray-600 bg-gray-800 text-white" : "border-gray-200"
+                  }`}
                   placeholder="Write Something..."
                   onChange={(e) => setNewMessage(e.target.value)}
                   value={newMessage}
