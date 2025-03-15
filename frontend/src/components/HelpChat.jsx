@@ -2,7 +2,7 @@
 import { useChat } from "@ai-sdk/react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import VoiceSearch from "../utils/voicespeech.jsx";
 
 export default function HelpChat({ onClose }) {
@@ -18,6 +18,9 @@ export default function HelpChat({ onClose }) {
   } = useChat({ api: "/api/gemini" });
 
   const messagesEndRef = useRef(null);
+  const [speech, setSpeech] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -25,8 +28,32 @@ export default function HelpChat({ onClose }) {
 
   const speak = (text) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      if (speech) {
+        speechSynthesis.cancel();
+      }
       const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+      };
+      setSpeech(utterance);
+      setIsSpeaking(true);
+      setIsPaused(false);
       speechSynthesis.speak(utterance);
+    }
+  };
+
+  const pauseSpeech = () => {
+    if (speechSynthesis.speaking && !speechSynthesis.paused) {
+      speechSynthesis.pause();
+      setIsPaused(true);
+    }
+  };
+
+  const resumeSpeech = () => {
+    if (speechSynthesis.paused) {
+      speechSynthesis.resume();
+      setIsPaused(false);
     }
   };
 
@@ -85,13 +112,32 @@ export default function HelpChat({ onClose }) {
               </Markdown>
             </div>
             {message.role !== "user" && (
-              <button
-                className="mt-1 px-3 py-1 flex items-center gap-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md 
-                hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
-                onClick={() => speak(message.content)}
-              >
-                <span role="img" aria-label="speaker" className="animate-bounce">🔊</span> Read Aloud
-              </button>
+              <div className="flex gap-2 mt-1">
+                <button
+                  className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                  onClick={() => speak(message.content)}
+                >
+                  🔊 Read Aloud
+                </button>
+                {isSpeaking && (
+                  <>
+                    <button
+                      className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                      onClick={pauseSpeech}
+                    >
+                      ⏸
+                    </button>
+                    {isPaused && (
+                      <button
+                      className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                      onClick={resumeSpeech}
+                    >
+                      ▶
+                    </button>
+                    )}
+                  </>
+                )}
+              </div>
             )}
           </div>
         ))}
