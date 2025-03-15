@@ -24,8 +24,10 @@ export default function HelpChat({ onClose }) {
   }, [messages]);
 
   const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    speechSynthesis.speak(utterance);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
   };
 
   return (
@@ -82,13 +84,12 @@ export default function HelpChat({ onClose }) {
                 {message.content}
               </Markdown>
             </div>
-            {/* Read Aloud Button Only for Chatbot Responses */}
             {message.role !== "user" && (
               <button
-              className="mt-1 px-3 py-1 flex items-center gap-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md 
-              hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
-              onClick={() => speak(message.content)}
-            >
+                className="mt-1 px-3 py-1 flex items-center gap-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md 
+                hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                onClick={() => speak(message.content)}
+              >
                 <span role="img" aria-label="speaker" className="animate-bounce">🔊</span> Read Aloud
               </button>
             )}
