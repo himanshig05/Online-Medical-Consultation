@@ -117,6 +117,24 @@ const updateRequest = async (req, res) => {
   }
 };
 
+const countPendingRequests = async (req, res) => {
+  try {
+      console.log("Counting pending requests for doctor:", req.params.doctorEmail);
 
-module.exports={updateRequest,getAllRequests,getDoctor,getDoctorEmail,createDoctor,createDoctorEmail,updateDoctor};
+      const { doctorEmail } = req.params;
+      if (!doctorEmail) {
+          return res.status(400).json({ message: "Doctor email is required" });
+      }
+
+      const pendingCount = await RequestModel.countDocuments({ doctorEmail, status: "pending" });
+
+      res.status(200).json({ message: "Pending requests count retrieved", count: pendingCount });
+  } catch (error) {
+      console.error("Error in countPendingRequests:", error);
+      res.status(500).json({ message: "Internal Server Error.", error: error.message });
+  }
+};
+
+
+module.exports={countPendingRequests, updateRequest,getAllRequests,getDoctor,getDoctorEmail,createDoctor,createDoctorEmail,updateDoctor};
   

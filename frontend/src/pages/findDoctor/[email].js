@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { BASE_URL } from "../../helper.js";
 import { FaMoon, FaSun } from "react-icons/fa"; // Importing the icons
+import Bell from "../Bell";
 
 const DoctorTable = () => {
   const router = useRouter();
@@ -85,6 +86,9 @@ const DoctorTable = () => {
                   </li>
                   <li className="text-lg font-medium ml-10">
                     <Link href="/DoctorRequests">VERIFY REQUESTS</Link>
+                  </li>
+                  <li>
+                  <Bell doctorEmail={email} /> 
                   </li>
                   <li className="text-lg font-medium ml-10">
                     <button onClick={() => signOut({ callbackUrl: "/" })}>
