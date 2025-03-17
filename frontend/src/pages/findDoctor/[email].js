@@ -109,9 +109,19 @@ const DoctorTable = () => {
 
             {/* Sidebar */}
             <div className="bg-white dark:bg-gray-800 rounded-b-3xl h-[86%] left-0 overflow-x-hidden pt-5 absolute top-[80px] w-[250px]">
-              <div className="flex justify-center items-center flex-col">
-                {doctor.picturePath && <img src={doctor.picturePath} style={{ width: "200px", height: "200px" }} />}
-                <div className="text-black dark:text-gray-100 text-xl font-bold pt-5 text-center">{doctor.name}</div>
+                <div className="flex justify-center items-center flex-col">
+                {doctor.picturePath ? (
+                  <img 
+                    src={doctor.picturePath} 
+                    alt="Doctor Profile" 
+                    className="w-[200px] h-[200px] object-cover"
+                  />
+                ) : (
+                  <div className="w-[200px] h-[200px] bg-white dark:bg-gray-700 border border-gray-300"></div>
+                )}
+                <div className="text-black dark:text-gray-100 text-xl font-bold pt-5 text-center">
+                  {doctor.name}
+                </div>
                 <div className="text-center mt-4 space-y-4">
                   <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
                     <Link href={`/editDoctor/${session?.user.email}`}>Edit Details</Link>
@@ -122,6 +132,7 @@ const DoctorTable = () => {
                 </div>
               </div>
             </div>
+
 
             {/* Doctor Info & Reviews */}
             <div className="ml-[29%] text-2xl px-10 w-[58%]">
