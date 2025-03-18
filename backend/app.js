@@ -12,6 +12,7 @@ const conversationRoutes = require("./routes/conversationRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const reviewRoutes= require("./routes/reviewRoutes");
 const requestRoutes = require("./routes/requestRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 
 
@@ -38,6 +39,7 @@ app.use("/messages", messageRoutes);
 app.use("/rating",reviewRoutes);
 
 app.use("/api/requests", requestRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 // const PORT = process.env.PORT || 5002;

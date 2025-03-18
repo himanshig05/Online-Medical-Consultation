@@ -1,5 +1,7 @@
 const Doctor = require("../models/doctorModel");
 const RequestModel = require("../models/requestModel"); 
+const NotificationModel = require("../models/notificationModel");
+
 const getDoctor= async function (req, res) {
     const doctors = await Doctor.find({});
     res.json({ data: doctors });
@@ -87,35 +89,49 @@ const getDoctor= async function (req, res) {
         return res.status(500).json({ message: "Internal Server Error." });
     }
 };
+
+
 const updateRequest = async (req, res) => {
   try {
     console.log("Received update request:", req.body);
 
-    const { doctorEmail, patientEmail, status } = req.body;
+    const { doctorEmail, patientEmail, status: new_status } = req.body;
 
-    if (!doctorEmail || !patientEmail || !status) {
-      return res.status(400).json({ message: "Doctor email, patient email, and status are required." });
+    if (!doctorEmail || !patientEmail || !new_status) {
+      return res.status(400).json({ message: "Doctor email, patient email, and new status are required." });
     }
-
-    const request = await RequestModel.findOneAndUpdate(
-      { doctorEmail, patientEmail },
-      { status },
-      { new: true }
-    );
-
-    if (!request) {
+    const existingRequest = await RequestModel.findOne({ doctorEmail, patientEmail });
+    if (!existingRequest) {
       console.log("Request not found:", { doctorEmail, patientEmail });
       return res.status(404).json({ message: "No request found to update." });
     }
-
-    console.log("Request updated successfully:", request);
-    return res.status(200).json({ message: "Request updated successfully.", request });
+    const existing_status = existingRequest.status; 
+    const updatedRequest = await RequestModel.findOneAndUpdate(
+      { doctorEmail, patientEmail },
+      { status: new_status },
+      { new: true }
+    );
+    const newNotif = new NotificationModel({
+      doctorEmail,
+      patientEmail,
+      existing_status,
+      new_status
+    });
+    await newNotif.save(); 
+    console.log("Request updated successfully:", updatedRequest);
+    return res.status(200).json({
+      message: "Request updated successfully.",
+      request: updatedRequest,
+      notification: newNotif
+    });
 
   } catch (error) {
     console.error("Error in updateRequest:", error);
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+
+
 
 const countPendingRequests = async (req, res) => {
   try {

@@ -9,6 +9,8 @@ import { signOut, useSession } from "next-auth/react";
 import LoginPage from "../components/LoginPage.jsx";
 import Link from "next/link";
 import { useTheme } from "../../context/ThemeContext";
+import PatientBell from "./patientBell";
+
 
 const Patient_Login = () => {
   const { data: session } = useSession();
@@ -56,6 +58,7 @@ const toggleTheme = () => {
                 <li className="text-lg font-medium">
                   <Link href="/Messenger">CHAT CONSULT</Link>
                 </li>
+                
                 <li className="text-lg font-medium">
                   <Link href={`/patientProfile/${session?.user?.email}`}>
                     Profile
@@ -63,6 +66,10 @@ const toggleTheme = () => {
                 </li>
                 <li className="text-lg font-medium">
                   <button onClick={() => signOut()}>SIGN OUT</button>
+                </li>
+                <li>
+                <PatientBell patientEmail={session?.user?.email} />
+
                 </li>
               </ul>
 

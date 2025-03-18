@@ -1,5 +1,6 @@
 const Patient = require("../models/patientModel");
 const RequestModel = require("../models/requestModel"); 
+const Notification = require("../models/notificationModel"); // ✅ Import the model
 
 
 const mongoose=require("mongoose");
@@ -185,7 +186,34 @@ const getRequestStatus = async (req, res) => {
       res.status(500).json({ message: "Server error" });
   }
 };
+const countUnreadNotifications = async (req, res) => {
+  try {
+    console.log("Fetching notifications for:", req.params.patientEmail);
+
+    const { patientEmail } = req.params;
+    if (!patientEmail) {
+      return res.status(400).json({ message: "Patient email is required" });
+    }
+
+    // Fetch all notifications where isRead is missing or false
+    const unreadNotifications = await Notification.find({
+      patientEmail,
+      $or: [{ isRead: false }, { isRead: { $exists: false } }] // Includes missing isRead
+    });
+
+    // Get the count by checking the array length
+    const unreadCount = unreadNotifications.length;
+
+    res.status(200).json({
+      message: "Unread notifications count retrieved",
+      count: unreadCount,
+    });
+  } catch (error) {
+    console.error("Error in countUnreadNotifications:", error);
+    res.status(500).json({ message: "Internal Server Error.", error: error.message });
+  }
+};
 
 
 
-module.exports={getRequestStatus , sendRequest,createPatient, getPatient,updatePatient,editPrescription,deletePrescription,addPrescription};
+module.exports={countUnreadNotifications, getRequestStatus , sendRequest,createPatient, getPatient,updatePatient,editPrescription,deletePrescription,addPrescription};

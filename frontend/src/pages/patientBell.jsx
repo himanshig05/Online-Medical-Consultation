@@ -28,7 +28,7 @@ const Bell = ({ patientEmail }) => {
     }, [patientEmail]);
 
     const handleNotificationClick = () => {
-        router.push("/PatientNotifications");
+        router.push("/PatientRequests"); // Updated to PatientRequests
     };
 
     return (
@@ -46,14 +46,14 @@ const Bell = ({ patientEmail }) => {
                 className={isOpen ? "bell-shake" : ""}
             >
                 🔔
-                {/* Notification Badge (Now Positioned Over the Bell) */}
+                {/* Notification Badge (Over the Bell) */}
                 {notificationCount > 0 && (
                     <span style={{
                         position: "absolute",
-                        top: "-5px",  // Moves the badge over the bell
+                        top: "-5px",
                         right: "-2px",
                         transform: "translate(50%, -50%)",
-                        backgroundColor: "#FF5733",  // Slightly softened red
+                        backgroundColor: "#FF5733",  // Softer red
                         color: "white",
                         fontSize: "12px",
                         fontWeight: "bold",
@@ -92,14 +92,14 @@ const Bell = ({ patientEmail }) => {
                 }}>
                     <p style={{ marginBottom: "10px" }}>
                         {notificationCount > 0 
-                            ? <>🔔 You have <strong>{notificationCount}</strong> unread notification(s).</>
-                            : "✅ No new notifications."}
+                            ? <>🔔 You have <strong>{notificationCount}</strong> unread request(s).</>
+                            : "✅ No new requests."}
                     </p>
                     {notificationCount > 0 && (
                         <button 
                             onClick={handleNotificationClick} 
                             style={{
-                                background: "#FF6B4A",  // Softer red
+                                background: "#FF6B4A",
                                 border: "none",
                                 padding: "8px 12px",
                                 borderRadius: "6px",
@@ -108,10 +108,10 @@ const Bell = ({ patientEmail }) => {
                                 cursor: "pointer",
                                 transition: "background 0.3s",
                             }}
-                            onMouseOver={(e) => e.target.style.background = "#E85C42"}  // Less intense hover
+                            onMouseOver={(e) => e.target.style.background = "#E85C42"}
                             onMouseOut={(e) => e.target.style.background = "#FF6B4A"}
                         >
-                            View Notifications
+                            View Requests
                         </button>
                     )}
                 </div>
