@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-
+import { BASE_URL } from "../helper.js";
 const Bell = ({ doctorEmail }) => {
     const [pendingCount, setPendingCount] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
