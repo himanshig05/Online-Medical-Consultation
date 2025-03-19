@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FaSun, FaMoon } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { BASE_URL } from "../helper.js";
-import PatientBell from "./PatientBell"; // Ensure this component exists
+import PatientBell from "./patientBell"; // Ensure this component exists
 
 const PatientNotifications = () => {
   const { data: session, status } = useSession();
