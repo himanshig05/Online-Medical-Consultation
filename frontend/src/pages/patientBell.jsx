@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../helper.js";
 
-const Bell = ({ doctorEmail }) => {
-    const [pendingCount, setPendingCount] = useState(null);
+const Bell = ({ patientEmail }) => {
+    const [notificationCount, setNotificationCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        if (!doctorEmail) return;
+        if (!patientEmail) return;
 
-        const fetchPendingRequests = async () => {
+        const fetchUnreadNotifications = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/api/requests/pending/count/${doctorEmail}`);
-
+                const response = await fetch(`${BASE_URL}/api/notifications/unread/count/${patientEmail}`);
                 if (!response.ok) {
-                    throw new Error("Failed to fetch pending requests");
+                    throw new Error("Failed to fetch unread notifications");
                 }
                 const data = await response.json();
-                setPendingCount(data.count);
+                setNotificationCount(data.count);
             } catch (error) {
-                console.error("Error fetching pending requests:", error);
-                setPendingCount(0);
+                console.error("Error fetching unread notifications:", error);
+                setNotificationCount(0);
             }
         };
 
-        fetchPendingRequests();
-    }, [doctorEmail]);
+        fetchUnreadNotifications();
+    }, [patientEmail]);
 
-    const handleReviewClick = () => {
-        router.push("/DoctorRequests"); // Open DoctorRequests.jsx
+    const handleNotificationClick = () => {
+        router.push("/PatientRequests"); // Updated to PatientRequests
     };
 
     return (
@@ -42,28 +42,32 @@ const Bell = ({ doctorEmail }) => {
                     background: "none", 
                     border: "none",
                     position: "relative",
-                    transition: "transform 0.3s ease",
                 }}
                 className={isOpen ? "bell-shake" : ""}
             >
                 🔔
-                {/* Notification Badge (Shown Only If Count > 0) */}
-                {pendingCount > 0 && (
+                {/* Notification Badge (Over the Bell) */}
+                {notificationCount > 0 && (
                     <span style={{
                         position: "absolute",
-                        top: "-3px",
-                        right: "-3px",
-                        backgroundColor: "#6495ED", // Changed to blue
+                        top: "-5px",
+                        right: "-2px",
+                        transform: "translate(50%, -50%)",
+                        backgroundColor: "#FF5733",  // Softer red
                         color: "white",
-                        fontSize: "10px",  
+                        fontSize: "12px",
                         fontWeight: "bold",
                         borderRadius: "50%",
-                        padding: "3px 6px", 
-                        minWidth: "16px",  
+                        padding: "3px 6px",
+                        minWidth: "18px",
+                        height: "18px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                         textAlign: "center",
                         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
                     }}>
-                        {pendingCount}
+                        {notificationCount}
                     </span>
                 )}
             </button>
@@ -74,7 +78,7 @@ const Bell = ({ doctorEmail }) => {
                     position: "absolute",
                     top: "40px",
                     right: "-20px",
-                    background: "linear-gradient(135deg, #87CEEB, #6495ED)", // Changed to blue shades
+                    background: "linear-gradient(135deg, #FF8C66, #FF5733)",  // Softened hover color
                     borderRadius: "10px",
                     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
                     padding: "14px 18px",
@@ -86,16 +90,16 @@ const Bell = ({ doctorEmail }) => {
                     zIndex: "1000",
                     animation: "fadeIn 0.3s ease-in-out",
                 }}>
-                    <p style={{ marginBottom: "10px", textTransform: "none" }}>
-                        {pendingCount > 0 
-                            ? <>🔔 You have <strong>{pendingCount}</strong> pending request(s). Please review them.</>
-                            : "✅ You have no pending requests."}
+                    <p style={{ marginBottom: "10px" }}>
+                        {notificationCount > 0 
+                            ? <>🔔 You have <strong>{notificationCount}</strong> unread request(s).</>
+                            : "✅ No new requests."}
                     </p>
-                    {pendingCount > 0 && (
+                    {notificationCount > 0 && (
                         <button 
-                            onClick={handleReviewClick} 
+                            onClick={handleNotificationClick} 
                             style={{
-                                background: "#6495ED", // Changed to blue
+                                background: "#FF6B4A",
                                 border: "none",
                                 padding: "8px 12px",
                                 borderRadius: "6px",
@@ -104,10 +108,10 @@ const Bell = ({ doctorEmail }) => {
                                 cursor: "pointer",
                                 transition: "background 0.3s",
                             }}
-                            onMouseOver={(e) => e.target.style.background = "#4682B4"}
-                            onMouseOut={(e) => e.target.style.background = "#6495ED"}
+                            onMouseOver={(e) => e.target.style.background = "#E85C42"}
+                            onMouseOut={(e) => e.target.style.background = "#FF6B4A"}
                         >
-                            Review requests
+                            View Requests
                         </button>
                     )}
                 </div>
