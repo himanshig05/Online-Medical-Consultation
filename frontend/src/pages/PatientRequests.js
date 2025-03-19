@@ -51,15 +51,15 @@ const PatientNotifications = () => {
         body: JSON.stringify({ patientEmail, doctorEmail }),
       });
 
-      const text = await response.text();
-      console.log("Raw response:", text);
+      // const text = await response.text();
+      // console.log("Raw response:", text);
 
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error("Invalid JSON response from server");
-      }
+      // let data;
+      // try {
+      //   data = JSON.parse(text);
+      // } catch {
+      //   throw new Error("Invalid JSON response from server");
+      // }
 
       if (!response.ok) throw new Error(data.message || "Failed to delete notification");
 
