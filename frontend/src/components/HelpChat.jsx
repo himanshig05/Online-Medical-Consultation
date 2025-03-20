@@ -1,4 +1,3 @@
-"use client";
 import { useChat } from "@ai-sdk/react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -21,20 +20,39 @@ export default function HelpChat({ onClose }) {
   const [speech, setSpeech] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [currentWordIndex, setCurrentWordIndex] = useState(null);
+  const [currentWords, setCurrentWords] = useState([]);
+  const [highlightedMessage, setHighlightedMessage] = useState(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const speak = (text) => {
+  const speak = (text, message) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       if (speech) {
         speechSynthesis.cancel();
       }
       const utterance = new SpeechSynthesisUtterance(text);
+      const words = text.split(" ");
+      setCurrentWords(words);
+      setHighlightedMessage(message);
+      utterance.onboundary = (event) => {
+        if (event.name === "word") {
+          const spokenWordIndex = Math.floor(event.charIndex / text.length * words.length);
+          setCurrentWordIndex(spokenWordIndex);
+        }
+      };
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+        setIsPaused(false);
+      };
+
       utterance.onend = () => {
         setIsSpeaking(false);
         setIsPaused(false);
+        setCurrentWordIndex(null);
+        setHighlightedMessage(null);
       };
       setSpeech(utterance);
       setIsSpeaking(true);
@@ -86,36 +104,55 @@ export default function HelpChat({ onClose }) {
                   : "bg-purple-700 text-gray-100"
               }`}
             >
-              <Markdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  code({ inline, children, ...props }) {
-                    return inline ? (
-                      <code {...props} className="bg-gray-700 px-1 py-0.5 rounded-md text-sm">
-                        {children}
-                      </code>
-                    ) : (
-                      <pre className="bg-gray-800 p-3 rounded-md text-sm text-gray-200">
-                        <code {...props}>{children}</code>
-                      </pre>
-                    );
-                  },
-                  ul: ({ children }) => (
-                    <ul className="pl-5 list-disc text-gray-300">{children}</ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="pl-5 list-decimal text-gray-300">{children}</ol>
-                  ),
-                }}
-              >
-                {message.content}
-              </Markdown>
+              {message.role !== "user" && highlightedMessage === message ? (
+                <span>
+                  {currentWords.length > 0
+                    ? currentWords.map((word, i) => (
+                        <span
+                          key={i}
+                          className={`${
+                            i === currentWordIndex
+                              ? "bg-yellow-500 text-gray-900 font-bold"
+                              : ""
+                          }`}
+                        >
+                          {word + " "}
+                        </span>
+                      ))
+                    : message.content}
+                </span>
+              ) : (
+                <Markdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    code({ inline, children, ...props }) {
+                      return inline ? (
+                        <code {...props} className="bg-gray-700 px-1 py-0.5 rounded-md text-sm">
+                          {children}
+                        </code>
+                      ) : (
+                        <pre className="bg-gray-800 p-3 rounded-md text-sm text-gray-200">
+                          <code {...props}>{children}</code>
+                        </pre>
+                      );
+                    },
+                    ul: ({ children }) => (
+                      <ul className="pl-5 list-disc text-gray-300">{children}</ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="pl-5 list-decimal text-gray-300">{children}</ol>
+                    ),
+                  }}
+                >
+                  {message.content}
+                </Markdown>
+              )}
             </div>
             {message.role !== "user" && (
               <div className="flex gap-2 mt-1">
                 <button
                   className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
-                  onClick={() => speak(message.content)}
+                  onClick={() => speak(message.content, message)}
                 >
                   🔊 Read Aloud
                 </button>
@@ -129,11 +166,11 @@ export default function HelpChat({ onClose }) {
                     </button>
                     {isPaused && (
                       <button
-                      className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
-                      onClick={resumeSpeech}
-                    >
-                      ▶
-                    </button>
+                        className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-xs font-semibold rounded-full shadow-md hover:bg-white/30 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                        onClick={resumeSpeech}
+                      >
+                        ▶
+                      </button>
                     )}
                   </>
                 )}
