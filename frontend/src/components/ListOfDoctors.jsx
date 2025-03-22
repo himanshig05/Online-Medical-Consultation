@@ -10,8 +10,9 @@ export default function App() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [doctors, setDoctors] = useState([]);
   const { data: session } = useSession();
-  const [domain, setDomain] = useState("");
-  const [searchDomain, setSearchDomain] = useState("");
+  // const [domain, setDomain] = useState("");
+const [sortOrder, setSortOrder] = useState("desc");
+const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (router.isReady) {
@@ -48,13 +49,28 @@ export default function App() {
     }
   };
 
-  const handleSearch = () => {
-    setSearchDomain(domain.trim());
-  };
+  // const handleSearch = () => {
+  //   setSearchDomain(domain.trim());
+  //   setSearchName(searchName.trim());
+  // setSearchLocation(searchLocation.trim());
+  // };
 
-  const viewDoctors = searchDomain
-    ? doctors.filter((d) => d.domain.toLowerCase() === searchDomain.toLowerCase())
-    : doctors;
+  const viewDoctors = doctors
+  .filter((d) =>
+    !searchQuery ||
+    d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    d.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    d.domain.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+  .sort((a, b) => {
+    if (sortOrder === "desc") {
+      return b.averageRating - a.averageRating;
+    } else {
+      return a.averageRating - b.averageRating;
+    }
+  });
+
+
 
   return (
     <div className={`flex flex-col min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
@@ -67,30 +83,19 @@ export default function App() {
         {theme === "dark" ? "" : ""}
       </button> */}
 
-      {/* Search Bar */}
-      <div className="relative pl-4">
-      <input
-  type="search"
-  className={`block w-full p-4 pl-10 text-sm border border-gray-300 rounded-lg outline-none ${
-    theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-900"
-  }`}
-  placeholder="Search For Doctors By Domain..."
-  value={domain}
-  onChange={(e) => setDomain(e.target.value)}
-/>
-<button
-  className={`absolute right-40 bottom-2.5 font-medium rounded-lg text-sm px-6 py-2 
-    transition ${
-      theme === "dark"
-        ? "bg-gray-800 text-white hover:bg-gray-700"
-        : "bg-gray-300 text-gray-900 hover:bg-gray-300"
+     {/* Search Bar */}
+<div className="relative pl-4">
+  <input
+    type="search"
+    className={`block w-full p-4 pl-10 text-sm border border-gray-300 rounded-lg outline-none ${
+      theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-900"
     }`}
-  onClick={handleSearch}
->
-  Search
-</button>
+    placeholder="Search For Doctors By Name, Location, or Domain..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+</div>
 
-      </div>
 
       {/* Doctor Table */}
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -99,17 +104,74 @@ export default function App() {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               {/* Table Header */}
               <thead className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"}`}>
-                <tr>
-                  {["Name", "Domain", "Location", "Experience", "Rating", "Actions"].map((header) => (
-                    <th
-                      key={header}
-                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                    >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
+  <tr>
+    {["Name", "Domain", "Location", "Experience", "Rating", "Actions"].map((header) => (
+      <th
+        key={header}
+        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+      >
+        {header === "Rating" ? (
+          <div className="relative inline-block text-left">
+            <span className="text-sm">Rating</span>
+            <button
+              className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              id="rating-dropdown-button"
+              aria-expanded="false"
+              aria-haspopup="true"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("rating-dropdown").classList.toggle("hidden");
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="inline-block w-5 h-5"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            <div
+              id="rating-dropdown"
+              className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="rating-dropdown-button"
+            >
+              <button
+                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                role="menuitem"
+                onClick={() => {
+                  setSortOrder("desc");
+                  document.getElementById("rating-dropdown").classList.add("hidden");
+                }}
+              >
+                Highest Rated
+              </button>
+              <button
+                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                role="menuitem"
+                onClick={() => {
+                  setSortOrder("asc");
+                  document.getElementById("rating-dropdown").classList.add("hidden");
+                }}
+              >
+                Lowest Rated
+              </button>
+            </div>
+          </div>
+        ) : (
+          header
+        )}
+      </th>
+    ))}
+  </tr>
+</thead>
 
               {/* Table Body */}
               <tbody className={`${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"} divide-y divide-gray-200 dark:divide-gray-700`}>
