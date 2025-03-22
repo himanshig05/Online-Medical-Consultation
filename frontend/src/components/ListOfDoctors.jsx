@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { BASE_URL } from "../helper.js";
 import { ThemeContext } from "../../context/ThemeContext";
 import { FaMoon, FaSun } from "react-icons/fa"; // Import FontAwesome icons
+import VoiceSearch from "./VoiceSearch";
+import { FaMicrophone, FaTimes } from "react-icons/fa";
 
 export default function App() {
   const router = useRouter();
@@ -13,6 +15,7 @@ export default function App() {
   // const [domain, setDomain] = useState("");
 const [sortOrder, setSortOrder] = useState("desc");
 const [searchQuery, setSearchQuery] = useState("");
+const [stopVoiceSearch, setStopVoiceSearch] = useState(false);
 
   useEffect(() => {
     if (router.isReady) {
@@ -54,7 +57,16 @@ const [searchQuery, setSearchQuery] = useState("");
   //   setSearchName(searchName.trim());
   // setSearchLocation(searchLocation.trim());
   // };
-
+  const handleVoiceSearch = (transcript) => {
+    setSearchQuery(transcript);
+  };
+  const handleClear = () => {
+    setSearchQuery("");
+    setStopVoiceSearch(true);
+    setTimeout(() => {
+      setStopVoiceSearch(false);
+    }, 300); 
+  };
   const viewDoctors = doctors
   .filter((d) =>
     !searchQuery ||
@@ -83,18 +95,30 @@ const [searchQuery, setSearchQuery] = useState("");
         {theme === "dark" ? "" : ""}
       </button> */}
 
-     {/* Search Bar */}
-<div className="relative pl-4">
+<div className="relative w-full flex items-center">
+  {/* Search Input */}
   <input
     type="search"
-    className={`block w-full p-4 pl-10 text-sm border border-gray-300 rounded-lg outline-none ${
+    className={`block w-full p-4 pl-12 text-sm border border-gray-300 rounded-lg outline-none ${
       theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-900"
     }`}
     placeholder="Search For Doctors By Name, Location, or Domain..."
     value={searchQuery}
     onChange={(e) => setSearchQuery(e.target.value)}
   />
-</div>
+
+  {/* Voice Search Button */}
+  <div className="absolute right-20.5 top--2">
+        <VoiceSearch onSearch={handleVoiceSearch} onStop={stopVoiceSearch} />
+      </div>
+
+      {/* Clear Button */}
+      <div className="absolute right-4 top-4 cursor-pointer" onClick={handleClear}>
+        <FaTimes size={18} className="text-gray-500 hover:text-gray-100 dark:text-gray-100 dark:hover:text-gray-100" />
+      </div>
+    </div>
+
+
 
 
       {/* Doctor Table */}
