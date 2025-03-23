@@ -148,7 +148,7 @@ export default function App() {
         <div className="absolute right-4 top-4 cursor-pointer" onClick={handleClear}>
           <FaTimes size={18} className="text-gray-500 hover:text-gray-100 dark:text-gray-100 dark:hover:text-gray-100" />
         </div>
-        {showDropdown && filteredSearches.length > 0 && (
+        {showDropdown && filteredSearches.length > 0 && searchQuery.length>0 && (
           <div className={`absolute top-12 left-0 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10`}>
             {filteredSearches.map((search, index) => (
               <div

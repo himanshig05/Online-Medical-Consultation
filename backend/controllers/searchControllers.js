@@ -9,7 +9,7 @@ const storeSearch = async (req, res) => {
       return res.status(400).json({ error: "userId and searchTerm are required" });
     }
 
-    const key = `user:${userId}:searches`;
+    const key = `medicare:user:${userId}:searches`;
     const existingSearches = await redisClient.lRange(key, 0, -1);
 
     if (!existingSearches.includes(searchTerm)) {
@@ -39,7 +39,7 @@ const getPastSearches = async (req, res) => {
       return res.status(400).json({ error: "userId is required" });
     }
 
-    const key = `user:${userId}:searches`;
+    const key = `medicare:user:${userId}:searches`;
     console.log(`Generated Redis key: ${key}`);
 
     console.log(`Fetching search history from Redis for key: ${key}`);
