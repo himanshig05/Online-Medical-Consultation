@@ -1,3 +1,4 @@
+//trying new code:
 const redisClient = require("../utils/redis");
 
 // Store a search term for a user
@@ -38,7 +39,6 @@ const getPastSearches = async (req, res) => {
       return res.status(400).json({ error: "userId is required" });
     }
 
-    
     const key = `user:${userId}:searches`;
     console.log(`Generated Redis key: ${key}`);
 
@@ -50,7 +50,6 @@ const getPastSearches = async (req, res) => {
       console.warn(`No searches found for user: ${userId}`);
     }
 
-    
     const filteredSearches = query
       ? searches.filter((search) =>
           search.toLowerCase().startsWith((query || "").toLowerCase())
@@ -58,7 +57,8 @@ const getPastSearches = async (req, res) => {
       : searches;
 
     console.log("Filtered searches ");
-    res.json(filteredSearches);
+    res.json(filteredSearches || []);
+
     console.log("Response sent successfully.");
   } catch (error) {
     console.error("Error fetching past searches:", error);
@@ -66,8 +66,4 @@ const getPastSearches = async (req, res) => {
   }
 };
 
-
-
-
 module.exports = { storeSearch, getPastSearches };
-
