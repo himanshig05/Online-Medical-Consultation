@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../helper.js"; 
 
 const PatientDocuments = () => {
   const { data: session } = useSession();
@@ -14,7 +15,7 @@ const PatientDocuments = () => {
     const fetchDocuments = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/media/documents/patient/${encodeURIComponent(patientEmail)}`
+          `${BASE_URL}/media/documents/patient/${encodeURIComponent(patientEmail)}`
         );
 
         if (!response.ok) {
