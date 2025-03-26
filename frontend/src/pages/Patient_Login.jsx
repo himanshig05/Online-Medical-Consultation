@@ -10,7 +10,7 @@ import LoginPage from "../components/LoginPage.jsx";
 import Link from "next/link";
 import { useTheme } from "../../context/ThemeContext";
 import PatientBell from "./patientBell";
-
+import PatientDocuments from "./PatientDocuments";
 
 const Patient_Login = () => {
   const { data: session } = useSession();
@@ -71,6 +71,10 @@ const toggleTheme = () => {
                 <PatientBell patientEmail={session?.user?.email} />
 
                 </li>
+                {/* <li>
+                <Link href="/PatientDocuments">View Documents</Link>
+
+                </li> */}
               </ul>
 
               {/* Dark Mode Toggle Button */}
