@@ -1,103 +1,3 @@
-// import React, { useState } from "react";
-// import { useParams } from "react-router-dom";
-
-// const UploadForm = () => {
-//   const { patientEmail } = useParams(); // Extract patient email from URL params
-//   const doctorEmail = sessionStorage.getItem("doctorEmail"); // Fetch doctor's email from session
-
-//   const [title, setTitle] = useState("");
-//   const [document, setDocument] = useState(null);
-//   const [loading, setLoading] = useState(false);
-//   const [message, setMessage] = useState("");
-
-//   const handleFileChange = (e) => {
-//     setDocument(e.target.files[0]);
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!title || !document) {
-//       setMessage("Please provide a title and upload a document.");
-//       return;
-//     }
-
-//     setLoading(true);
-//     setMessage("");
-//     const formData = new FormData();
-//     formData.append("file", document);
-//     formData.append("upload_preset", "oneworld"); // Replace with your Cloudinary upload preset
-
-//     try {
-//       const cloudinaryResponse = await fetch(
-//         "https://api.cloudinary.com/v1_1/dx31kszy8/image/upload",
-//         { method: "POST", body: formData }
-//       );
-//       const cloudinaryData = await cloudinaryResponse.json();
-//       if (!cloudinaryData.secure_url) throw new Error("File upload failed.");
-
-//       // Now send to backend
-//       const backendResponse = await fetch(
-//         "http://localhost:3000/uploadDocument/${patientEmail}",
-//         {
-//           method: "POST",
-//           headers: { "Content-Type": "application/json" },
-//           body: JSON.stringify({
-//             title,
-//             document: cloudinaryData.secure_url,
-//             doctorEmail,
-//           }),
-//         }
-//       );
-
-//       const backendData = await backendResponse.json();
-//       if (backendResponse.ok) {
-//         setMessage("Document uploaded successfully!");
-//       } else {
-//         setMessage(backendData.error || "Error uploading document.");
-//       }
-//     } catch (error) {
-//       setMessage("Upload failed. Please try again.");
-//       console.error(error);
-//     }
-
-//     setLoading(false);
-//   };
-
-//   return (
-//     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
-//       <h2 className="text-xl font-semibold mb-4">Upload Document</h2>
-//       <form onSubmit={handleSubmit}>
-//         <div className="mb-4">
-//           <label className="block text-gray-700 font-medium">Title</label>
-//           <input
-//             type="text"
-//             className="w-full px-3 py-2 border rounded-md"
-//             value={title}
-//             onChange={(e) => setTitle(e.target.value)}
-//             required
-//           />
-//         </div>
-
-//         <div className="mb-4">
-//           <label className="block text-gray-700 font-medium">Upload File</label>
-//           <input type="file" className="w-full" onChange={handleFileChange} required />
-//         </div>
-
-//         <button
-//           type="submit"
-//           className="bg-blue-500 text-white px-4 py-2 rounded-md"
-//           disabled={loading}
-//         >
-//           {loading ? "Uploading..." : "Submit"}
-//         </button>
-//       </form>
-
-//       {message && <p className="mt-4 text-red-600">{message}</p>}
-//     </div>
-//   );
-// };
-
-// export default UploadForm;
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -134,12 +34,15 @@ const router =useRouter();
     setLoading(true);
     const formData = new FormData();
     formData.append("file", document);
-    formData.append("upload_preset", "oneworld");
+    formData.append("upload_preset", "MediCare");
+
+    const isImage = document.type.startsWith("image/");
+    const resourceType = isImage ? "image" : "raw";
 
     try {
       // Upload file to Cloudinary
       const cloudinaryResponse = await fetch(
-        `https://api.cloudinary.com/v1_1/dx31kszy8/upload`,
+        `https://api.cloudinary.com/v1_1/ddenfqz4u/${resourceType}/upload`,
         { method: "POST", body: formData }
       );
 

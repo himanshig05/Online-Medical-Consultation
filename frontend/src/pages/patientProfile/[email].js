@@ -188,7 +188,7 @@ const PatientProfile = () => {
               </div>
               {(() => {
                 const isPecEmail = session?.user?.email?.endsWith("@pec.edu.in");
-                console.log("Email ends with .pec.edu.in:", isPecEmail);
+                console.log("Email ends with @pec.edu.in:", isPecEmail);
                 return isPecEmail ? (
                   <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
                     <Link href={`/uploadDocument/${patient.email}`}>
