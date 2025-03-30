@@ -3,71 +3,62 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { BASE_URL } from "../../helper.js";
-import { useTheme } from "../../../context/ThemeContext";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-
-// import UploadForm from "../UploadForm";
 
 const PatientProfile = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [patient, setPatient] = useState({});
   const email = router.query.email;
-  const { theme, toggleTheme } = useTheme();
+  const [darkMode, setDarkMode] = useState(false);
 
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const savedTheme = localStorage.getItem("theme") || "light";
+  //     setTheme(savedTheme);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem("theme", theme);
+  // }, [theme]);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => !prevMode);
+    document.documentElement.classList.toggle("dark");
+  };
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme && savedTheme !== theme) {
-      toggleTheme(); // Ensures the theme toggles correctly
-    }
-  }, [theme, toggleTheme]);
-
-  useEffect(() => {
-    localStorage.setItem("theme", theme); // Save theme in local storage
-  }, [theme]);
-
-  useEffect(() => {
-    if (router.isReady) {
-      fetch(`${BASE_URL}/patientProfile/${email}`, {
-        method: "GET",
-      })
+    if (router.isReady && email) {
+      fetch(`${BASE_URL}/patientProfile/${email}`)
         .then((res) => res.json())
         .then((data) => {
           setPatient(data);
-        });
+        })
+        .catch((err) => console.error("Failed to fetch patient data:", err));
     }
-  }, [router.isReady]);
+  }, [router.isReady, email]);
 
   const handleDelete = async (prescriptionId) => {
-    const curr_user = session.user.email;
-    fetch(
-      `${BASE_URL}/deletePrescription`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          email,
-          prescriptionId,
-          curr_user
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`${BASE_URL}/deletePrescription`, {
+      method: "PATCH",
+      body: JSON.stringify({ email, prescriptionId, curr_user: session.user.email }),
+      headers: { "Content-Type": "application/json" },
+    })
       .then((res) => res.json())
       .then((data) => {
-        if (data.deleted === true) {
+        if (data.deleted) {
           alert("Deleted prescription");
-          router.reload(`/patientProfile/${email}`);
+          setPatient((prev) => ({
+            ...prev,
+            prescriptions: prev.prescriptions.filter((p) => p._id !== prescriptionId),
+          }));
         } else {
-          alert("You cannot delete that prescription!");
+          alert("You cannot delete this prescription!");
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.error("Error deleting prescription:", error));
   };
 
   const handleEdit = async (prescriptionId) => {
@@ -76,28 +67,32 @@ const PatientProfile = () => {
 
   if (!patient) {
     return (
-      <div className={`dark:bg-gray-900 bg-white flex flex-col w-full h-screen`}>
-        <div className="flex justify-center">
-          <img
-            src="/doctor_team.png"
-            style={{ width: "600px", height: "500px" }}
-          />
-        </div>
-        <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6 dark:text-white">
-          Create Profile to track your Medical History!
-        </div>
-        <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
-          <Link
-            href={`/patientCreate/${email}`}
-            className="bg-red-500 text-white p-4 rounded-md"
-          >
-            Create Profile
-          </Link>
+      <div className={darkMode ? "dark" : ""}>
+    
+        <div className={`dark:bg-gray-900 bg-white flex flex-col w-full h-screen`}>
+          <div className="flex justify-center">
+            <img
+              src="/doctor_team.png"
+              style={{ width: "600px", height: "500px" }}
+            />
+          </div>
+          <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6 dark:text-white">
+            Create Profile to track your Medical History!
+          </div>
+          <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
+            <Link
+              href={`/patientCreate/${email}`}
+              className="bg-red-500 text-white p-4 rounded-md"
+            >
+              Create Profile
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
+ 
   return (
     <div className={`dark:bg-gray-900 bg-white flex flex-col w-full h-screen`}>
       {/* Navigation Bar with Toggle Button */}
@@ -117,7 +112,7 @@ const PatientProfile = () => {
                 <Link href="/ListDoctors">Find Doctors</Link>
               </li>
               <li className="text-lg font-medium ml-10">
-                <Link href="/Messenger">chat consult</Link>
+                <Link href="/Messenger">Chat Consult</Link>
               </li>
               <li className="text-lg font-medium ml-10">
                 <a href={`/patientProfile/${session?.user?.email}`}>Profile</a>
@@ -129,9 +124,9 @@ const PatientProfile = () => {
               </li>
               {/* Theme Toggle Button */}
               <li className="ml-10">
-                <button onClick={toggleTheme} className="text-xl">
-                  {theme === "dark" ? <FaSun /> : <FaMoon />}
-                </button>
+              <button onClick={toggleDarkMode} className="flex items-center space-x-2 text-lg font-medium text-blue-700 hover:text-blue-500">
+          {darkMode ? <FaSun className="text-yellow-400" size={20} /> : <FaMoon className="text-blue-500" size={20} />}
+        </button>
               </li>
             </ul>
           </div>
@@ -142,7 +137,7 @@ const PatientProfile = () => {
                 <Link href="/">Home</Link>
               </li>
               <li className="text-lg font-medium ml-10">
-                <Link href="/Messenger">PATIENTS</Link>
+                <Link href="/Messenger">Patients</Link>
               </li>
               <li className="text-lg font-medium ml-10">
                 <button onClick={() => signOut({ callbackUrl: "/" })}>
@@ -151,9 +146,9 @@ const PatientProfile = () => {
               </li>
               {/* Theme Toggle Button */}
               <li className="ml-10">
-                <button onClick={toggleTheme} className="text-xl">
-                  {theme === "dark" ? <FaSun /> : <FaMoon />}
-                </button>
+              <button onClick={toggleDarkMode} className="flex items-center space-x-2 text-lg font-medium text-blue-700 hover:text-blue-500">
+    {darkMode ? <FaSun className="text-yellow-400" size={20} /> : <FaMoon className="text-blue-500" size={20} />}
+  </button>
               </li>
             </ul>
           </div>
@@ -175,7 +170,7 @@ const PatientProfile = () => {
               </div>
             </div>
             <div className="text-center mt-4 space-y-4">
-              {session?.user?.email == email && (
+              {session?.user?.email === email && (
                 <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
                   <Link href={`/patientUpdate/${patient.email}`}>Edit Details</Link>
                 </div>
@@ -184,7 +179,6 @@ const PatientProfile = () => {
                 <Link href={`/patientPrescription/${patient.email}`}>
                   Add Prescription
                 </Link>
-
               </div>
               {(() => {
                 const isPecEmail = session?.user?.email?.endsWith("@pec.edu.in");
@@ -203,7 +197,6 @@ const PatientProfile = () => {
                   </div>
                 );
               })()}
-
             </div>
           </div>
         </div>
@@ -256,6 +249,7 @@ const PatientProfile = () => {
           </table>
         </div>
       </div>
+
       <div className="text-black dark:text-white text-3xl flex justify-center font-bold mt-8">
         Current Medications
       </div>
@@ -297,10 +291,10 @@ const PatientProfile = () => {
                     <td>
                       <span
                         className={`px-3 py-1 rounded-lg font-bold ${p.status === "active"
-                            ? "bg-green-500 text-white"
-                            : p.status === "pending"
-                              ? "bg-yellow-500 text-black"
-                              : "bg-blue-500 text-white"
+                          ? "bg-green-500 text-white"
+                          : p.status === "pending"
+                            ? "bg-yellow-500 text-black"
+                            : "bg-blue-500 text-white"
                           }`}
                       >
                         {p.status}
@@ -351,11 +345,8 @@ const PatientProfile = () => {
           </div>
         </div>
       )}
-
-
     </div>
   );
 };
 
 export default PatientProfile;
-

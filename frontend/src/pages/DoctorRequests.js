@@ -1,20 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import { signOut, useSession } from 'next-auth/react'; // Ensure next-auth is correctly set up for signOut
-import Link from 'next/link'; // Ensure Link is imported
-import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for dark mode toggle
-import { BASE_URL } from "../helper.js"; 
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+} from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { FaSun, FaMoon } from "react-icons/fa";
+import { BASE_URL } from "../helper.js";
+
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+    background: {
+      default: "#FFFFFF", // Complete white for light mode
+    },
+    text: {
+      primary: "#000000", // Black text in light mode
+    },
+  },
+});
+
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    background: {
+      default: "#121212", // Solid dark background in dark mode
+    },
+    text: {
+      primary: "#FFFFFF", // White text in dark mode
+    },
+  },
+});
+
 const DoctorRequests = () => {
-    const { data: session, status } = useSession();
-   
+  const { data: session, status } = useSession();
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(false); // State for Dark Mode
-  const doctorEmail = session?.user?.email; // Get doctor email from session
-  // Function to toggle dark mode
+  const [darkMode, setDarkMode] = useState(false);
+  const doctorEmail = session?.user?.email;
+
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.body.classList.toggle('dark', !darkMode); // Toggle dark mode globally
+    setDarkMode((prev) => !prev);
   };
 
   useEffect(() => {
@@ -23,11 +59,9 @@ const DoctorRequests = () => {
     }
   }, [status, session]);
 
-  // Fetch Requests function
   const fetchRequests = async () => {
     try {
       setError(null);
-      console.log("doctorEmail: ", doctorEmail);
       const response = await fetch(`${BASE_URL}/api/requests/getAllRequests/${doctorEmail}`);
 
       const data = await response.json();
@@ -42,10 +76,6 @@ const DoctorRequests = () => {
     }
   };
 
-  if (status === "loading") {
-    return <div className="flex items-center justify-center min-h-screen text-xl">Loading...</div>;
-  }
-  // Update Request Status function
   const updateRequest = async (patientEmail, newStatus) => {
     try {
       const response = await fetch(`${BASE_URL}/api/requests/UpdateRequest`, {
@@ -70,166 +100,137 @@ const DoctorRequests = () => {
     }
   };
 
-  // Call fetchRequests Inside useEffect
-  // useEffect(() => {
-  //   fetchRequests();
-  // }, [doctorEmail]);
+  if (status === "loading") {
+    return <div className="flex items-center justify-center min-h-screen text-xl">Loading...</div>;
+  }
 
   return (
-    <div style={styles.container}>
-      {/* Navbar */}
-      <div className="w-full px-2 flex justify-between items-center">
-        <div className="flex justify-between">
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+      <CssBaseline />
+      <div
+  style={{
+    padding: "30px",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: darkMode ? "#121212" : "#FFFFFF", // Solid dark or white background
+    color: darkMode ? "#FFFFFF" : "#000000", // Dynamic text color
+  }}
+>
+ {/* Navbar */}
+        <div className="w-full px-2 flex justify-between items-center">
           <div className="text-4xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700 p-5">
             MediCare
           </div>
-        </div>
-        <div className="flex justify-center" style={{ color: 'black' }}>
-          <ul className="flex justify-between space-x-8 uppercase p-5 mr-12">
-            <li className="text-lg font-medium ml-10">
-              <Link href="/">Home</Link>
+          <ul className="flex space-x-8 uppercase p-5">
+            <li><Link href="/">Home</Link></li>
+            <li><Link href="/Messenger">Patients</Link></li>
+            <li><Link href="/DoctorRequests">Verify Requests</Link></li>
+            <li>
+              <button onClick={() => signOut({ callbackUrl: "/" })}>Sign Out</button>
             </li>
-            <li className="text-lg font-medium ml-10">
-              <Link href="/Messenger">PATIENTS</Link>
-            </li>
-            <li className="text-lg font-medium ml-10">
-              <Link href="/DoctorRequests">VERIFY REQUESTS</Link>
-            </li>
-            <li className="text-lg font-medium ml-10">
-              <button onClick={() => signOut({ callbackUrl: "/" })}>SIGN OUT</button>
-            </li>
-            <button
-              onClick={toggleDarkMode}
-              className="flex items-center space-x-2 text-lg font-medium text-blue-700 hover:text-blue-500"
-            >
-              {darkMode ? <FaSun className="text-yellow-400" size={20} /> : <FaMoon className="text-blue-500" size={20} />}
+            <button onClick={toggleDarkMode} className="flex items-center space-x-2 text-lg font-medium">
+              {darkMode ? (
+                <FaSun className="text-yellow-400" size={20} />
+              ) : (
+                <FaMoon className="text-blue-500" size={20} />
+              )}
             </button>
           </ul>
         </div>
-      </div>
 
-      <h1 style={styles.title}>Doctor Requests</h1>
-      {error && <p style={styles.errorText}>Error: {error}</p>}
+        {/* Content */}
+        <h1 style={{ color: "#00698f", marginBottom: "20px", fontSize: "28px", fontWeight: "bold" }}>Doctor Requests</h1>
+        {error && <p style={{ color: "red", marginBottom: "20px", fontSize: "16px", fontWeight: "bold" }}>Error: {error}</p>}
 
-      <TableContainer component={Paper} style={styles.tableContainer}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell style={styles.tableHeader}>Patient Email</TableCell>
-              <TableCell style={styles.tableHeader}>Status</TableCell>
-              <TableCell style={styles.tableHeader}>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {requests.map((req) => (
-              <TableRow key={req._id} style={styles.tableRow}>
-                <TableCell>{req.patientEmail}</TableCell>
-                <TableCell
-                  style={{
-                    ...styles.statusText,
-                    color:
-                      req.status === "accepted"
-                        ? "green"
-                        : req.status === "rejected"
-                        ? "red"
-                        : "black",
-                  }}
-                >
-                  {req.status}
+        {/* Table */}
+        <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 5, maxWidth: "800px", width: "100%" }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "16px", backgroundColor: "#00698f", color: "#fff", textAlign: "center" }}>
+                  Patient Email
                 </TableCell>
-                <TableCell>
-                  <Button
-                    onClick={() => updateRequest(req.patientEmail, "accepted")}
-                    style={{
-                      ...styles.actionButton,
-                      backgroundColor: req.status === "accepted" ? "#4CAF50" : "#fff",
-                      color: req.status === "accepted" ? "#fff" : "#000",
-                      border: "2px solid #4CAF50",
-                    }}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    onClick={() => updateRequest(req.patientEmail, "rejected")}
-                    style={{
-                      ...styles.actionButton,
-                      backgroundColor: req.status === "rejected" ? "#f44336" : "#fff",
-                      color: req.status === "rejected" ? "#fff" : "#000",
-                      border: "2px solid #f44336",
-                    }}
-                  >
-                    Reject
-                  </Button>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "16px", backgroundColor: "#00698f", color: "#fff", textAlign: "center" }}>
+                  Status
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontSize: "16px", backgroundColor: "#00698f", color: "#fff", textAlign: "center" }}>
+                  Actions
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
-  );
-};
+            </TableHead>
+            <TableBody>
+              {requests.map((req) => (
+                <TableRow key={req._id}>
+                  <TableCell>{req.patientEmail}</TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: "bold",
+                      textTransform: "capitalize",
+                      fontSize: "14px",
+                      textAlign: "center",
+                      color:
+                        req.status === "accepted"
+                          ? "green"
+                          : req.status === "rejected"
+                          ? "red"
+                          : "black",
+                    }}
+                  >
+                    {req.status}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => updateRequest(req.patientEmail, "accepted")}
+                      sx={{
+                        margin: "5px",
+                        padding: "8px 16px",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease-in-out",
+                        backgroundColor:
+                          req.status === "accepted" ? "#4CAF50" : "#fff",
+                        color:
+                          req.status === "accepted" ? "#fff" : "#000",
+                        border:
+                          req.status === "accepted"
+                            ? `2px solid #4CAF50`
+                            : `2px solid #000`,
+                      }}
+                    >
+                      Accept
+                    </Button>
+  
 
-// Styling improvements
-const styles = {
-  container: {
-    padding: '30px',
-    fontFamily: 'Arial, sans-serif',
-    backgroundColor: '#f5f7fa',
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  title: {
-    color: '#00698f',
-    marginBottom: '20px',
-    fontSize: '28px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    textTransform: 'uppercase',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: '20px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-  },
-  tableContainer: {
-    borderRadius: '10px',
-    boxShadow: '0px 4px 15px rgba(0,0,0,0.15)',
-    overflowX: 'auto',
-    backgroundColor: '#ffffff',
-    maxWidth: '800px',
-    width: '100%',
-  },
-  tableHeader: {
-    fontWeight: 'bold',
-    fontSize: '16px',
-    backgroundColor: '#00698f',
-    color: '#fff',
-    textAlign: 'center',
-  },
-  tableRow: {
-    '&:hover': {
-      backgroundColor: '#f1f1f1',
-    },
-  },
-  statusText: {
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
-    fontSize: '14px',
-    textAlign: 'center',
-  },
-  actionButton: {
-    margin: '5px',
-    padding: '8px 16px',
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease-in-out',
-  },
+                    <Button
+                      onClick={() => updateRequest(req.patientEmail, "rejected")}
+                      sx={{
+                        margin: "5px",
+                        padding: "8px 16px",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease-in-out",
+                        backgroundColor: req.status === "rejected" ? "#f44336" : "#fff",
+                        color: req.status === "rejected" ? "#fff" : "#000",
+                        border: "2px solid #f44336",
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </ThemeProvider>
+  );
 };
 
 export default DoctorRequests;
