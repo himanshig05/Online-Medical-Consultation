@@ -16,31 +16,30 @@ The app supports Google OAuth, dark mode, and Redis-powered search history cachi
 - Role-based registration for patients and doctors  
 - Search doctors by specialization with voice-enabled search bar  
 - Real-time chat with doctors using Socket.io
-  <img width="937" alt="image" src="https://github.com/user-attachments/assets/26b53618-2d28-4e8f-9460-eee823c89212" />
+  <img width="900" alt="image" src="https://github.com/user-attachments/assets/26b53618-2d28-4e8f-9460-eee823c89212" />
 - Doctors can create new prescriptions and update existing ones in patient profiles
-  <img width="729" alt="image" src="https://github.com/user-attachments/assets/d1dc5b4e-e306-4118-9296-c6a2d28ee258" />
+  <img width="900" alt="image" src="https://github.com/user-attachments/assets/d1dc5b4e-e306-4118-9296-c6a2d28ee258" />
 - Media file attachments by doctors in patient profiles which is downloadable by patients  
 - Secure data storage with MongoDB  
 - Integrated medical chatbot with voice input and voice assistant
-  <img width="917" alt="image" src="https://github.com/user-attachments/assets/1e7a4436-046c-4817-b96c-70cd0ae925b3" />
+  <img width="900" alt="image" src="https://github.com/user-attachments/assets/1e7a4436-046c-4817-b96c-70cd0ae925b3" />
   - Text-to-speech with current word highlighting
-    <img width="933" alt="image" src="https://github.com/user-attachments/assets/4e45fad5-7999-48b2-9b7c-38d9b22aace1" />
+    <img width="900" alt="image" src="https://github.com/user-attachments/assets/4e45fad5-7999-48b2-9b7c-38d9b22aace1" />
   - Resume and pause controls
 
 - Dark mode enabled across the entire platform for better user experience  
 - Redis-based caching implemented for faster search history suggestions
-  <img width="934" alt="image" src="https://github.com/user-attachments/assets/8aad6b70-e746-4fd4-b12c-b1bef6df971d" />
+  <img width="900" alt="image" src="https://github.com/user-attachments/assets/8aad6b70-e746-4fd4-b12c-b1bef6df971d" />
  
 - Patients can rate and review doctors, and average ratings are displayed
-  ![WhatsApp Image 2025-04-05 at 23 07 40_0085b6e0](https://github.com/user-attachments/assets/12bb67eb-b6b0-4ef4-87ae-a8d61c043f20)
-
+<img src="https://github.com/user-attachments/assets/12bb67eb-b6b0-4ef4-87ae-a8d61c043f20" width="900">
 - Sorting option for doctors based on rating (low to high, high to low)
-  ![image](https://github.com/user-attachments/assets/99df2a01-9be5-409d-b76d-a937be3e1675)
+ <img src="https://github.com/user-attachments/assets/99df2a01-9be5-409d-b76d-a937be3e1675" width="900">
 - Notification system:  
   - Doctors are notified when a patient submits a review request
-    ![image](https://github.com/user-attachments/assets/20cbd22d-adcb-4de2-9c4a-a804236fac65)
+  <img src="https://github.com/user-attachments/assets/20cbd22d-adcb-4de2-9c4a-a804236fac65" width="900">
   - Patients are notified when their review is accepted or rejected
-    ![image](https://github.com/user-attachments/assets/f60789dd-d5ad-4fe0-b709-68eab6274f80)
+   <img src="https://github.com/user-attachments/assets/f60789dd-d5ad-4fe0-b709-68eab6274f80" width="900">
   - Patients can resend review requests if rejected
 - Secure payment gateway integration for seamless transactions
  
