@@ -121,7 +121,7 @@ Ensure you have the following installed:
 ```bash
 # Build and run the app using Docker
 docker-compose up --build
-
+ ```
 5. **Access the application:** Open ```http://localhost:3000``` in your browser.
 
 ## Contributing
