@@ -13,6 +13,10 @@ const initiatePayment = async (req, res) => {
     const { amount, doctorEmail } = req.body;
     const transaction = { date: new Date(), amount, status: 'pending' };
 
+    const amountInPaise = parseInt(amount, 10) * 100;
+    console.log("amount : ",amountInPaise);
+    console.log("amount type : ", typeof amountInPaise);
+
     // PATIENT SIDE
     const patient = await PatientPay.findOne({ patientEmail });
 
@@ -96,7 +100,7 @@ const initiatePayment = async (req, res) => {
             product_data: {
               name: `Payment by: ${patientEmail} to ${doctorEmail}`,
             },
-            unit_amount: amount * 100, // in paise
+            unit_amount: amountInPaise,
           },
           quantity: 1,
         },

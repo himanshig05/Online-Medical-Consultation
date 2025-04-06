@@ -37,7 +37,7 @@ const Success = () => {
     fetchSession();
   }, [session_id]);
 
-  if (loading) return <p>Loading payment details...</p>;
+  if (loading) return <p>Loading ...</p>;
 
   return (
     <div>

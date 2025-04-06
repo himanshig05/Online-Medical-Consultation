@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import { signOut, useSession } from 'next-auth/react'; // Ensure next-auth is correctly set up for signOut
-import Link from 'next/link'; // Ensure Link is imported
-import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for dark mode toggle
-import { BASE_URL } from "../helper.js";
-const DoctorRequests = () => {
-  const { data: session, status } = useSession();
-
-=======
 import React, { useState, useEffect } from "react";
 import {
   Table,
@@ -55,7 +44,6 @@ const darkTheme = createTheme({
 
 const DoctorRequests = () => {
   const { data: session, status } = useSession();
->>>>>>> 86aca3e47c366d9a229cc5e5b71ef55cb52efb77
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
@@ -156,33 +144,6 @@ const DoctorRequests = () => {
         <h1 style={{ color: "#00698f", marginBottom: "20px", fontSize: "28px", fontWeight: "bold" }}>Doctor Requests</h1>
         {error && <p style={{ color: "red", marginBottom: "20px", fontSize: "16px", fontWeight: "bold" }}>Error: {error}</p>}
 
-<<<<<<< HEAD
-      <TableContainer component={Paper} style={styles.tableContainer}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell style={styles.tableHeader}>Patient Email</TableCell>
-              <TableCell style={styles.tableHeader}>Status</TableCell>
-              <TableCell style={styles.tableHeader}>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {requests.map((req) => (
-              <TableRow key={req._id} style={styles.tableRow}>
-                <TableCell>{req.patientEmail}</TableCell>
-                <TableCell
-                  style={{
-                    ...styles.statusText,
-                    color:
-                      req.status === "accepted"
-                        ? "green"
-                        : req.status === "rejected"
-                          ? "red"
-                          : "black",
-                  }}
-                >
-                  {req.status}
-=======
         {/* Table */}
         <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 5, maxWidth: "800px", width: "100%" }}>
           <Table stickyHeader>
@@ -190,7 +151,6 @@ const DoctorRequests = () => {
               <TableRow>
                 <TableCell sx={{ fontWeight: "bold", fontSize: "16px", backgroundColor: "#00698f", color: "#fff", textAlign: "center" }}>
                   Patient Email
->>>>>>> 86aca3e47c366d9a229cc5e5b71ef55cb52efb77
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", fontSize: "16px", backgroundColor: "#00698f", color: "#fff", textAlign: "center" }}>
                   Status

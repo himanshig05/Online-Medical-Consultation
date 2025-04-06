@@ -14,11 +14,8 @@ const reviewRoutes= require("./routes/reviewRoutes");
 const requestRoutes = require("./routes/requestRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const searchRoutes = require("./routes/searchRoutes.js");
-<<<<<<< HEAD
 const paymentRoutes = require("./routes/paymentRoutes.js");
-=======
 const mediaRoutes = require("./routes/mediaRoutes");
->>>>>>> 86aca3e47c366d9a229cc5e5b71ef55cb52efb77
 
 
 
