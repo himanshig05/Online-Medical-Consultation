@@ -14,6 +14,7 @@ const reviewRoutes= require("./routes/reviewRoutes");
 const requestRoutes = require("./routes/requestRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const searchRoutes = require("./routes/searchRoutes.js");
+const paymentRoutes = require("./routes/paymentRoutes.js");
 
 
 
@@ -43,7 +44,9 @@ app.use("/api/requests", requestRoutes);
 app.use("/api/notifications", notificationRoutes);
 //search bar routes
 
-app.use("/search", searchRoutes)
+app.use("/search", searchRoutes);
+
+app.use("/payment",paymentRoutes);
 
 const PORT = process.env.PORT || 5000;
 // const PORT = process.env.PORT || 5002;
