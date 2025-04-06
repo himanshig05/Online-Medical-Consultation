@@ -266,6 +266,7 @@ const DoctorTable = () => {
             <p>No reviews yet.</p>
           )}
         </section>
+        <Link  href={`/makePayments/${session?.user?.email}/${doctor.email}`}> <button> Make Payment </button> </Link>
       </main>
     </div>
   );
