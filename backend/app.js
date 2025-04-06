@@ -14,7 +14,11 @@ const reviewRoutes= require("./routes/reviewRoutes");
 const requestRoutes = require("./routes/requestRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const searchRoutes = require("./routes/searchRoutes.js");
+<<<<<<< HEAD
 const paymentRoutes = require("./routes/paymentRoutes.js");
+=======
+const mediaRoutes = require("./routes/mediaRoutes");
+>>>>>>> 86aca3e47c366d9a229cc5e5b71ef55cb52efb77
 
 
 
@@ -22,6 +26,7 @@ const app = express();
 
 const server = require("http").Server(app);
 const io=initializeSocket(server);
+
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,6 +47,8 @@ app.use("/rating",reviewRoutes);
 
 app.use("/api/requests", requestRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/media", mediaRoutes); 
+
 //search bar routes
 
 app.use("/search", searchRoutes);

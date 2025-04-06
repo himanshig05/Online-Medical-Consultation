@@ -57,7 +57,7 @@ const DoctorTable = () => {
   };
 
   return (
-    <div className={darkMode ? "dark" : ""}>
+    <div className={`dark:bg-gray-900 bg-white flex flex-col w-full h-screen`}>
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         {error ? (
           <div className="flex flex-col w-full h-screen justify-center items-center">

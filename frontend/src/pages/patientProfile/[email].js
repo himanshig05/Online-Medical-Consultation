@@ -3,7 +3,6 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { BASE_URL } from "../../helper.js";
-import { useTheme } from "../../../context/ThemeContext";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
@@ -12,59 +11,54 @@ const PatientProfile = () => {
   const { data: session } = useSession();
   const [patient, setPatient] = useState({});
   const email = router.query.email;
-  const { theme, toggleTheme } = useTheme();
+  const [darkMode, setDarkMode] = useState(false);
+
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const savedTheme = localStorage.getItem("theme") || "light";
+  //     setTheme(savedTheme);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem("theme", theme);
+  // }, [theme]);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => !prevMode);
+    document.documentElement.classList.toggle("dark");
+  };
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme && savedTheme !== theme) {
-      toggleTheme(); // Ensures the theme toggles correctly
-    }
-  }, [theme, toggleTheme]);
-
-  useEffect(() => {
-    localStorage.setItem("theme", theme); // Save theme in local storage
-  }, [theme]);
-
-  useEffect(() => {
-    if (router.isReady) {
-      fetch(`${BASE_URL}/patientProfile/${email}`, {
-        method: "GET",
-      })
+    if (router.isReady && email) {
+      fetch(`${BASE_URL}/patientProfile/${email}`)
         .then((res) => res.json())
         .then((data) => {
           setPatient(data);
-        });
+        })
+        .catch((err) => console.error("Failed to fetch patient data:", err));
     }
-  }, [router.isReady]);
+  }, [router.isReady, email]);
 
   const handleDelete = async (prescriptionId) => {
-    const curr_user = session.user.email;
-    fetch(
-      `${BASE_URL}/deletePrescription`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          email,
-          prescriptionId,
-          curr_user
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    fetch(`${BASE_URL}/deletePrescription`, {
+      method: "PATCH",
+      body: JSON.stringify({ email, prescriptionId, curr_user: session.user.email }),
+      headers: { "Content-Type": "application/json" },
+    })
       .then((res) => res.json())
       .then((data) => {
-        if (data.deleted === true) {
+        if (data.deleted) {
           alert("Deleted prescription");
-          router.reload(`/patientProfile/${email}`);
+          setPatient((prev) => ({
+            ...prev,
+            prescriptions: prev.prescriptions.filter((p) => p._id !== prescriptionId),
+          }));
         } else {
-          alert("You cannot delete that prescription!");
+          alert("You cannot delete this prescription!");
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.error("Error deleting prescription:", error));
   };
 
   const handleEdit = async (prescriptionId) => {
@@ -73,28 +67,32 @@ const PatientProfile = () => {
 
   if (!patient) {
     return (
-      <div className={`dark:bg-gray-900 bg-white flex flex-col w-full h-screen`}>
-        <div className="flex justify-center">
-          <img
-            src="/doctor_team.png"
-            style={{ width: "600px", height: "500px" }}
-          />
-        </div>
-        <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6 dark:text-white">
-          Create Profile to track your Medical History!
-        </div>
-        <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
-          <Link
-            href={`/patientCreate/${email}`}
-            className="bg-red-500 text-white p-4 rounded-md"
-          >
-            Create Profile
-          </Link>
+      <div className={darkMode ? "dark" : ""}>
+    
+        <div className={`dark:bg-gray-900 bg-white flex flex-col w-full h-screen`}>
+          <div className="flex justify-center">
+            <img
+              src="/doctor_team.png"
+              style={{ width: "600px", height: "500px" }}
+            />
+          </div>
+          <div className="text-[#2f0563] font-bold justify-center flex text-5xl mt-6 dark:text-white">
+            Create Profile to track your Medical History!
+          </div>
+          <div className="flex justify-center mt-8 text-lg hover:scale-[1.01] duration-500">
+            <Link
+              href={`/patientCreate/${email}`}
+              className="bg-red-500 text-white p-4 rounded-md"
+            >
+              Create Profile
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
+ 
   return (
     <div className={`dark:bg-gray-900 bg-white flex flex-col w-full h-screen`}>
       {/* Navigation Bar with Toggle Button */}
@@ -114,7 +112,7 @@ const PatientProfile = () => {
                 <Link href="/ListDoctors">Find Doctors</Link>
               </li>
               <li className="text-lg font-medium ml-10">
-                <Link href="/Messenger">chat consult</Link>
+                <Link href="/Messenger">Chat Consult</Link>
               </li>
               <li className="text-lg font-medium ml-10">
                 <a href={`/patientProfile/${session?.user?.email}`}>Profile</a>
@@ -126,9 +124,9 @@ const PatientProfile = () => {
               </li>
               {/* Theme Toggle Button */}
               <li className="ml-10">
-                <button onClick={toggleTheme} className="text-xl">
-                  {theme === "dark" ? <FaSun /> : <FaMoon />}
-                </button>
+              <button onClick={toggleDarkMode} className="flex items-center space-x-2 text-lg font-medium text-blue-700 hover:text-blue-500">
+          {darkMode ? <FaSun className="text-yellow-400" size={20} /> : <FaMoon className="text-blue-500" size={20} />}
+        </button>
               </li>
             </ul>
           </div>
@@ -139,7 +137,7 @@ const PatientProfile = () => {
                 <Link href="/">Home</Link>
               </li>
               <li className="text-lg font-medium ml-10">
-                <Link href="/Messenger">PATIENTS</Link>
+                <Link href="/Messenger">Patients</Link>
               </li>
               <li className="text-lg font-medium ml-10">
                 <button onClick={() => signOut({ callbackUrl: "/" })}>
@@ -148,9 +146,9 @@ const PatientProfile = () => {
               </li>
               {/* Theme Toggle Button */}
               <li className="ml-10">
-                <button onClick={toggleTheme} className="text-xl">
-                  {theme === "dark" ? <FaSun /> : <FaMoon />}
-                </button>
+              <button onClick={toggleDarkMode} className="flex items-center space-x-2 text-lg font-medium text-blue-700 hover:text-blue-500">
+    {darkMode ? <FaSun className="text-yellow-400" size={20} /> : <FaMoon className="text-blue-500" size={20} />}
+  </button>
               </li>
             </ul>
           </div>
@@ -172,7 +170,7 @@ const PatientProfile = () => {
               </div>
             </div>
             <div className="text-center mt-4 space-y-4">
-              {session?.user?.email == email && (
+              {session?.user?.email === email && (
                 <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
                   <Link href={`/patientUpdate/${patient.email}`}>Edit Details</Link>
                 </div>
@@ -182,6 +180,23 @@ const PatientProfile = () => {
                   Add Prescription
                 </Link>
               </div>
+              {(() => {
+                const isPecEmail = session?.user?.email?.endsWith("@pec.edu.in");
+                console.log("Email ends with @pec.edu.in:", isPecEmail);
+                return isPecEmail ? (
+                  <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                    <Link href={`/uploadDocument/${patient.email}`}>
+                      Add Document
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="text-white font-bold py-2 px-4 text-xl border-2 rounded-xl bg-blue-500 hover:bg-blue-700 text-center">
+                    <Link href="/PatientDocuments">
+                      View Documents
+                    </Link>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -234,104 +249,102 @@ const PatientProfile = () => {
           </table>
         </div>
       </div>
-      <div className="text-black dark:text-white text-3xl flex justify-center font-bold mt-8">
-  Current Medications
-</div>
-{patient.prescriptions?.length > 0 ? (
-  patient.prescriptions?.map((p) => (
-    <div
-      key={p._id}
-      className="bg-white dark:bg-gray-800 rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8"
-    >
-      <div className="relative flex flex-row items-start space-x-20">
-        <div>
-          <img src="/download.jpeg" alt="Medicine" />
-        </div>
-        <table className="border-none text-base h-[270px] w-[80%] text-black dark:text-white">
-          <tbody>
-            <tr>
-              <td className="font-semibold">Date</td>
-              <td>:</td>
-              <td>{p.date}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold">Medicine</td>
-              <td>:</td>
-              <td>{p.medicine}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold">Duration</td>
-              <td>:</td>
-              <td>{p.duration}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold">Amount</td>
-              <td>:</td>
-              <td>{p.amount}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold">Status</td>
-              <td>:</td>
-              <td>
-                <span
-                  className={`px-3 py-1 rounded-lg font-bold ${
-                    p.status === "active"
-                      ? "bg-green-500 text-white"
-                      : p.status === "pending"
-                      ? "bg-yellow-500 text-black"
-                      : "bg-blue-500 text-white"
-                  }`}
-                >
-                  {p.status}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="flex space-x-4 absolute top-5 right-5">
-          {p.doctor === session?.user?.email && (
-            <button
-              className="inline-flex items-center px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md"
-              onClick={() => handleDelete(p._id)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-              Delete
-            </button>
-          )}
-          {p.doctor === session?.user?.email && (
-            <button
-              className="inline-flex items-center px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md"
-              onClick={() => handleEdit(p._id)}
-            >
-              Edit
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  ))
-) : (
-  <div className="bg-gray-100 dark:bg-gray-700 flex justify-center p-8 h-[250px]">
-    <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 w-[700px] flex justify-center text-black dark:text-white">
-      No prescriptions found
-    </div>
-  </div>
-)}
 
-      
+      <div className="text-black dark:text-white text-3xl flex justify-center font-bold mt-8">
+        Current Medications
+      </div>
+      {patient.prescriptions?.length > 0 ? (
+        patient.prescriptions?.map((p) => (
+          <div
+            key={p._id}
+            className="bg-white dark:bg-gray-800 rounded-3xl border-red-400 pt-5 pl-12 mb-5 pb-5 mt-8"
+          >
+            <div className="relative flex flex-row items-start space-x-20">
+              <div>
+                <img src="/download.jpeg" alt="Medicine" />
+              </div>
+              <table className="border-none text-base h-[270px] w-[80%] text-black dark:text-white">
+                <tbody>
+                  <tr>
+                    <td className="font-semibold">Date</td>
+                    <td>:</td>
+                    <td>{p.date}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-semibold">Medicine</td>
+                    <td>:</td>
+                    <td>{p.medicine}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-semibold">Duration</td>
+                    <td>:</td>
+                    <td>{p.duration}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-semibold">Amount</td>
+                    <td>:</td>
+                    <td>{p.amount}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-semibold">Status</td>
+                    <td>:</td>
+                    <td>
+                      <span
+                        className={`px-3 py-1 rounded-lg font-bold ${p.status === "active"
+                          ? "bg-green-500 text-white"
+                          : p.status === "pending"
+                            ? "bg-yellow-500 text-black"
+                            : "bg-blue-500 text-white"
+                          }`}
+                      >
+                        {p.status}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="flex space-x-4 absolute top-5 right-5">
+                {p.doctor === session?.user?.email && (
+                  <button
+                    className="inline-flex items-center px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md"
+                    onClick={() => handleDelete(p._id)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                    Delete
+                  </button>
+                )}
+                {p.doctor === session?.user?.email && (
+                  <button
+                    className="inline-flex items-center px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md"
+                    onClick={() => handleEdit(p._id)}
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="bg-gray-100 dark:bg-gray-700 flex justify-center p-8 h-[250px]">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 w-[700px] flex justify-center text-black dark:text-white">
+            No prescriptions found
+          </div>
+        </div>
+      )}
     </div>
   );
 };

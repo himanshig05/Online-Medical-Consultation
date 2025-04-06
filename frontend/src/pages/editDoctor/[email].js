@@ -11,6 +11,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const EditForm = () => {
   const { data: session } = useSession();
@@ -26,6 +27,7 @@ const EditForm = () => {
   const [location, setLocation] = useState("");
   const [hours, setHours] = useState("");
   const [profilePic, setProfilePic] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     if (router.isReady) {
@@ -122,31 +124,46 @@ const EditForm = () => {
     }
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => !prevMode);
+    document.documentElement.classList.toggle("dark");
+  };
+
+ 
   return (
-    <div className="bg-white">
+    <div className={`min-h-screen transition-all ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}> 
       <div className="flex items-center justify-center">
-        <div className="bg-white px-16 py-10 border-2 w-1/2 mt-24 mb-24">
-          <div className="font-semibold text-black flex justify-center items-center mb-6 text-lg">
-            Edit your Profile
-          </div>
+        
+        <Link href="/">
+      <button
+        className={`absolute top-4 left-4 font-semibold mb-4 px-4 py-2 rounded-lg transition-all ${
+          darkMode ? "text-gray-100 bg-gray-800 hover:bg-gray-700" : "text-black bg-gray-200 hover:bg-gray-300"
+        }`}
+      >
+        ← Back to  Profile
+      </button>
+    </Link>
+        <div className={`px-16 py-10 border-2 w-1/2 mt-24 mb-24 transition-all ${darkMode ? "bg-gray-800 border-gray-600" : "bg-white border-gray-300"}`}> <div className="font-semibold flex justify-center items-center mb-6 text-lg">Edit your Profile</div>
+          
 
           {/* Name */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">Name:</label>
+            <label className="block mb-2 text-white:text-black">Name:</label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={(e) => setName(e.target.value)}
-              type="text"
-              value={name}
-            />
+            className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           </div>
 
           {/* Age */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">Age:</label>
+            <label className="block mb-2 text-white:text-black">Age:</label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={(e) => setAge(e.target.value)}
+              className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+             
+               onChange={(e) => setAge(e.target.value)}
               type="number"
               value={age}
             />
@@ -154,10 +171,10 @@ const EditForm = () => {
 
           {/* Domain */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">Domain:</label>
+            <label className="block mb-2 text-white:text-black">Domain:</label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={(e) => setDomain(e.target.value)}
+             className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+             onChange={(e) => setDomain(e.target.value)}
               type="text"
               value={domain}
             />
@@ -165,10 +182,10 @@ const EditForm = () => {
 
           {/* Experience */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">Experience:</label>
+            <label className="block mb-2 text-white:text-black">Experience:</label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={(e) => setExperience(e.target.value)}
+             className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+             onChange={(e) => setExperience(e.target.value)}
               type="number"
               value={experience}
             />
@@ -176,10 +193,10 @@ const EditForm = () => {
 
           {/* Qualifications */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">Qualifications:</label>
+            <label className="block mb-2 text-white:text-black">Qualifications:</label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={(e) => setQualifications(e.target.value)}
+             className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+             onChange={(e) => setQualifications(e.target.value)}
               type="text"
               value={qualifications}
             />
@@ -187,10 +204,10 @@ const EditForm = () => {
 
           {/* Location */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">Location:</label>
+            <label className="block mb-2 text-white:text-black">Location:</label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={(e) => setLocation(e.target.value)}
+             className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+             onChange={(e) => setLocation(e.target.value)}
               type="text"
               value={location}
             />
@@ -198,24 +215,24 @@ const EditForm = () => {
 
           {/* Hours */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">Available Hours:</label>
+            <label className="block mb-2 text-white:text-black">Available Hours:</label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={(e) => setHours(e.target.value)}
+             className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+             onChange={(e) => setHours(e.target.value)}
               type="text"
               value={hours}
             />
           </div>
+
+          {/* Profile Picture */}
           <div className="mb-6">
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Profile Picture:
-            </label>
+            <label className="block mb-2 text-white:text-black">Profile Picture:</label>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setProfilePic(e.target.files[0])}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            />
+              className="bg-gray-200 dark:bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all"
+              />
           </div>
 
           {profilePic && (
@@ -223,14 +240,14 @@ const EditForm = () => {
               <img
                 src={URL.createObjectURL(profilePic)}
                 alt="Profile Preview"
-                className="w-32 h-32 object-cover"
+                className="w-32 h-32 object-cover rounded-lg"
               />
             </div>
           )}
 
           <div className="mb-6 flex items-center justify-center">
             <button
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center transition-all"
               onClick={updateDoctor}
             >
               Submit
@@ -238,8 +255,15 @@ const EditForm = () => {
           </div>
 
           <div className="flex items-center justify-center">
-            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center transition-all">
               <Link href={`/findDoctor/${session?.user.email}`}>Show Profile</Link>
+            </button>
+          </div>
+
+          {/* Dark Mode Toggle Button */}
+          <div className="absolute top-4 right-4">
+            <button onClick={toggleDarkMode} className="flex items-center space-x-2 text-lg font-medium text-blue-700 dark:text-gray-100 hover:text-blue-500 transition-all">
+              {darkMode ? <FaSun className="text-yellow-400" size={20} /> : <FaMoon className="text-blue-500" size={20} />}
             </button>
           </div>
         </div>
