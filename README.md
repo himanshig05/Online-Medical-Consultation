@@ -42,6 +42,8 @@ The app supports Google OAuth, dark mode, and Redis-powered search history cachi
    <img src="https://github.com/user-attachments/assets/f60789dd-d5ad-4fe0-b709-68eab6274f80" width="900">
   - Patients can resend review requests if rejected
 - Secure payment gateway integration for seamless transactions
+  <img src= "https://github.com/user-attachments/assets/aacbf7cd-ec74-4405-8a88-292df88266ad" width="900">
+
  
 
 
