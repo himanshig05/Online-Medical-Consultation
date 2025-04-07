@@ -92,6 +92,9 @@ const DoctorTable = () => {
                     <Link href="/Messenger">PATIENTS</Link>
                   </li>
                   <li className="text-lg font-medium ml-10">
+                    <Link href={`/doctorPayments/${session?.user?.email}`}>PAYMENTS</Link>
+                  </li>
+                  <li className="text-lg font-medium ml-10">
                     <Link href="/DoctorRequests">VERIFY REQUESTS</Link>
                   </li>
                   <li>

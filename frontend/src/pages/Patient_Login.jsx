@@ -66,7 +66,11 @@ const toggleTheme = () => {
                 <li className="text-lg font-medium">
                   <Link href="/Messenger">CHAT CONSULT</Link>
                 </li>
-                
+                <li className="text-lg font-medium">
+                  <Link href={`/patientPayments/${session?.user?.email}`}>
+                    Payments
+                  </Link>
+                </li>
                 <li className="text-lg font-medium">
                   <Link href={`/patientProfile/${session?.user?.email}`}>
                     Profile
