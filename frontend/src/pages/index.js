@@ -26,7 +26,7 @@ export default function Home() {
     <>
       <Head>
         <title>MediCare</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/MEDICARE.png" />
       </Head>
       <div>
         <LoginPage />

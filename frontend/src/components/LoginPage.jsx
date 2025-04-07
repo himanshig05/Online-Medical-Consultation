@@ -4,30 +4,31 @@ import { useRouter } from "next/router.js";
 import Patient_Login from "@/pages/Patient_Login";
 import { FaMoon, FaSun } from "react-icons/fa";
 
+
 const LoginPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [darkMode, setDarkMode] = useState(false);
 
-  // 🌙 Load dark mode preference from localStorage
+
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedMode);
     if (savedMode) {
-      document.documentElement.classList.add("dark");  // ✅ Apply to HTML
+      document.documentElement.classList.add("dark");  
     }
   }, []);
 
-  // 🌙 Toggle Dark Mode
+ 
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
     localStorage.setItem("darkMode", newMode.toString());
 
     if (newMode) {
-      document.documentElement.classList.add("dark");  // ✅ Apply dark mode
+      document.documentElement.classList.add("dark"); 
     } else {
-      document.documentElement.classList.remove("dark");  // ❌ Remove dark mode
+      document.documentElement.classList.remove("dark");  
     }
   };
 
@@ -58,7 +59,15 @@ const LoginPage = () => {
 
         <div className="flex w-full h-screen items-center justify-center lg:w-1/2">
           <div className={`px-12 py-20 border-2 ${darkMode ? "bg-gray-800 border-white" : "bg-white border-purple-500"}`}>
-            
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+  <img 
+    src="/MEDICARE1.png" 
+    alt="Logo" 
+    className="w-16 h-16" 
+    style={{ width: "90px" , height: "90px" }} 
+  />
+</div>
+
             <div className="flex justify-center items-center">
               <h1 className="text-6xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700">
                 MediCare
