@@ -30,14 +30,21 @@ const LoginPage = () => {
       document.documentElement.classList.remove("dark");  // ❌ Remove dark mode
     }
   };
+  
+  // Check if user is logged in and store email in localStorage
+   useEffect(() => {
+    if (session?.user?.email) {
+      const emailId = session.user.email;
+      localStorage.setItem("userEmail", emailId); //Store email for history pages
+
+      const check = emailId.slice(emailId.indexOf("@"));
+      if (check === "@pec.edu.in") {
+        router.push(`/findDoctor/${emailId}`);
+      }
+    }
+  }, [session, router]);
 
   if (session) {
-    const emailId = session.user.email;
-    const check = emailId.slice(emailId.indexOf("@"));
-    if (check === "@pec.edu.in") {
-      router.push(`/findDoctor/${emailId}`);
-      return null;
-    }
     return <Patient_Login />;
   }
 
