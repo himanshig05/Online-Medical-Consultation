@@ -42,9 +42,17 @@ const toggleTheme = () => {
           {/* Navbar */}
           <div className={`w-full px-2 flex justify-between items-center ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} shadow-md py-4`}>
             <div className="flex">
+            <img 
+  src="/MEDICARE.png" 
+  alt="Logo" 
+  className="w-16 h-16" 
+  style={{ width: "65px" }} 
+/>
+
               <div className="text-4xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-700 p-5">
                 MediCare
               </div>
+            
             </div>
 
             <div className="flex items-center">
