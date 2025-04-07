@@ -3,7 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { BASE_URL } from "../helper.js";  // Make sure this is the correct base URL
 import { FaStar } from "react-icons/fa";
-import { useTheme } from "../../context/ThemeContext"; 
+import { useTheme } from "../../context/ThemeContext";
 import Link from 'next/link';
 
 
@@ -198,46 +198,46 @@ const DoctorTable = () => {
         {/* Review Submission */}
         {requestStatus === "accepted" ? (
           <div>
-          {hasReviewed ? (
-            <div className={`p-4 rounded-md mt-8 text-center ${theme === "dark" ? "bg-green-700" : "bg-green-100"}`}>
-              ✅ You have already reviewed the doctor!
-            </div>
-          ) : (
-            <section className={`mt-8 p-6 rounded-lg shadow-lg ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
-              <h2 className="text-3xl font-semibold mb-4">Rate and Review</h2>
-              <div className="flex space-x-2">
-                {[...Array(5)].map((_, index) => (
-                  <FaStar
-                    key={index}
-                    color={index < rating ? "#FFD700" : "#ccc"}
-                    onClick={() => setRating(index + 1)}
-                    className="cursor-pointer text-2xl"
-                  />
-                ))}
+            {hasReviewed ? (
+              <div className={`p-4 rounded-md mt-8 text-center ${theme === "dark" ? "bg-green-700" : "bg-green-100"}`}>
+                ✅ You have already reviewed the doctor!
               </div>
-              <textarea
-                className={`w-full mt-3 p-2 border rounded ${theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-black"}`}
-                placeholder="Write your review..."
-                value={review}
-                onChange={(e) => setReview(e.target.value)}
-              />
-              <button
-                className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={handleReviewSubmit}
-                disabled={submitted}
-              >
-                {submitted ? "Submitted" : "Submit Review"}
-              </button>
-            </section>
-          )}
-        </div>
-        ) : requestStatus === "pending" || requestStatus==="rejected"? (
+            ) : (
+              <section className={`mt-8 p-6 rounded-lg shadow-lg ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
+                <h2 className="text-3xl font-semibold mb-4">Rate and Review</h2>
+                <div className="flex space-x-2">
+                  {[...Array(5)].map((_, index) => (
+                    <FaStar
+                      key={index}
+                      color={index < rating ? "#FFD700" : "#ccc"}
+                      onClick={() => setRating(index + 1)}
+                      className="cursor-pointer text-2xl"
+                    />
+                  ))}
+                </div>
+                <textarea
+                  className={`w-full mt-3 p-2 border rounded ${theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-black"}`}
+                  placeholder="Write your review..."
+                  value={review}
+                  onChange={(e) => setReview(e.target.value)}
+                />
+                <button
+                  className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={handleReviewSubmit}
+                  disabled={submitted}
+                >
+                  {submitted ? "Submitted" : "Submit Review"}
+                </button>
+              </section>
+            )}
+          </div>
+        ) : requestStatus === "pending" || requestStatus === "rejected" ? (
           <section className="mt-8 p-6 rounded-lg shadow-lg bg-gray-500 text-white">
             <h2 className="text-3xl font-semibold mb-4">Review Request Pending</h2>
             <p>Your review request is pending approval from the doctor.</p>
             <button onClick={handleSendRequest} className="mt-4 bg-blue-500 text-white px-6 py-3 rounded-lg">
-        Request Again
-      </button>
+              Request Again
+            </button>
           </section>
         ) : (
           <button
@@ -266,8 +266,14 @@ const DoctorTable = () => {
             <p>No reviews yet.</p>
           )}
         </section>
-        <Link  href={`/makePayments/${session?.user?.email}/${doctor.email}`}> <button> Make Payment </button> </Link>
+        <Link href={`/makePayments/${session?.user?.email}/${doctor.email}`}>
+          <button className="mt-8 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded shadow-md transition duration-300">
+            Make Payment
+          </button>
+        </Link>
+
       </main>
+
     </div>
   );
 };
