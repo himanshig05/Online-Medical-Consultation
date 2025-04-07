@@ -25,7 +25,7 @@ const DoctorHistory = () => {
 
   return (
     <div>
-      <h2>Doctor Payment History</h2>
+      <h2>Payment History</h2>
       {history.length > 0 ? (
         history.map((payment, index) => (
           <div key={index}>
