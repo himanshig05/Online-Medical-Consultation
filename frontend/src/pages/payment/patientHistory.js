@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../helper.j";
+import { BASE_URL } from "../../helper.js";
 
 const PatientHistory = () => {
   const [history, setHistory] = useState([]);
