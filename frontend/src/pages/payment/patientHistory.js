@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "../../helper.j";
 
 const PatientHistory = () => {
   const [history, setHistory] = useState([]);
@@ -13,7 +14,7 @@ const PatientHistory = () => {
 
     const fetchHistory = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/payment/patient/${patientEmail}`);
+        const response = await axios.get(`${BASE_URL}/payment/patient/${patientEmail}`);
         setHistory(response.data.details);
       } catch (error) {
         console.error("Failed to fetch payment history", error);

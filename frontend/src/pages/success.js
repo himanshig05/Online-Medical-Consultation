@@ -17,6 +17,7 @@ const Success = () => {
       try {
         const res = await fetch(`/api/checkout-session?session_id=${session_id}`);
         const data = await res.json();
+        console.log('payment data', data);
         setSessionDetails(data);
 
         // Update fee status

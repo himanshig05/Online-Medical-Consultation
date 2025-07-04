@@ -35,7 +35,7 @@ export default async function handler(req, res) {
         const { messages } = await req.json(); 
 
         const stream = await streamText({
-            model: google("gemini-1.5-pro-002"),
+            model: google("gemini-2.0-flash"),
             messages: buildGoogleGenAIPrompt(messages),
             temperature: 0.7,
         });

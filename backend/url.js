@@ -1,3 +1,3 @@
-export const baseUrl = " https://medicare-3gxl.onrender.com";
+const baseUrl = "https://medicare-phi-three.vercel.app";
 // const baseUrl = "http://localhost:3000";
-// module.exports=baseUrl;
+module.exports=baseUrl;

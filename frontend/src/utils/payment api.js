@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const BASE_URL = "http://localhost:5000/payment";
+import {BASE_URL} from "../helper.js";
 
 export const initiatePayment = async (patientName, patientEmail, doctorName, doctorEmail, amount) => {
   try {

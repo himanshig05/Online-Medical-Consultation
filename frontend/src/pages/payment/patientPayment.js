@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../../helper.js";
 
 const PatientPayment = () => {
   const [form, setForm] = useState({
@@ -21,7 +22,7 @@ const PatientPayment = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/payment/initiate/${form.patientName}/${form.patientEmail}`,
+        `${BASE_URL}/payment/initiate/${form.patientName}/${form.patientEmail}`,
         {
           doctorName: form.doctorName,
           doctorEmail: form.doctorEmail,
